@@ -1,0 +1,38 @@
+skills:
+  - "Python - Anaconda - Pandas"
+  - "SQL - Excel"
+  - "C++ - C# - Mips"
+  - "Linux - Docker - Git"
+  - "Java - HMTL - CSS"
+  - "Springboot - Bootstrap - Flutter"
+
+skillsGrouped:
+  - groupName: "Technical"
+    skills: ["Data Analysis/Pandas/Scikitlearn","Python", "PostgresSQl/MySQL", "Clustering/Unsupervised Learning", "C++/Java/HTML", "Docker/Git", "Excel"]
+
+  - groupName: "Professional"
+    skills: ["Effective Communication", "Adaptive Problem Solving", "Team Building Mentallity", "Unwavering Ethics"]
+
+interests:
+  - "Data Science"
+  - "Artificial Intellegence"
+  - "Machine Learning"
+  - "Optimization Problems"
+
+languages:
+  - name: "English"
+    level: "Native"
+
+
+awards:
+  - name: "Tübitak - Graduation Project"
+    date: "2017"
+    details: "A Decision Support System for 3D Cutting Problem"
+
+
+about:
+  - name: "DAVID GRAY"
+    tagline: "Computer Scientist"
+    phone: "(636) 734-9842"
+    email: "davidgraymi@gmail.com"
+    details: ""

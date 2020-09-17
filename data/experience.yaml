@@ -1,0 +1,27 @@
+- company: "Computer Lab Assistant"
+  name: "Missouri State University "
+  date: "September - Current"
+  details: "•	Resolve computer issues by troubleshooting online services. \n
+	     •	Update and develop the Missouri State University website. \n
+	     •	Keep computer software up to date."
+
+- company: "Quality Assurance Analyst"
+  name: "O'Reilly Autoparts"
+  date: "June 2020 - August 2020"
+  details: "Optimized SQL queries for quick, accurate results.
+	     Reviewed, tested, and approved test cases on production level software.
+	     Wrote detailed documents on bugs found when testing."
+
+- company: "Undergraduate Research Assistant"
+  name: "Missouri State University"
+  date: "July 2020"
+  details: "Embedded high dimensional datasets into two-dimensional scatter plots using the TSNE algorithm.
+	     Created overview data analyses for researchers to easily understand large, complex datasets.
+	     Assisted a published work on the effects of the TSNE algorithm on Traumatic Brain Injury data."
+
+- company: "Summer Camp Teacher"
+  name: "Zion Lutheran School"
+  date: "Summer 2016, 2017, & 2018"
+  details: "Resolved issues by communicating with parents on a regular basis via weekly emails.
+	     Planned and led large group activities.
+	     Supervised the safety of young students."
