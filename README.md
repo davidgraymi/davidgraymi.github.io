@@ -1,2 +1,0 @@
-# davidgraymi.github.io
- 
