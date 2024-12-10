@@ -50845,7 +50845,7 @@ break
 case 2:o+="\ud83d\udfe8"
 break
 case 3:o+="\ud83d\udfe9"
-break}o+="\n"}return o+"https://davidmgray.com/flutter/wordlet.html"},
+break}o+="\n"}return o+"https://davidmgray.com/wordlet/index.html"},
 SO(){this.aQ(new A.YX(this))},
 Vw(a){var s,r,q,p,o,n,m,l=this,k=a.split(""),j=A.w(t.N,t.ie)
 for(s=0;s<5;++s){r=k[s]
