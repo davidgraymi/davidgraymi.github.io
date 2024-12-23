@@ -261,3 +261,13 @@ body {
         padding: 8px 0;
     }
 }
+
+@media (max-width: 480px) {
+    .logos-slide img {
+        height: 35px;
+        margin: 0 20px;
+    }
+    .logos {
+        padding: 6px 0;
+    }
+}
