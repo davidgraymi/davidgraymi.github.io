@@ -1,5 +1,5 @@
 const header = document.querySelector('.persistent-header');
-const heroSection = document.querySelector('.hero-section');
+const heroSection = document.querySelector('.hero-section-ref');
 
 window.addEventListener('scroll', () => {
     const heroBottom = heroSection.getBoundingClientRect().bottom;
