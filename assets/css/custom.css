@@ -1,6 +1,7 @@
 :root {
     --background: #ffffff;
     --text: #1a1a1a;
+    --text-muted: #565656;
     --surface: #f5f5f5;
     --surface-hover: #e5e5e5;
     --border: #dadada;
@@ -11,6 +12,7 @@
     :root {
         --background: #1a1a1a;
         --text: #ffffff;
+        --text-muted: #a2a2a2;
         --surface: #2a2a2a;
         --surface-hover: #3a3a3a;
         --border: #404040;
@@ -96,11 +98,80 @@ body {
     /* margin-top: 0px; */
 }
 
+.gradient-subtitle {
+    font-family: "Lato", serif;
+    font-size: 40px;
+    font-weight: 300;
+    font-optical-sizing: auto;
+    background: linear-gradient(
+        300deg,
+        #ff6b6b,
+        #4ecdc4,
+        #45b7d1,
+        #a06cd5,
+        #ff6b6b
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 10s ease infinite;
+    text-align: left;
+    /* margin-top: 0px; */
+}
+
 .subtitle {
     font-family: "Lato", serif;
     font-size: 5vw;
     text-align: left;
     color: var(--text);
+}
+
+.logos {
+    padding: 2vh 0;
+    overflow: hidden;
+    background: var(--surface);
+    white-space: nowrap;
+    position: relative;
+}
+
+.logos:before,
+.logos:after {
+    position: absolute;
+    top: 0;
+    width: 100px;
+    height: 100%;
+    content: "";
+    z-index: 2;
+}
+
+.logos:before {
+    left: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0), var(--surface));
+}
+
+.logos:after {
+    right: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--surface));
+}
+
+.logos-slide {
+    display: inline-block;
+    animation: 35s slide infinite linear;
+}
+
+.logos-slide img {
+    height: 60px;
+    margin: 0 40px;
+}
+
+@keyframes slide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }
 
 .persistent-header {
