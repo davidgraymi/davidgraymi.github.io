@@ -78,7 +78,7 @@ body {
 
 .gradient-title {
     font-family: "Lato", serif;
-    font-size: 24vw;
+    font-size: 17vw;
     font-weight: 300;
     font-optical-sizing: auto;
     background: linear-gradient(
@@ -95,7 +95,6 @@ body {
     color: transparent;
     animation: gradient-shift 10s ease infinite;
     text-align: left;
-    /* margin-top: 0px; */
 }
 
 .gradient-subtitle {
@@ -128,7 +127,7 @@ body {
 }
 
 .logos {
-    padding: 2vh 0;
+    padding: 12px 0;
     overflow: hidden;
     background: var(--surface);
     white-space: nowrap;
@@ -163,6 +162,7 @@ body {
 .logos-slide img {
     height: 60px;
     margin: 0 40px;
+    /* max-height: 60px; */
 }
 
 @keyframes slide {
@@ -243,14 +243,20 @@ body {
 }
 
 @media (max-width: 768px) {
-    .gradient-title {
+    /* .gradient-title {
         font-size: 28vw;
-    }
+    } */
     .subtitle {
         font-size: 8vw;
         /* margin-top: -3vw; */
     }
     .persistent-header .gradient-title {
         font-size: 1.5rem;
+    }
+    .logos-slide img {
+        height: 45px;
+    }
+    .logos {
+        padding: 8px 0;
     }
 }
