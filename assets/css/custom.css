@@ -255,6 +255,7 @@ body {
     }
     .logos-slide img {
         height: 45px;
+        margin: 0 26px;
     }
     .logos {
         padding: 8px 0;
