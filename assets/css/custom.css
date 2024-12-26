@@ -1,4 +1,9 @@
 :root {
+    --color-1: #ffffff;
+    --color-2: #e5e5e5;
+    --color-3: #fca311;
+    --color-4: #14213d;
+    --color-5: #000000;
     --background: #ffffff;
     --text: #1a1a1a;
     --text-muted: #565656;
@@ -131,17 +136,19 @@ body {
 }
 
 .logos {
-    margin:  0 0 -15px 0;
+    /* margin:  0 0 -15px 0; */
     overflow: hidden;
     white-space: nowrap;
     position: relative;
+    border-radius: 1rem;
+    padding: 8px;
 }
 
 .logos:before,
 .logos:after {
     position: absolute;
     top: 0;
-    width: 100px;
+    width: 10rem;
     height: 100%;
     content: "";
     z-index: 2;
@@ -149,12 +156,12 @@ body {
 
 .logos:before {
     left: 0;
-    background: linear-gradient(to left, rgba(0, 0, 0, 0), var(--background));
+    background: linear-gradient(to left, rgba(0, 0, 0, 0), var(--color-4));
 }
 
 .logos:after {
     right: 0;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--background));
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--color-4));
 }
 
 .logos-slide {
@@ -196,7 +203,6 @@ body {
 .persistent-header .gradient-title {
     font-size: 2rem;
     margin: 0;
-    /* line-height: 1; */
 }
 
 .scroll-indicator {
@@ -215,15 +221,17 @@ body {
 }
 
 .card {
-    background-color: var(--surface);
+    /* background-color: var(--background); */
     border-radius: 1rem;
-    padding: 2rem;
-    margin-bottom: 2rem;
+    /* padding: 2rem 0; */
+    /* margin-bottom: 2rem; */
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-color);
 }
 
 .card:hover {
     background-color: var(--surface-hover);
+    box-shadow: 8px 8px 10px var(--shadow-color);
 }
 
 .section-title {
@@ -259,9 +267,9 @@ body {
         height: 45px;
         margin: 0 26px;
     }
-    .logos {
+    /* .logos {
         margin: 0 0 -30px 0;
-    }
+    } */
 }
 
 @media (max-width: 480px) {
@@ -269,7 +277,7 @@ body {
         height: 35px;
         margin: 0 20px;
     }
-    .logos {
+    /* .logos {
         margin: 0 0 -35px 0;
-    }
+    } */
 }
