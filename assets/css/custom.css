@@ -135,6 +135,11 @@ body {
     color: var(--text);
 }
 
+.skill-grid {
+    display: grid;
+    gap: 8px;
+}
+
 .logos {
     /* margin:  0 0 -15px 0; */
     overflow: hidden;
