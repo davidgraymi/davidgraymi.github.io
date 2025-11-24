@@ -1,0 +1,12 @@
+baseURL = 'https://davidmgray.com/'
+languageCode = 'en-us'
+title = 'David Gray'
+theme = []
+
+[params]
+  description = "David Gray - Full Stack Developer"
+  author = "David Gray"
+  # Social handles
+  twitter = "gray_dave_"
+  github = "davidgraymi"
+  linkedin = "david-gray-mi"
