@@ -11,8 +11,7 @@ yarn-error.log*
 package-lock.json
 
 # Build outputs
-static/js/interactive.js
-static/js/style.css
+static/js/
 
 # OS
 .DS_Store

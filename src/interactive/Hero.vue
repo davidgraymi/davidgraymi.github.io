@@ -1,80 +1,130 @@
 <template>
-  <div ref="container" class="canvas-container"></div>
+  <canvas ref="canvas" class="confetti-canvas"></canvas>
 </template>
 
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from 'vue'
-import * as THREE from 'three'
 
-const container = ref(null)
-let scene, camera, renderer, animationId
-let particles
+const canvas = ref(null)
+let ctx
+let particles = []
+let animationId
+
+class Particle {
+  constructor(x, y) {
+    this.x = x
+    this.y = y
+    this.size = Math.random() * 8 + 4
+    this.speedY = Math.random() * 1 + 0.5
+    this.speedX = Math.random() * 2 - 1
+    this.rotation = Math.random() * 360
+    this.rotationSpeed = Math.random() * 4 - 2
+    
+    // Google-style colors: blues, teals, and grays
+    const colors = [
+      '#1a73e8', // Google Blue
+      '#34a853', // Google Green  
+      '#fbbc04', // Google Yellow
+      '#ea4335', // Google Red
+      '#4285f4', // Light Blue
+      '#5f6368', // Gray
+    ]
+    this.color = colors[Math.floor(Math.random() * colors.length)]
+    this.opacity = Math.random() * 0.5 + 0.3
+    
+    // Shape: 0 = circle, 1 = square, 2 = triangle
+    this.shape = Math.floor(Math.random() * 3)
+  }
+  
+  update() {
+    this.y += this.speedY
+    this.x += this.speedX
+    this.rotation += this.rotationSpeed
+    
+    // Wrap around
+    if (this.y > canvas.value.height + 20) {
+      this.y = -20
+      this.x = Math.random() * canvas.value.width
+    }
+    if (this.x > canvas.value.width + 20) {
+      this.x = -20
+    }
+    if (this.x < -20) {
+      this.x = canvas.value.width + 20
+    }
+  }
+  
+  draw() {
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.rotate(this.rotation * Math.PI / 180)
+    ctx.globalAlpha = this.opacity
+    ctx.fillStyle = this.color
+    
+    if (this.shape === 0) {
+      // Circle
+      ctx.beginPath()
+      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2)
+      ctx.fill()
+    } else if (this.shape === 1) {
+      // Square
+      ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size)
+    } else {
+      // Triangle
+      ctx.beginPath()
+      ctx.moveTo(0, -this.size / 2)
+      ctx.lineTo(this.size / 2, this.size / 2)
+      ctx.lineTo(-this.size / 2, this.size / 2)
+      ctx.closePath()
+      ctx.fill()
+    }
+    
+    ctx.restore()
+  }
+}
 
 onMounted(() => {
-  init()
+  ctx = canvas.value.getContext('2d')
+  resizeCanvas()
+  
+  // Create particles
+  for (let i = 0; i < 80; i++) {
+    particles.push(new Particle(
+      Math.random() * canvas.value.width,
+      Math.random() * canvas.value.height
+    ))
+  }
+  
   animate()
+  window.addEventListener('resize', resizeCanvas)
 })
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationId)
-  window.removeEventListener('resize', onWindowResize)
+  window.removeEventListener('resize', resizeCanvas)
 })
 
-function init() {
-  scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  camera.position.z = 50
-
-  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  container.value.appendChild(renderer.domElement)
-
-  // Particles
-  const geometry = new THREE.BufferGeometry()
-  const vertices = []
-  
-  for (let i = 0; i < 2000; i++) {
-    vertices.push(
-      (Math.random() - 0.5) * 200,
-      (Math.random() - 0.5) * 200,
-      (Math.random() - 0.5) * 200
-    )
-  }
-  
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3))
-  
-  const material = new THREE.PointsMaterial({ 
-    color: 0x00f2ff, 
-    size: 0.5,
-    transparent: true,
-    opacity: 0.8
-  })
-  
-  particles = new THREE.Points(geometry, material)
-  scene.add(particles)
-
-  window.addEventListener('resize', onWindowResize)
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+function resizeCanvas() {
+  canvas.value.width = window.innerWidth
+  canvas.value.height = window.innerHeight
 }
 
 function animate() {
+  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+  
+  particles.forEach(particle => {
+    particle.update()
+    particle.draw()
+  })
+  
   animationId = requestAnimationFrame(animate)
-  
-  particles.rotation.x += 0.0005
-  particles.rotation.y += 0.001
-  
-  renderer.render(scene, camera)
 }
 </script>
 
 <style scoped>
-.canvas-container {
+.confetti-canvas {
   width: 100%;
   height: 100%;
+  display: block;
 }
 </style>
