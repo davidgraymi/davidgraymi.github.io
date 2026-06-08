@@ -2,7 +2,8 @@
   "name": "interactive-islands",
   "version": "1.0.0",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build && hugo --minify",
+    "start": "npm run build && hugo server"
   },
   "dependencies": {
     "vue": "^3.3.4",

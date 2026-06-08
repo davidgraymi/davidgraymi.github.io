@@ -29,15 +29,6 @@ class Particle {
     this.floatRadius = 15 + Math.random() * 10
     this.floatOffsetX = Math.random() * Math.PI * 2
     this.floatOffsetY = Math.random() * Math.PI * 2
-    
-    // Blue shades like Google Antigravity
-    const blues = [
-      'rgba(26, 115, 232, 0.6)',   // Google Blue
-      'rgba(66, 133, 244, 0.5)',   // Light Blue
-      'rgba(26, 115, 232, 0.4)',   // Lighter
-      'rgba(66, 133, 244, 0.3)',   // Even lighter
-    ]
-    this.color = blues[Math.floor(Math.random() * blues.length)]
   }
   
   update() {
@@ -56,44 +47,28 @@ class Particle {
 
     // Always point at cursor (angle from particle to mouse)
     this.rotation = Math.atan2(dy, dx)
+
+    // Size based on distance from mouse
     this.radiusX = this.smoothRadiusX(distance)
     this.radiusY = this.radiusX / 3
     
-    // Repel from cursor
-    if (distance < repelRadius) {
-      const force = (repelRadius - distance) / repelRadius
-      const angle = Math.atan2(dy, dx)
-      this.vx += Math.cos(angle) * force * 0.8
-      this.vy += Math.sin(angle) * force * 0.8
-    }
-    
-    // Return to home position with floating offset (spring force)
-    const homeForce = 0.05
-    const targetX = this.homeX + floatX
-    const targetY = this.homeY + floatY
-    this.vx += (targetX - this.x) * homeForce
-    this.vy += (targetY - this.y) * homeForce
-    
-    // Apply damping
-    this.vx *= 0.92
-    this.vy *= 0.92
-    
     // Update position
-    this.x += this.vx
-    this.y += this.vy
+    // this.x += this.vx
+    // this.y += this.vy
   }
   
   draw() {
     ctx.beginPath()
     ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, this.rotation, 0, 2 * Math.PI);
-    ctx.fillStyle = this.color
+    const red = Math.floor(Math.random() * 256);
+    ctx.fillStyle = 'rgb(' + red + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')'
     ctx.fill()
   }
 
-  smoothRadiusX(distance) {
-    const maxRadiusX = 6
-    let raw = -((((distance - 300) / 100))**2) + maxRadiusX
-    return Math.max(0, raw)
+  smoothRadiusX(distance) { 
+    const maxRadiusX = 5
+    let raw = -((((distance - 250) / 100))**2) + maxRadiusX
+    return Math.max(1, raw)
   }
 }
 
@@ -108,9 +83,8 @@ onMounted(() => {
   
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      // Add some randomness to position
-      const x = i * spacing + Math.random() * 20 - 10
-      const y = j * spacing + Math.random() * 20 - 10
+      const x = i * spacing
+      const y = j * spacing
       particles.push(new Particle(x, y))
     }
   }
@@ -146,8 +120,8 @@ function resizeCanvas() {
   
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      const x = i * spacing + Math.random() * 20 - 10
-      const y = j * spacing + Math.random() * 20 - 10
+      const x = i * spacing
+      const y = j * spacing
       particles.push(new Particle(x, y))
     }
   }

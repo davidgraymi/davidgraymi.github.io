@@ -12,7 +12,8 @@ export default defineConfig({
       formats: ['es']
     },
     outDir: 'static/js',
-    emptyOutDir: false,
+    emptyOutDir: true,
+    copyPublicDir: false,
   },
   define: {
     'process.env': {}
