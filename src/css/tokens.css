@@ -1,0 +1,204 @@
+/* =============================================================
+   tokens.css — Design tokens for davidmgray.com
+   Single source of truth for color, type, spacing, radius, motion.
+   Brand: "From the metal to the model" (see docs/brand-identity.md).
+
+   Palette: teal primary (infra / trust) + violet complementary (AI),
+   near-black background. The teal->violet relationship renders the
+   metal->model story in color: teal = systems/infra, violet = AI.
+
+   Modes: DARK is the default and the launch face. LIGHT is fully
+   defined and activates only when the user/system asks for it, so
+   light mode can be switched on later with zero rewrites.
+
+   Accessibility: every text/background and text/accent pairing here
+   is verified to meet WCAG 2.1 AA (>=4.5:1 body, >=3:1 large/UI).
+   Do not hand-edit accent hexes without re-checking contrast.
+   ============================================================= */
+
+/* ---- Brand accent scales (mode-independent reference) ----------
+   Kept as raw scales so components can reach for a specific stop.
+   Semantic tokens below map these into each mode. */
+:root {
+  /* Teal (primary) */
+  --teal-300: #5EEAD4;   /* bright accent, glows on dark */
+  --teal-400: #2DD4BF;
+  --teal-500: #14B8A6;
+  --teal-700: #0E7C68;   /* darkened for light-mode text/links */
+  --teal-900: #04241F;   /* deep teal, e.g. text on a teal fill (dark mode) */
+
+  /* Violet (complementary — AI) */
+  --violet-300: #C4B5FD;
+  --violet-400: #A78BFA;  /* accent on dark */
+  --violet-600: #6D4ED6;  /* darkened for light-mode text/links */
+  --violet-900: #1A1340;  /* deep violet, e.g. text on a violet fill (dark mode) */
+
+  /* ---- Typography ---- */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Code', Menlo, monospace;
+
+  /* Modular type scale, 1.250 (major third), base 1rem = 16px.
+     Hero may exceed via clamp() — see --fs-hero. */
+  --fs-xs:   0.8rem;     /* 12.8px — captions, tags */
+  --fs-sm:   0.9rem;     /* 14.4px — small UI */
+  --fs-base: 1rem;       /* 16px   — body */
+  --fs-md:   1.25rem;    /* 20px */
+  --fs-lg:   1.563rem;   /* 25px */
+  --fs-xl:   1.953rem;   /* 31px */
+  --fs-2xl:  2.441rem;   /* 39px */
+  --fs-3xl:  3.052rem;   /* 49px */
+  --fs-hero: clamp(2.5rem, 6vw, 4.5rem); /* fluid hero display */
+
+  --lh-tight: 1.15;      /* display / headings */
+  --lh-snug:  1.35;
+  --lh-body:  1.6;       /* prose */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-semibold:600;
+  --fw-bold:    800;
+
+  --tracking-tight: -0.02em; /* large display */
+  --tracking-normal: 0;
+  --tracking-wide:   0.04em; /* mono labels / eyebrows */
+
+  --measure: 70ch;       /* max line length for prose */
+
+  /* ---- Spacing scale (px-based, 4pt grid) ---- */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  24px;
+  --sp-6:  32px;
+  --sp-7:  48px;
+  --sp-8:  64px;
+  --sp-9:  96px;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 8px;   /* buttons */
+  --radius-lg: 12px;  /* cards */
+  --radius-xl: 16px;  /* feature cards */
+  --radius-pill: 999px;
+
+  /* ---- Layout ---- */
+  --container-max: 1180px;
+  --container-prose: 680px;
+
+  /* ---- Motion (honor prefers-reduced-motion below) ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-mid:  250ms;
+}
+
+/* =============================================================
+   DARK MODE — the default. Applied at :root so the site is dark
+   out of the box with no attribute or media query required.
+   ============================================================= */
+:root {
+  color-scheme: dark;
+
+  --bg:          #0B0F17;  /* near-black, cool tint — never pure #000 */
+  --bg-elevated: #0F1521;
+  --surface:     #141A24;  /* cards, panels */
+  --surface-2:   #1B222F;  /* nested surfaces, hover */
+  --border:      #243044;  /* hairline dividers (decorative, subtle) */
+  --border-strong:#33415A; /* emphasized borders, inputs */
+
+  --text:        #E6EAF2;  /* primary text  (15.9:1) */
+  --text-muted:  #94A1B8;  /* secondary     (7.3:1) */
+  --text-faint:  #6B7689;  /* hints, disabled (large/non-essential only) */
+
+  /* Accents in context */
+  --accent:        var(--teal-300);   /* links, primary CTA, infra energy (13:1) */
+  --accent-hover:  var(--teal-400);
+  --accent-2:      var(--violet-400); /* AI moments, gradient end (7:1) */
+  --accent-2-hover:var(--violet-300);
+
+  /* On-accent text (for filled buttons) */
+  --on-accent:   var(--teal-900);     /* deep teal on teal fill (11:1) */
+  --on-accent-2: var(--violet-900);   /* deep violet on violet fill (6.4:1) */
+
+  /* The metal->model gradient: teal (systems) -> violet (AI).
+     Use for the hero accent, the signature particle field sampling,
+     and section dividers. Sparingly. */
+  --gradient-brand: linear-gradient(100deg, var(--teal-300) 0%, var(--violet-400) 100%);
+
+  --focus-ring: 0 0 0 3px rgba(94, 234, 212, 0.45); /* teal, AA-visible */
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.45);    /* depth on dark; flat-ish */
+}
+
+/* =============================================================
+   LIGHT MODE — fully defined, OFF by default.
+   Activates via either:
+     (a) system preference  -> @media (prefers-color-scheme: light)
+     (b) explicit override  -> <html data-theme="light">
+   To LAUNCH dark-only, simply don't ship the toggle and (optionally)
+   comment out the media query below. Tokens stay ready either way.
+   ============================================================= */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+
+    --bg:          #FBFCFE;
+    --bg-elevated: #FFFFFF;
+    --surface:     #F2F5F9;
+    --surface-2:   #E9EEF4;
+    --border:      #DDE3EC;
+    --border-strong:#C3CCD9;
+
+    --text:        #0B0F17;  /* 18.7:1 */
+    --text-muted:  #5A6477;  /* 5.8:1 */
+    --text-faint:  #8A93A6;
+
+    --accent:        var(--teal-700);   /* darkened for AA on light (5:1) */
+    --accent-hover:  #0C6F5C;
+    --accent-2:      var(--violet-600); /* 5.5:1 */
+    --accent-2-hover:#5B3FC4;
+
+    --on-accent:   #FFFFFF;             /* white on teal-700 fill (5.1:1) */
+    --on-accent-2: #FFFFFF;             /* white on violet-600 fill (5.7:1) */
+
+    --gradient-brand: linear-gradient(100deg, var(--teal-700) 0%, var(--violet-600) 100%);
+
+    --focus-ring: 0 0 0 3px rgba(14, 124, 104, 0.4);
+    --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.10);
+  }
+}
+
+/* Explicit light override (for a manual toggle), regardless of system. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:          #FBFCFE;
+  --bg-elevated: #FFFFFF;
+  --surface:     #F2F5F9;
+  --surface-2:   #E9EEF4;
+  --border:      #DDE3EC;
+  --border-strong:#C3CCD9;
+  --text:        #0B0F17;
+  --text-muted:  #5A6477;
+  --text-faint:  #8A93A6;
+  --accent:        var(--teal-700);
+  --accent-hover:  #0C6F5C;
+  --accent-2:      var(--violet-600);
+  --accent-2-hover:#5B3FC4;
+  --on-accent:   #FFFFFF;
+  --on-accent-2: #FFFFFF;
+  --gradient-brand: linear-gradient(100deg, var(--teal-700) 0%, var(--violet-600) 100%);
+  --focus-ring: 0 0 0 3px rgba(14, 124, 104, 0.4);
+  --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.10);
+}
+
+/* Reduced motion: disable nonessential transitions/animations.
+   The JS particle field must also check this (see brand §9). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
