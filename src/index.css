@@ -12,8 +12,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #05070b;
-  color: #e8eef5;
+  background: #0a2540; /* blueprint blue — matches the canvas clear color */
+  color: #eef4fb;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   overflow-x: hidden;
 }
@@ -58,6 +58,28 @@ html.lenis body {
   background: linear-gradient(90deg, transparent, #00d4ff66, transparent);
 }
 
+/* Blueprint graph-paper grid — fixed layer that sits over the jet canvas but
+   under the content overlay. Fine grid + bolder major lines every 5th cell. */
+.blueprint-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(223, 234, 245, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(223, 234, 245, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(223, 234, 245, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(223, 234, 245, 0.09) 1px, transparent 1px);
+  background-size:
+    28px 28px,
+    28px 28px,
+    140px 140px,
+    140px 140px;
+  /* fade the grid out toward the edges so it reads as a vignette, not a wall */
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+  mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+}
+
 /* Subtle scanline texture overlay */
 .scanlines::before {
   content: '';
@@ -67,8 +89,8 @@ html.lenis body {
   z-index: 5;
   background: repeating-linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.015) 0px,
-    rgba(255, 255, 255, 0.015) 1px,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 1px,
     transparent 1px,
     transparent 3px
   );

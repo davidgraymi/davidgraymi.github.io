@@ -16,7 +16,7 @@ export default function Loader() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#05070b] transition-opacity duration-700"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a2540] transition-opacity duration-700"
       style={{ opacity: !active && progress >= 100 ? 0 : 1 }}
     >
       <div className="tag mb-6">Spooling turbines</div>

@@ -24,6 +24,7 @@ export default function App() {
     <div className="scanlines">
       <Loader />
       <JetScene />
+      <div className="blueprint-grid" />
       <HudFrame />
       <Overlay />
     </div>

@@ -6,6 +6,7 @@ export default {
       colors: {
         ice: '#00d4ff',
         ember: '#ff4d1c',
+        blueprint: '#0a2540',
         steel: '#0a0e14',
       },
       fontFamily: {

@@ -6,17 +6,24 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Top-down hero: camera looks straight DOWN from +Y. up = (1, 0, 0) puts the
+// nose toward the top of the page (verified: world +X maps to screen-up). The
+// aircraft's topside is made to face +Y by a roll applied in JetScene.
+const TOPDOWN_UP = new Vector3(1, 1, 0)
+const DEFAULT_UP = new Vector3(0, 1, 0)
+
 // Camera keyframes, one per section. The model is normalized in JetModel to a
 // ~4-unit wingspan centered at origin, so these values are model-independent.
+// `up` controls screen-up orientation; it's lerped (and renormalized) too.
 export const CAMERA_KEYFRAMES = [
-  // 0 — Hero: wide, slightly above. Idle orbit plays here before scroll.
-  { position: new Vector3(0, 1.4, 8), target: new Vector3(0, 0, 0) },
+  // 0 — Hero: top-down plan view, nose pointing up the page.
+  { position: new Vector3(0, 9, 0), target: new Vector3(0, 0, 0), up: TOPDOWN_UP },
   // 1 — Experience: low, behind/side. Looking up the fuselage.
-  { position: new Vector3(-5.5, -1.2, 4.5), target: new Vector3(0, 0.3, 0) },
+  { position: new Vector3(-5.5, -1.2, 4.5), target: new Vector3(0, 0.3, 0), up: DEFAULT_UP },
   // 2 — Projects: tight, high front-quarter over the cockpit.
-  { position: new Vector3(3.2, 2.6, 3.2), target: new Vector3(0, 0, -1) },
+  { position: new Vector3(3.2, 2.6, 3.2), target: new Vector3(0, 0, -1), up: DEFAULT_UP },
   // 3 — Contact: wide pull-back, jet small in frame, drifting off-center.
-  { position: new Vector3(-3, 3.5, 13), target: new Vector3(0.5, 0, 0) },
+  { position: new Vector3(-3, 3.5, 13), target: new Vector3(0.5, 0, 0), up: DEFAULT_UP },
 ]
 
 // scrub per transition: higher = laggier/more cinematic.
@@ -30,19 +37,20 @@ const SCRUB = [2.2, 1, 1.4]
 export function useScrollCamera() {
   const { camera } = useThree()
   const orbiting = useRef(true)
-  const angle = useRef(0)
+  const t = useRef(0)
   const lookTmp = useRef(new Vector3())
+  const upTmp = useRef(new Vector3())
 
-  // Idle cinematic orbit on the hero, before any scroll input.
+  // Idle hero: hold the top-down plan view, with a subtle breathing drift in
+  // altitude and a slow yaw so it reads as "alive" but stays top-down.
   useFrame((_, delta) => {
     if (!orbiting.current) return
-    angle.current += delta * 0.16
-    const r = 8
-    camera.position.set(
-      Math.sin(angle.current) * r,
-      1.4 + Math.sin(angle.current * 0.5) * 0.4,
-      Math.cos(angle.current) * r,
-    )
+    t.current += delta
+    const hero = CAMERA_KEYFRAMES[0]
+    camera.position.set(0, hero.position.y + Math.sin(t.current * 0.4) * 0.25, 0)
+    // Gently rock the up vector so the jet sways a few degrees around the nose axis.
+    const sway = Math.sin(t.current * 0.25) * 0.06
+    camera.up.set(Math.sin(sway), 0, Math.cos(sway))
     camera.lookAt(0, 0, 0)
   })
 
@@ -66,6 +74,12 @@ export function useScrollCamera() {
         onUpdate(self) {
           if (orbiting.current) orbiting.current = false
           camera.position.lerpVectors(from.position, to.position, self.progress)
+          // Lerp the up vector so the view rolls smoothly out of the top-down
+          // plan view into the angled section cameras.
+          upTmp.current
+            .lerpVectors(from.up || DEFAULT_UP, to.up || DEFAULT_UP, self.progress)
+            .normalize()
+          camera.up.copy(upTmp.current)
           lookTmp.current.lerpVectors(from.target, to.target, self.progress)
           camera.lookAt(lookTmp.current)
         },
