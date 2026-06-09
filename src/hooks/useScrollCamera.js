@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger)
 // Top-down hero: camera looks straight DOWN from +Y. up = (1, 0, 0) puts the
 // nose toward the top of the page (verified: world +X maps to screen-up). The
 // aircraft's topside is made to face +Y by a roll applied in JetScene.
-const TOPDOWN_UP = new Vector3(1, 1, 0)
+const TOPDOWN_UP = new Vector3(0, 0, 1)
 const DEFAULT_UP = new Vector3(0, 1, 0)
 
 // Camera keyframes, one per section. The model is normalized in JetModel to a

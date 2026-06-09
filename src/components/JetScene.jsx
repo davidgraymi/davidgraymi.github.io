@@ -49,7 +49,8 @@ function JetWireframe() {
   useLayoutEffect(() => {
     const obj = ref.current
     if (!obj) return
-    obj.rotation.set(0, 0, 0)
+    // Rotate so the nose (native +X) faces world +Z (screen-up with camera.up=(0,0,1)).
+    obj.rotation.set(0, -Math.PI / 2, 0)
     obj.scale.setScalar(1)
     obj.position.set(0, 0, 0)
     obj.updateWorldMatrix(true, true)
@@ -67,7 +68,7 @@ function JetWireframe() {
   }, [wire])
 
   return (
-    <group ref={ref} rotation={[0, Math.PI, 0]}>
+    <group ref={ref} rotation={[0, 0, 0]}>
       <primitive object={wire} />
     </group>
   )
