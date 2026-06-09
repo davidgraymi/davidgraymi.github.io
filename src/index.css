@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #05070b;
+  color: #e8eef5;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  overflow-x: hidden;
+}
+
+/* Lenis recommends this for correct scroll height */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+#root {
+  position: relative;
+  width: 100%;
+}
+
+/* Section pinned content — text sits centered in viewport while the section scrolls */
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+.pin > * {
+  pointer-events: auto;
+}
+
+.tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #00d4ff;
+}
+
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00d4ff66, transparent);
+}
+
+/* Subtle scanline texture overlay */
+.scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.015) 0px,
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}

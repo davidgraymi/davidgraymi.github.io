@@ -1,17 +1,11 @@
-# Hugo
-public/
-resources/_gen/
-.hugo_build.lock
+# Build output
+dist/
 
 # Node
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-
-# Build outputs
-static/js/
 
 # OS
 .DS_Store
@@ -33,6 +27,3 @@ Thumbs.db
 *.log
 *.tmp
 .cache/
-
-# Old files (backup)
-old_index.html

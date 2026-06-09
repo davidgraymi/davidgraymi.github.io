@@ -1,21 +1,13 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import react from '@vitejs/plugin-react'
 
+// Custom domain (davidmgray.com via CNAME) serves from root, so base is '/'.
 export default defineConfig({
-  plugins: [vue()],
+  base: '/',
+  plugins: [react()],
   build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/interactive/main.js'),
-      name: 'Interactive',
-      fileName: (format) => `interactive.js`,
-      formats: ['es']
-    },
-    outDir: 'static/js',
+    outDir: 'dist',
     emptyOutDir: true,
-    copyPublicDir: false,
+    assetsInlineLimit: 0, // keep the glb as a real file, never inlined
   },
-  define: {
-    'process.env': {}
-  }
 })
