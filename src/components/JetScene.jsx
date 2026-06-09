@@ -16,9 +16,9 @@ import { useScrollCamera } from '../hooks/useScrollCamera'
 const MODEL_URL = '/models/f22.glb'
 const TARGET_SIZE = 4 // normalize the model's largest dimension to this many world units
 
-// Blueprint palette
-const BG = '#0a2540' // blueprint blue background
-const LINE = '#dfeaf5' // off-white lines
+// Background matches brand --bg token; lines stay crisp off-white
+const BG = '#0B0F17' // brand near-black
+const LINE = '#dfeaf5' // off-white wireframe lines
 // Only draw an edge where two faces meet above this angle (degrees). Higher =
 // fewer, cleaner lines (just real panel/silhouette edges); lower = busier.
 const EDGE_THRESHOLD_DEG = 16

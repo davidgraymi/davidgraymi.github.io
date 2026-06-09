@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,15 +6,28 @@
 
 :root {
   color-scheme: dark;
+
+  /* Scroll-driven gradient arc — updated by GradientArc.jsx via JS */
+  --scroll-progress: 0;   /* 0 = hero, 1 = contact */
+
+  /* Background glow stops derived from brand tokens */
+  --glow-teal: 94, 234, 212;    /* #5EEAD4 */
+  --glow-violet: 167, 139, 250; /* #A78BFA */
+
+  /* Ambient glow intensities interpolated in JS */
+  --glow-teal-alpha: 0.06;
+  --glow-violet-alpha: 0;
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  background: #0a2540; /* blueprint blue — matches the canvas clear color */
-  color: #eef4fb;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  /* Near-black brand bg — matches brand token --bg */
+  background: #0B0F17;
+  color: #E6EAF2;
+  /* Outfit for UI text, mono reserved for technical accents */
+  font-family: 'Outfit', system-ui, sans-serif;
   overflow-x: hidden;
 }
 
@@ -32,55 +45,90 @@ html.lenis body {
   width: 100%;
 }
 
-/* Section pinned content — text sits centered in viewport while the section scrolls */
-.pin {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  pointer-events: none;
-}
-.pin > * {
-  pointer-events: auto;
-}
-
-.tag {
-  font-size: 0.7rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #00d4ff;
-}
-
-.hairline {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #00d4ff66, transparent);
-}
-
-/* Blueprint graph-paper grid — fixed layer that sits over the jet canvas but
-   under the content overlay. Fine grid + bolder major lines every 5th cell. */
-.blueprint-grid {
+/* ── Gradient arc background ──────────────────────────────────────
+   A fixed radial glow whose color shifts teal→violet as the user
+   scrolls. Sits above the canvas, below the grid and content.
+   The two glow layers are driven by --glow-teal-alpha / --glow-violet-alpha
+   which are updated by GradientArc.jsx on each scroll frame.        */
+.gradient-arc {
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image:
-    linear-gradient(rgba(223, 234, 245, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(223, 234, 245, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(223, 234, 245, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(223, 234, 245, 0.09) 1px, transparent 1px);
-  background-size:
-    28px 28px,
-    28px 28px,
-    140px 140px,
-    140px 140px;
-  /* fade the grid out toward the edges so it reads as a vignette, not a wall */
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
-  mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+  /* Teal glow — strong at hero, fades out by projects */
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(var(--glow-teal), var(--glow-teal-alpha)) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      rgba(var(--glow-violet), var(--glow-violet-alpha)) 0%,
+      transparent 70%
+    );
+  transition: none; /* JS handles smoothing via lenis */
 }
 
-/* Subtle scanline texture overlay */
+/* ── Section pinned content ───────────────────────────────────────
+   Wrapped in @layer components so Tailwind utilities can override. */
+@layer components {
+  .pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .pin > * {
+    pointer-events: auto;
+  }
+}
+
+/* ── HUD primitives ───────────────────────────────────────────────
+   Mono stays for technical labels only. Outfit handles everything
+   with semantic weight — section headings, panel titles, body copy. */
+
+.tag {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #5EEAD4;
+}
+
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(94,234,212,0.4), transparent);
+}
+
+/* ── Blueprint grid ───────────────────────────────────────────────
+   Dialed back opacity so it reads as texture, not wallpaper.
+   The grid stays — it's part of the aesthetic — but it no longer
+   fights the content for attention.                               */
+.blueprint-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(94, 234, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 234, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(94, 234, 212, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 234, 212, 0.055) 1px, transparent 1px);
+  background-size:
+    32px 32px,
+    32px 32px,
+    160px 160px,
+    160px 160px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+}
+
+/* ── Scanlines ────────────────────────────────────────────────────
+   Barely-there texture. One step above none.                      */
 .scanlines::before {
   content: '';
   position: fixed;
@@ -89,10 +137,39 @@ html.lenis body {
   z-index: 5;
   background: repeating-linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.02) 0px,
-    rgba(255, 255, 255, 0.02) 1px,
+    rgba(255, 255, 255, 0.012) 0px,
+    rgba(255, 255, 255, 0.012) 1px,
     transparent 1px,
-    transparent 3px
+    transparent 4px
   );
   mix-blend-mode: overlay;
+}
+
+/* ── Section heading — Outfit display ────────────────────────────
+   Used in Experience and Projects for the section-level label.    */
+.section-heading {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #E6EAF2;
+}
+
+/* Teal gradient variant for accented headings */
+.section-heading-accent {
+  background: linear-gradient(100deg, #5EEAD4 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
