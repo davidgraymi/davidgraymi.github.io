@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="grid h-9 w-9 place-items-center rounded-lg border transition-colors hover:text-[var(--signal)]"
+  aria-label="Switch between light and dark"
+  title="Switch between light and dark"
+>
+  <span class="icon-when-dark"><Icon name="sun" size={16} /></span>
+  <span class="icon-when-light"><Icon name="moon" size={16} /></span>
+</button>
+
+<style>
+  /* Show the destination, not the current state: dark page offers the sun. */
+  .icon-when-dark { display: none; }
+  .icon-when-light { display: block; }
+
+  :global(:root[data-theme='dark']) .icon-when-dark { display: block; }
+  :global(:root[data-theme='dark']) .icon-when-light { display: none; }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .icon-when-dark { display: block; }
+    :global(:root:not([data-theme='light'])) .icon-when-light { display: none; }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const current = root.dataset.theme ?? (systemDark ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* private mode: the choice just won't persist */
+    }
+  });
+</script>

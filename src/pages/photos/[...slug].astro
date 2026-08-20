@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '~/layouts/Base.astro';
+import FormattedDate from '~/components/FormattedDate.astro';
+import Icon from '~/components/Icon.astro';
+
+export const getStaticPaths = (async () => {
+  const albums = await getCollection('photos', ({ data }) => !data.draft);
+  return albums.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, location, images } = entry.data;
+---
+
+<Base title={title} description={`${title}${location ? ` — ${location}` : ''}`} type="article">
+  <header class="border-b">
+    <div class="wrap py-12 md:py-16">
+      <a
+        href="/photos"
+        class="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--signal)]"
+        style="color: var(--fg-muted)"
+      >
+        <span class="rotate-180 leading-none"><Icon name="arrow" size={14} /></span>
+        All albums
+      </a>
+      <h1 class="mt-6 font-semibold" style="font-size: var(--text-h1)">{title}</h1>
+      <p class="mt-4 font-mono text-[12.5px]" style="color: var(--fg-muted)">
+        {location && `${location} · `}<FormattedDate date={date} />
+      </p>
+      <div class="prose mt-6 max-w-2xl">
+        <Content />
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap py-12 md:py-16">
+    <div class="columns-1 gap-6 sm:columns-2 lg:columns-3">
+      {
+        images.map((photo) => (
+          <figure class="mb-6 break-inside-avoid">
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              widths={[400, 800, 1200]}
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+              class="w-full rounded-[var(--radius-card)] border"
+              loading="lazy"
+            />
+            {photo.caption && (
+              <figcaption class="mt-2.5 text-[13.5px] leading-relaxed" style="color: var(--fg-muted)">
+                {photo.caption}
+              </figcaption>
+            )}
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</Base>

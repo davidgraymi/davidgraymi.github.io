@@ -1,0 +1,70 @@
+---
+import { nav, site, socials } from '~/site.config';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t" style="background: var(--bg-surface)">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div>
+      <p class="text-[15px] font-semibold">{site.name}</p>
+      <p class="mt-2 max-w-xs text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
+        {site.role}. Based in {site.location}.
+      </p>
+      <a href={`mailto:${site.email}`} class="link-underline mt-4 inline-block font-mono text-[13.5px]">
+        {site.email}
+      </a>
+    </div>
+
+    <nav aria-label="Footer">
+      <p class="kicker">Pages</p>
+      <ul class="mt-4 space-y-2.5 text-[14.5px]">
+        <li><a href="/" class="hover:text-[var(--signal)]" style="color: var(--fg-muted)">Home</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class="hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div>
+      <p class="kicker">Elsewhere</p>
+      <ul class="mt-4 space-y-2.5 text-[14.5px]">
+        {
+          socials.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                class="inline-flex items-center gap-2.5 hover:text-[var(--signal)]"
+                style="color: var(--fg-muted)"
+                rel={s.href.startsWith('http') ? 'me noopener' : undefined}
+              >
+                <Icon name={s.icon} size={15} />
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href="/rss.xml" class="inline-flex items-center gap-2.5 hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+            <Icon name="rss" size={15} />
+            RSS
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t">
+    <div class="wrap flex flex-col gap-2 py-5 font-mono text-[12px] sm:flex-row sm:items-center sm:justify-between" style="color: var(--fg-muted)">
+      <p>© {year} {site.name}</p>
+      <p>Built with Astro. Hosted on GitHub Pages. No trackers, no cookies.</p>
+    </div>
+  </div>
+</footer>

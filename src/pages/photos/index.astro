@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '~/layouts/Base.astro';
+import PageHeader from '~/components/PageHeader.astro';
+import Icon from '~/components/Icon.astro';
+
+const albums = (await getCollection('photos', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.data.images[0]?.src;
+---
+
+<Base
+  title="Photos"
+  description="Above water and below it — a slowly growing collection of places I've been."
+>
+  <PageHeader
+    kicker="Photos"
+    title="Above water and below it"
+    lead="Diving, climbing, hiking, and whatever else got me outside. Shot mostly badly, kept anyway."
+  />
+
+  <div class="wrap py-14 md:py-20">
+    {
+      albums.length === 0 ? (
+        <div class="surface flex max-w-xl flex-col items-start p-8">
+          <span style="color: var(--signal)">
+            <Icon name="camera" size={26} />
+          </span>
+          <p class="mt-5 text-[17px] font-medium">No albums yet.</p>
+          <p class="mt-2 text-[15px] leading-relaxed" style="color: var(--fg-muted)">
+            {'The gallery is wired up and waiting. Drop images into '}
+            <code class="font-mono text-[13.5px]">src/assets/photos/&lt;album&gt;/</code>
+            {', add a matching markdown file in '}
+            <code class="font-mono text-[13.5px]">src/content/photos/</code>
+            {', and they appear here. '}
+            <code class="font-mono text-[13.5px]">CONTENT.md</code>
+            {' has the template.'}
+          </p>
+        </div>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {albums.map((album) => {
+            const cover = coverOf(album);
+            return (
+              <a
+                href={`/photos/${album.id}`}
+                class="surface group relative overflow-hidden transition-colors hover:border-[var(--signal)]"
+              >
+                {cover && (
+                  <div class="aspect-[4/3] overflow-hidden" style="background: var(--bg-surface-2)">
+                    <Image
+                      src={cover}
+                      alt=""
+                      widths={[400, 800]}
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="border-t p-5">
+                  <h2 class="text-[17px] font-semibold">{album.data.title}</h2>
+                  <p class="mt-1.5 font-mono text-[12px]" style="color: var(--fg-muted)">
+                    {album.data.location && `${album.data.location} · `}
+                    {album.data.images.length}{' '}
+                    {album.data.images.length === 1 ? 'photo' : 'photos'}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+</Base>

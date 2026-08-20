@@ -1,0 +1,28 @@
+---
+import Base from '~/layouts/Base.astro';
+import Icon from '~/components/Icon.astro';
+---
+
+<Base title="Not found" noindex>
+  <section class="gridlines">
+    <div class="wrap flex min-h-[60vh] flex-col items-start justify-center py-20">
+      <p class="font-mono text-[13px] uppercase tracking-[0.16em]" style="color: var(--signal)">
+        Error 404
+      </p>
+      <h1 class="mt-5 font-semibold" style="font-size: var(--text-h1)">
+        Segmentation fault (metaphorically)
+      </h1>
+      <p class="mt-5 max-w-lg text-[17px] leading-relaxed" style="color: var(--fg-muted)">
+        This page doesn't exist. Either I moved it, or something linked to an address that never
+        did. Both are my problem, not yours.
+      </p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="/" class="btn btn-primary">
+          Back home
+          <Icon name="arrow" size={16} />
+        </a>
+        <a href="/work" class="btn btn-ghost">Browse the work</a>
+      </div>
+    </div>
+  </section>
+</Base>
