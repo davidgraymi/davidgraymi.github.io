@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageHeader from '~/components/PageHeader.astro';
+import WorkCard from '~/components/WorkCard.astro';
+import CallToAction from '~/components/CallToAction.astro';
+
+const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  return a.data.order - b.data.order;
+});
+---
+
+<Base
+  title="Work"
+  description="Real-time embedded systems, applied machine learning, and side projects that got out of hand."
+>
+  <PageHeader
+    kicker="Portfolio"
+    title="Things I've built, and what each one taught me"
+    lead="Production defense software I can only describe in outline, research projects with the numbers attached, and side projects I built because something annoyed me. Sorted by how much I want you to read them."
+  />
+
+  <div class="wrap py-14 md:py-20">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {entries.map((entry) => <WorkCard entry={entry} />)}
+    </div>
+  </div>
+
+  <CallToAction
+    title="Want the version with more detail?"
+    body="A lot of the best work is easier to explain out loud than in writing. Ask me about any of it."
+  />
+</Base>

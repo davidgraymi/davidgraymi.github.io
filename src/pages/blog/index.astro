@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageHeader from '~/components/PageHeader.astro';
+import PostCard from '~/components/PostCard.astro';
+import Icon from '~/components/Icon.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Base
+  title="Writing"
+  description="Notes on real-time systems, machine learning, and the parts of engineering nobody puts in the résumé."
+>
+  <PageHeader
+    kicker="Writing"
+    title="Notes from the workbench"
+    lead="Mostly about low-level systems, machine learning that has to survive contact with reality, and the constraints that made a decision obvious in hindsight."
+  >
+    <a href="/rss.xml" class="btn btn-ghost mt-8">
+      <Icon name="rss" size={16} />
+      Subscribe via RSS
+    </a>
+  </PageHeader>
+
+  <div class="wrap py-14 md:py-20">
+    {
+      posts.length === 0 ? (
+        <p class="text-[17px]" style="color: var(--fg-muted)">
+          Nothing published yet. The first post is always the hardest.
+        </p>
+      ) : (
+        <div class="max-w-3xl border-b">
+          {posts.map((entry) => (
+            <PostCard entry={entry} />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Base>

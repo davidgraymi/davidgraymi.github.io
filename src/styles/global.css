@@ -1,0 +1,321 @@
+@import 'tailwindcss';
+
+/* Latin subsets only — the other eleven subsets Fontsource ships are never
+   downloaded by a browser here, and shipping them just bloats the build. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+   The site has one idea: an instrument panel. Near-black ground, hairline
+   rules, monospace labels, and a single amber signal colour that only ever
+   marks something you can act on.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ink: #08090b;
+  --color-surface: #101216;
+  --color-surface-2: #171a1f;
+  --color-line: #23262c;
+  --color-fg: #eceef0;
+  --color-muted: #9198a1;
+  --color-signal: #ffb020;
+  --color-signal-ink: #1a1200;
+
+  --radius-card: 0.75rem;
+
+  --text-display: clamp(2.5rem, 1.45rem + 4.2vw, 4.75rem);
+  --text-h1: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
+  --text-h2: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+}
+
+/* Light theme is the default palette so that a viewer with no JS and no
+   preference still gets a readable page. */
+:root {
+  color-scheme: light;
+  --bg: #faf9f7;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #f2f0ec;
+  --rule: #e2ded6;
+  --fg: #16181c;
+  --fg-muted: #5f6570;
+  --signal: #a8560a;
+  --signal-soft: #fdf1de;
+  --signal-contrast: #ffffff;
+  --grid: rgba(22, 24, 28, 0.055);
+  --shadow-card: 0 1px 2px rgba(16, 18, 22, 0.05), 0 8px 24px -16px rgba(16, 18, 22, 0.25);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #08090b;
+  --bg-surface: #101216;
+  --bg-surface-2: #171a1f;
+  --rule: #23262c;
+  --fg: #eceef0;
+  --fg-muted: #969da7;
+  --signal: #ffb020;
+  --signal-soft: rgba(255, 176, 32, 0.1);
+  --signal-contrast: #1a1200;
+  --grid: rgba(255, 255, 255, 0.045);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -20px rgba(0, 0, 0, 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #08090b;
+    --bg-surface: #101216;
+    --bg-surface-2: #171a1f;
+    --rule: #23262c;
+    --fg: #eceef0;
+    --fg-muted: #969da7;
+    --signal: #ffb020;
+    --signal-soft: rgba(255, 176, 32, 0.1);
+    --signal-contrast: #1a1200;
+    --grid: rgba(255, 255, 255, 0.045);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -20px rgba(0, 0, 0, 0.9);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--rule);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--signal);
+    color: var(--signal-contrast);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page gutter. Every section uses this so the vertical rules line up. */
+  .wrap {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wrap { padding-inline: 2rem; }
+  }
+
+  /* The small monospace kicker that labels every section. */
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .kicker::before {
+    content: '';
+    width: 1.75rem;
+    height: 1px;
+    background: var(--signal);
+    flex: none;
+  }
+
+  .surface {
+    background: var(--bg-surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.875rem;
+    padding-inline: 1.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    font-weight: 560;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px); }
+
+  .btn-primary {
+    background: var(--signal);
+    color: var(--signal-contrast);
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+
+  .btn-ghost {
+    border-color: var(--rule);
+    background: var(--bg-surface);
+    color: var(--fg);
+  }
+  .btn-ghost:hover { border-color: var(--signal); color: var(--signal); }
+
+  /* Faint engineering graph paper, used behind the hero only. */
+  .gridlines {
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 3.5rem 3.5rem;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--signal) 55%, transparent);
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1.5px;
+  }
+  .link-underline:hover { text-decoration-color: var(--signal); }
+}
+
+/* --------------------------------------------------------------------------
+   Long-form article styling (blog posts and case studies).
+-------------------------------------------------------------------------- */
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--fg);
+}
+.prose > * + * { margin-top: 1.25em; }
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 620;
+  margin-top: 2.5em;
+  margin-bottom: 0.2em;
+  scroll-margin-top: 6rem;
+}
+.prose h3 {
+  font-size: 1.175rem;
+  font-weight: 620;
+  margin-top: 2em;
+  margin-bottom: 0.1em;
+  scroll-margin-top: 6rem;
+}
+.prose a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--signal) 60%, transparent);
+  text-underline-offset: 0.2em;
+}
+.prose a:hover { color: var(--signal); }
+.prose strong { font-weight: 620; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose li::marker { color: var(--signal); }
+.prose li + li { margin-top: 0.4em; }
+.prose blockquote {
+  border-left: 2px solid var(--signal);
+  padding-left: 1.1em;
+  color: var(--fg-muted);
+  font-style: italic;
+}
+.prose img, .prose video {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--rule);
+}
+.prose hr { border-top: 1px solid var(--rule); margin-block: 2.5em; }
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--rule);
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+.prose table { width: 100%; font-size: 0.9375rem; border-collapse: collapse; }
+.prose th, .prose td { border: 1px solid var(--rule); padding: 0.5rem 0.75rem; text-align: left; }
+
+/* Shiki emits both themes; show the one that matches. */
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .astro-code,
+  :root:not([data-theme='light']) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}

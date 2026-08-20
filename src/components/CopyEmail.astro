@@ -1,0 +1,46 @@
+---
+import { site } from '~/site.config';
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={['btn btn-ghost group', className]}
+  data-copy-email={site.email}
+  hidden
+>
+  <span class="copy-idle inline-flex items-center gap-2">
+    <Icon name="copy" size={16} />
+    Copy address
+  </span>
+  <span class="copy-done inline-flex items-center gap-2" hidden style="color: var(--signal)">
+    <Icon name="check" size={16} />
+    Copied
+  </span>
+</button>
+
+<script>
+  // Only offered when the browser can actually do it.
+  if (navigator.clipboard) {
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach((btn) => {
+      btn.hidden = false;
+      btn.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(btn.dataset.copyEmail ?? '');
+        const idle = btn.querySelector<HTMLElement>('.copy-idle');
+        const done = btn.querySelector<HTMLElement>('.copy-done');
+        if (!idle || !done) return;
+        idle.hidden = true;
+        done.hidden = false;
+        setTimeout(() => {
+          idle.hidden = false;
+          done.hidden = true;
+        }, 1800);
+      });
+    });
+  }
+</script>

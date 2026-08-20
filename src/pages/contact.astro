@@ -1,0 +1,127 @@
+---
+import Base from '~/layouts/Base.astro';
+import Icon from '~/components/Icon.astro';
+import CopyEmail from '~/components/CopyEmail.astro';
+import { site, socials } from '~/site.config';
+
+const goodFits = [
+  'Embedded, real-time or bare-metal work that has to be right the first time',
+  'Machine learning that needs to survive contact with production, not just a benchmark',
+  'Build systems, CI and internal tooling that everybody wants and nobody has time for',
+  'A second opinion on an architecture before you commit to it',
+];
+
+const badFits = [
+  'Unpaid "quick chats" that are actually a job interview',
+  'Anything that needs me to be a full-time founder tomorrow',
+  'Cold recruiter templates with my name find-and-replaced in',
+];
+---
+
+<Base
+  title="Contact"
+  description="The fastest way to reach me is email. No form, no funnel, no autoresponder."
+>
+  <section class="gridlines border-b">
+    <div class="wrap py-16 md:py-24">
+      <div class="max-w-2xl">
+        <p class="kicker">Contact</p>
+        <h1 class="mt-5 font-semibold" style="font-size: var(--text-h1)">
+          Email me. It goes straight to me.
+        </h1>
+        <p class="mt-5 text-[18px] leading-relaxed" style="color: var(--fg-muted)">
+          No contact form, no funnel, no autoresponder pretending to be a person. One address, read
+          by one human, usually answered within a day or two.
+        </p>
+
+        <a
+          href={`mailto:${site.email}`}
+          class="link-underline mt-9 inline-block font-mono text-[clamp(1.1rem,0.8rem+1.6vw,1.9rem)] font-medium"
+        >
+          {site.email}
+        </a>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <a href={`mailto:${site.email}`} class="btn btn-primary">
+            <Icon name="mail" size={17} />
+            Open my mail app
+          </a>
+          <CopyEmail />
+        </div>
+
+        <p class="mt-8 font-mono text-[12.5px]" style="color: var(--fg-muted)">
+          {site.location} · Central Time · {site.availabilityNote}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-b">
+    <div class="wrap grid gap-12 py-16 md:grid-cols-2 md:gap-16 md:py-20">
+      <div>
+        <h2 class="text-[20px] font-semibold">Good reasons to write</h2>
+        <ul class="mt-6 space-y-4">
+          {
+            goodFits.map((item) => (
+              <li class="flex gap-3.5 text-[15.5px] leading-relaxed">
+                <span class="mt-0.5 shrink-0" style="color: var(--signal)">
+                  <Icon name="check" size={17} />
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-[20px] font-semibold">Honestly, probably not</h2>
+        <ul class="mt-6 space-y-4">
+          {
+            badFits.map((item) => (
+              <li class="flex gap-3.5 text-[15.5px] leading-relaxed" style="color: var(--fg-muted)">
+                <span class="mt-0.5 shrink-0">
+                  <Icon name="close" size={17} />
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-6 text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
+          If you're not sure which list you're on, write anyway. I'd rather read a message that
+          turns out to be a no than miss the one that wasn't.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap py-16 md:py-20">
+      <p class="kicker">Elsewhere on the internet</p>
+      <div class="mt-8 grid gap-px md:grid-cols-2" style="background: var(--rule)">
+        {
+          socials.map((s) => (
+            <a
+              href={s.href}
+              class="group flex items-center gap-4 p-6 transition-colors hover:text-[var(--signal)]"
+              style="background: var(--bg)"
+              rel={s.href.startsWith('http') ? 'me noopener' : undefined}
+            >
+              <Icon name={s.icon} size={20} />
+              <span>
+                <span class="block text-[15.5px] font-medium">{s.label}</span>
+                <span class="block font-mono text-[12.5px]" style="color: var(--fg-muted)">
+                  {s.handle}
+                </span>
+              </span>
+              <span class="ml-auto opacity-0 transition-opacity group-hover:opacity-100">
+                <Icon name="arrowUpRight" size={17} />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
