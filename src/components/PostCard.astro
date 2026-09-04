@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import Icon from './Icon.astro';
 
 interface Props {
   entry: CollectionEntry<'blog'>;
@@ -8,28 +9,35 @@ interface Props {
 const { entry } = Astro.props;
 ---
 
-<article class="group relative border-t py-7">
+<article class="group relative rounded-2xl border border-transparent p-5 transition-all hover:border-[var(--rule)] hover:bg-[var(--bg-surface)] hover:shadow-lg">
   <div class="flex flex-col gap-2 md:flex-row md:items-baseline md:gap-8">
     <FormattedDate
       date={entry.data.pubDate}
       class="font-mono text-[12px] uppercase tracking-wider md:w-32 md:shrink-0"
     />
-    <div class="min-w-0">
-      <h3 class="text-[19px] font-semibold leading-snug transition-colors group-hover:text-[var(--signal)]">
-        <a href={`/blog/${entry.id}`} class="after:absolute after:inset-0 after:content-['']">
-          {entry.data.title}
-        </a>
-      </h3>
+    <div class="min-w-0 flex-1">
+      <div class="flex items-start justify-between gap-4">
+        <h3 class="text-[19.5px] font-semibold leading-snug transition-colors group-hover:text-[var(--signal)]">
+          <a href={`/blog/${entry.id}`} class="after:absolute after:inset-0 after:content-['']">
+            {entry.data.title}
+          </a>
+        </h3>
+        <span class="opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100" style="color: var(--signal)">
+          <Icon name="arrow" size={17} />
+        </span>
+      </div>
       <p class="mt-2 text-[15px] leading-relaxed" style="color: var(--fg-muted)">
         {entry.data.description}
       </p>
       {
         entry.data.tags.length > 0 && (
-          <p class="mt-3 flex flex-wrap gap-2 font-mono text-[11.5px]" style="color: var(--fg-muted)">
+          <div class="mt-3.5 flex flex-wrap gap-1.5 font-mono text-[11px]" style="color: var(--fg-muted)">
             {entry.data.tags.map((tag) => (
-              <span>#{tag}</span>
+              <span class="rounded border px-2 py-0.5" style="border-color: var(--rule); background: var(--bg-surface-2);">
+                #{tag}
+              </span>
             ))}
-          </p>
+          </div>
         )
       }
     </div>

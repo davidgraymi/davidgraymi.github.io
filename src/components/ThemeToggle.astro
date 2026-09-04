@@ -5,12 +5,13 @@ import Icon from './Icon.astro';
 <button
   id="theme-toggle"
   type="button"
-  class="grid h-9 w-9 place-items-center rounded-lg border transition-colors hover:text-[var(--signal)]"
+  class="grid h-8.5 w-8.5 place-items-center rounded-full border transition-all hover:border-[var(--rule-strong)] hover:text-[var(--signal)]"
+  style="border-color: var(--rule); background: var(--bg-surface-2);"
   aria-label="Switch between light and dark"
   title="Switch between light and dark"
 >
-  <span class="icon-when-dark"><Icon name="sun" size={16} /></span>
-  <span class="icon-when-light"><Icon name="moon" size={16} /></span>
+  <span class="icon-when-dark"><Icon name="sun" size={15} /></span>
+  <span class="icon-when-light"><Icon name="moon" size={15} /></span>
 </button>
 
 <style>

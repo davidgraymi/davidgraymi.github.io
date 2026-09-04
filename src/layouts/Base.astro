@@ -2,6 +2,8 @@
 import BaseHead from '~/components/BaseHead.astro';
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
+import AuroraBackground from '~/components/AuroraBackground.astro';
+import CommandPalette from '~/components/CommandPalette.astro';
 import '~/styles/global.css';
 
 interface Props {
@@ -28,7 +30,8 @@ const props = Astro.props;
       } catch (e) {}
     </script>
   </head>
-  <body class="flex min-h-dvh flex-col">
+  <body class="relative flex min-h-dvh flex-col">
+    <AuroraBackground />
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:px-4 focus:py-2"
@@ -41,5 +44,24 @@ const props = Astro.props;
       <slot />
     </main>
     <Footer />
+    <CommandPalette />
+
+    <script>
+      // High-performance pointer tracking for Linear-style spotlight cards
+      function initSpotlights() {
+        document.querySelectorAll('.spotlight-card').forEach((card) => {
+          if ((card as any).__hasSpotlight) return;
+          (card as any).__hasSpotlight = true;
+          card.addEventListener('pointermove', (e) => {
+            const rect = (card as HTMLElement).getBoundingClientRect();
+            (card as HTMLElement).style.setProperty('--mouse-x', `${(e as PointerEvent).clientX - rect.left}px`);
+            (card as HTMLElement).style.setProperty('--mouse-y', `${(e as PointerEvent).clientY - rect.top}px`);
+          });
+        });
+      }
+
+      initSpotlights();
+      document.addEventListener('astro:page-load', initSpotlights);
+    </script>
   </body>
 </html>

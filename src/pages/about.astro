@@ -15,11 +15,11 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
   title="About"
   description="Software engineer in St. Louis. Real-time embedded systems by day, machine learning and a document platform nobody asked for by night."
 >
-  <section class="gridlines border-b">
-    <div class="wrap grid items-start gap-10 py-16 md:grid-cols-[1.5fr_1fr] md:gap-16 md:py-20">
+  <section class="gridlines border-b" style="border-color: var(--rule);">
+    <div class="wrap grid items-start gap-10 py-16 md:grid-cols-[1.5fr_1fr] md:gap-16 md:py-24">
       <div>
         <p class="kicker">About</p>
-        <h1 class="mt-5 font-semibold" style="font-size: var(--text-h1)">
+        <h1 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h1)">
           Hi, I'm David. I got into this to find out how the magic worked.
         </h1>
         <div class="mt-7 space-y-5 text-[17.5px] leading-relaxed" style="color: var(--fg-muted)">
@@ -52,7 +52,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
       </div>
 
       <div class="w-full">
-        <div class="surface overflow-hidden">
+        <div class="glass-panel overflow-hidden rounded-3xl" style="background: var(--bg-surface); border-color: var(--rule);">
           <Image
             src={avatar}
             alt="David Gray"
@@ -63,16 +63,16 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           />
         </div>
 
-        <dl class="mt-6 space-y-4 font-mono text-[13px]">
-          <div class="flex justify-between gap-4 border-b pb-3">
+        <dl class="glass-panel mt-6 space-y-3.5 rounded-2xl p-5 font-mono text-[13px]" style="background: var(--bg-surface); border-color: var(--rule);">
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
             <dt style="color: var(--fg-muted)">Based in</dt>
             <dd class="text-right">{site.location}</dd>
           </div>
-          <div class="flex justify-between gap-4 border-b pb-3">
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
             <dt style="color: var(--fg-muted)">Studying</dt>
-            <dd class="text-right">M.S. CS, UIUC</dd>
+            <dd class="text-right" style="color: var(--signal)">M.S. CS, UIUC</dd>
           </div>
-          <div class="flex justify-between gap-4 border-b pb-3">
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
             <dt style="color: var(--fg-muted)">Language</dt>
             <dd class="text-right">English (native)</dd>
           </div>
@@ -82,12 +82,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           </div>
         </dl>
 
-        <div class="mt-7 flex flex-wrap gap-3">
+        <div class="mt-6 flex flex-wrap gap-2.5">
           {
             socials.map((s) => (
               <a
                 href={s.href}
-                class="btn btn-ghost h-10 px-3.5 text-[13.5px]"
+                class="btn btn-ghost h-9.5 rounded-full px-4 text-[13px]"
                 rel={s.href.startsWith('http') ? 'me noopener' : undefined}
               >
                 <Icon name={s.icon} size={15} />
@@ -102,13 +102,13 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
   {/* ------------------------------------------------------------ experience */}
   <Section kicker="Experience" title="Where I've worked" alt>
-    <div class="mt-12 space-y-px" style="background: var(--rule)">
+    <div class="mt-12 flex flex-col gap-4">
       {
         roles.map((role) => (
-          <div class="grid gap-5 p-7 md:grid-cols-[1fr_2fr] md:gap-10" style="background: var(--bg)">
+          <div class="spotlight-card grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
             <div>
-              <h3 class="text-[17px] font-semibold leading-snug">{role.title}</h3>
-              <p class="mt-1 text-[15px]" style="color: var(--signal)">
+              <h3 class="text-[18px] font-semibold leading-snug">{role.title}</h3>
+              <p class="mt-1.5 font-medium text-[15px]" style="color: var(--signal)">
                 {role.org}
               </p>
               <p class="mt-2 font-mono text-[12px]" style="color: var(--fg-muted)">
@@ -117,10 +117,10 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
             </div>
             <div>
               <p class="text-[15.5px] leading-relaxed">{role.summary}</p>
-              <ul class="mt-4 space-y-2">
+              <ul class="mt-4 space-y-2.5">
                 {role.points.map((point) => (
                   <li class="flex gap-3 text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
-                    <span class="mt-2 h-1 w-1 shrink-0 rounded-full" style="background: var(--signal)" />
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--signal)" />
                     {point}
                   </li>
                 ))}
@@ -136,16 +136,16 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
   <Section kicker="Background">
     <div class="grid gap-12 md:grid-cols-2 md:gap-16">
       <div>
-        <h2 class="text-[20px] font-semibold">Education</h2>
-        <div class="mt-6 space-y-6">
+        <h2 class="text-[21px] font-semibold">Education</h2>
+        <div class="mt-6 space-y-5">
           {
             education.map((item) => (
-              <div class="border-l-2 pl-5" style="border-color: var(--signal)">
-                <p class="text-[16px] font-medium">{item.degree}</p>
+              <div class="glass-panel rounded-2xl p-6 transition-all hover:border-[var(--rule-strong)]" style="border-left: 3px solid var(--signal);">
+                <p class="text-[16.5px] font-semibold">{item.degree}</p>
                 <p class="mt-1 text-[15px]" style="color: var(--fg-muted)">
                   {item.school}
                 </p>
-                <p class="mt-1.5 font-mono text-[12px]" style="color: var(--fg-muted)">
+                <p class="mt-2 font-mono text-[12px]" style="color: var(--fg-muted)">
                   {item.period}
                   {item.note && ` · ${item.note}`}
                 </p>
@@ -156,7 +156,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
       </div>
 
       <div>
-        <h2 class="text-[20px] font-semibold">Tools I reach for</h2>
+        <h2 class="text-[21px] font-semibold">Tools I reach for</h2>
         <div class="mt-6 space-y-6">
           {
             skills.map((group) => (
@@ -164,7 +164,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
                 <p class="kicker">{group.group}</p>
                 <div class="mt-3 flex flex-wrap gap-2">
                   {group.items.map((item) => (
-                    <span class="rounded-md border px-2.5 py-1.5 font-mono text-[12px]">{item}</span>
+                    <span
+                      class="rounded-lg border px-3 py-1.5 font-mono text-[12px] transition-all hover:border-[var(--signal)] hover:text-[var(--signal)]"
+                      style="background: var(--bg-surface); border-color: var(--rule);"
+                    >
+                      {item}
+                    </span>
                   ))}
                 </div>
               </div>

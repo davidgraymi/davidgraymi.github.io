@@ -8,20 +8,32 @@ interface Props {
 }
 const { entry } = Astro.props;
 const { title, blurb, kind, year, stack, highlight, cover, coverAlt } = entry.data;
+
+// Categorization helper for filtering
+let category = 'tools';
+const lower = (kind + ' ' + stack.join(' ') + ' ' + title).toLowerCase();
+if (lower.includes('real-time') || lower.includes('bare metal') || lower.includes('rtos') || lower.includes('kernel') || lower.includes('ada')) {
+  category = 'embedded';
+} else if (lower.includes('ml') || lower.includes('ai') || lower.includes('gesture') || lower.includes('classifier') || lower.includes('rl') || lower.includes('id3') || lower.includes('knn')) {
+  category = 'ai';
+}
 ---
 
 <article
-  class="surface group relative flex flex-col overflow-hidden transition-colors hover:border-[var(--signal)]"
+  class="spotlight-card group relative flex flex-col"
+  data-category={category}
+  data-kind={kind.toLowerCase()}
+  data-stack={stack.join(' ').toLowerCase()}
 >
   {
     cover && (
-      <div class="aspect-[16/9] overflow-hidden border-b" style="background: var(--bg-surface-2)">
+      <div class="aspect-[16/9] overflow-hidden border-b" style="border-color: var(--rule); background: var(--bg-surface-2)">
         <Image
           src={cover}
           alt={coverAlt}
           widths={[480, 800]}
           sizes="(min-width: 768px) 40vw, 92vw"
-          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           loading="lazy"
         />
       </div>
@@ -29,13 +41,20 @@ const { title, blurb, kind, year, stack, highlight, cover, coverAlt } = entry.da
   }
 
   <div class="flex flex-1 flex-col p-6">
-    <div class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]" style="color: var(--fg-muted)">
-      <span>{kind}</span>
-      <span aria-hidden="true">·</span>
-      <span>{year}</span>
+    <div class="flex items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.14em]" style="color: var(--fg-muted)">
+      <div class="flex items-center gap-2">
+        <span>{kind}</span>
+        <span aria-hidden="true" class="opacity-50">·</span>
+        <span>{year}</span>
+      </div>
+      {entry.id === 'wordlet' && (
+        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold" style="background: var(--signal-soft); color: var(--signal);">
+          Playable
+        </span>
+      )}
     </div>
 
-    <h3 class="mt-3 text-[19px] font-semibold leading-snug">
+    <h3 class="mt-3 text-[19.5px] font-semibold leading-snug transition-colors group-hover:text-[var(--signal)]">
       <a href={`/work/${entry.id}`} class="after:absolute after:inset-0 after:content-['']">
         {title}
       </a>
@@ -45,24 +64,25 @@ const { title, blurb, kind, year, stack, highlight, cover, coverAlt } = entry.da
 
     {
       highlight && (
-        <p class="mt-4 border-l-2 pl-3 font-mono text-[12.5px]" style="border-color: var(--signal); color: var(--fg)">
-          {highlight}
-        </p>
+        <div class="mt-4 flex items-center gap-2.5 rounded-lg border px-3 py-2 font-mono text-[12.5px]" style="background: var(--bg-surface-2); border-color: var(--rule); color: var(--fg);">
+          <span class="h-1.5 w-1.5 rounded-full" style="background: var(--signal); box-shadow: 0 0 6px var(--signal);" />
+          <span class="truncate">{highlight}</span>
+        </div>
       )
     }
 
-    <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-5">
+    <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-6">
       {
         stack.slice(0, 4).map((tech) => (
           <span
-            class="rounded-md border px-2 py-1 font-mono text-[11px]"
-            style="color: var(--fg-muted)"
+            class="rounded-md border px-2 py-0.75 font-mono text-[11px] transition-colors group-hover:border-[var(--rule-strong)]"
+            style="background: var(--bg-surface-2); border-color: var(--rule); color: var(--fg-muted)"
           >
             {tech}
           </span>
         ))
       }
-      <span class="ml-auto transition-colors group-hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+      <span class="ml-auto transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y--0.5 group-hover:text-[var(--signal)]" style="color: var(--fg-muted)">
         <Icon name="arrowUpRight" size={17} />
       </span>
     </div>

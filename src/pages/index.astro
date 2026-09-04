@@ -22,45 +22,59 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <Base>
   {/* ---------------------------------------------------------------- hero */}
-  <section class="gridlines relative overflow-hidden border-b">
+  <section class="gridlines relative overflow-hidden border-b" style="border-color: var(--rule);">
+    {/* Subtle top horizon glow */}
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-px"
-      style="background: linear-gradient(90deg, transparent, var(--signal), transparent); opacity: 0.6"
+      style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--signal) 50%, transparent) 50%, transparent 95%); opacity: 0.8"
     >
     </div>
 
-    <div class="wrap py-20 md:py-28">
+    <div class="wrap py-20 md:py-32">
       {
         site.availableForWork && (
-          <p class="inline-flex items-center gap-2.5 rounded-full border px-3 py-1.5 font-mono text-[11.5px] uppercase tracking-[0.12em]" style="background: var(--bg-surface)">
-            <span class="relative flex h-1.5 w-1.5">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-70" style="background: var(--signal)" />
-              <span class="relative inline-flex h-1.5 w-1.5 rounded-full" style="background: var(--signal)" />
-            </span>
-            {site.availabilityNote}
-          </p>
+          <div class="inline-flex">
+            <p class="glow-pill">
+              <span class="relative flex h-2 w-2">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style="background: var(--signal)" />
+                <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--signal)" />
+              </span>
+              <span style="color: var(--fg)">{site.availabilityNote}</span>
+            </p>
+          </div>
         )
       }
 
-      <h1 class="mt-8 max-w-4xl font-semibold leading-[1.02]" style="font-size: var(--text-display)">
-        I build software for <span style="color: var(--signal)">systems that can't fail.</span>
+      <h1 class="mt-8 max-w-4xl font-semibold leading-[1.04] tracking-tight" style="font-size: var(--text-display)">
+        I build software for <span class="shimmer-text">systems that can't fail.</span>
       </h1>
 
-      <p class="mt-7 max-w-2xl text-[18px] leading-relaxed md:text-[19.5px]" style="color: var(--fg-muted)">
+      <p class="mt-7 max-w-2xl text-[18px] leading-relaxed md:text-[20px]" style="color: var(--fg-muted)">
         Four years of real-time embedded engineering at Boeing — kernels, schedulers, anti-tamper,
         code that ships once and has to be right. Plus a second life in applied machine learning,
         and a master's at Illinois to make it rigorous.
       </p>
 
-      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+      <div class="mt-10 flex flex-wrap items-center gap-3.5">
         <a href="/contact" class="btn btn-primary">
-          Hire me
+          Get in touch
           <Icon name="arrow" size={17} />
         </a>
-        <a href="/work" class="btn btn-ghost">See the work</a>
+        <a href="/work" class="btn btn-ghost">
+          Explore work
+        </a>
+        <button
+          type="button"
+          onclick="if(window.openCommandPalette) window.openCommandPalette()"
+          class="btn btn-ghost font-mono text-[13px]"
+          title="Open Command Menu (⌘K)"
+        >
+          <Icon name="globe" size={15} />
+          <span>Press <kbd class="rounded border px-1.5 py-0.5 text-[11px]" style="border-color: var(--rule);">⌘K</kbd></span>
+        </button>
       </div>
 
-      <ul class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <ul class="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
         {
           socials.slice(0, 3).map((s) => (
             <li>
@@ -77,26 +91,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           ))
         }
       </ul>
-    </div>
 
-    {/* telemetry strip */}
-    <div class="border-t" style="background: var(--bg-surface)">
-      <div class="wrap grid grid-cols-2 md:grid-cols-4">
+      {/* Floating telemetry metrics capsules */}
+      <div class="mt-16 grid grid-cols-2 gap-3.5 md:grid-cols-4 md:gap-4">
         {
-          stats.map((stat, i) => (
+          stats.map((stat) => (
             <div
-              class:list={[
-                'py-6 pr-5 md:py-7',
-                i % 2 === 1 && 'border-l pl-5',
-                i >= 2 && 'border-t pt-6',
-                'md:border-t-0 md:pt-7',
-                i >= 1 && 'md:border-l md:pl-5',
-              ]}
+              class="glass-panel p-5.5 rounded-2xl transition-all hover:border-[var(--rule-strong)]"
+              style="background: var(--bg-surface); border-color: var(--rule);"
             >
-              <p class="font-mono text-[24px] font-semibold md:text-[27px]" style="color: var(--signal)">
+              <p class="font-mono text-[25px] font-bold tracking-tight md:text-[28px]" style="color: var(--signal)">
                 {stat.value}
               </p>
-              <p class="mt-1 text-[13px] leading-snug" style="color: var(--fg-muted)">
+              <p class="mt-1.5 text-[13px] leading-snug" style="color: var(--fg-muted)">
                 {stat.label}
               </p>
             </div>
@@ -112,17 +119,22 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     title="Three kinds of problem I'm genuinely good at"
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
   >
-    <div class="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-card)] border md:grid-cols-3" style="background: var(--rule)">
+    <div class="mt-12 grid gap-5 md:grid-cols-3">
       {
         services.map((service, i) => (
-          <div class="p-7" style="background: var(--bg)">
-            <p class="font-mono text-[12px]" style="color: var(--signal)">
-              {String(i + 1).padStart(2, '0')}
-            </p>
-            <h3 class="mt-4 text-[18px] font-semibold">{service.title}</h3>
-            <p class="mt-3 text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
-              {service.body}
-            </p>
+          <div class="spotlight-card flex flex-col justify-between p-7 md:p-8">
+            <div>
+              <span
+                class="inline-flex items-center justify-center rounded-lg border px-2.5 py-1 font-mono text-[12px] font-medium"
+                style="background: var(--bg-surface-2); border-color: var(--rule); color: var(--signal);"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-5 text-[19px] font-semibold leading-snug">{service.title}</h3>
+              <p class="mt-3 text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
+                {service.body}
+              </p>
+            </div>
           </div>
         ))
       }
@@ -139,16 +151,21 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <div class="mt-12 grid gap-6 md:grid-cols-3">
       {featured.map((entry) => <WorkCard entry={entry} />)}
     </div>
-    <a href="/work" class="btn btn-ghost mt-10">
-      All projects
-      <Icon name="arrow" size={16} />
-    </a>
+    <div class="mt-10 flex items-center gap-4">
+      <a href="/work" class="btn btn-ghost">
+        All projects
+        <Icon name="arrow" size={16} />
+      </a>
+      <a href="/wordlet" class="btn btn-ghost font-mono text-[13px]">
+        Play Wordlet in browser →
+      </a>
+    </div>
   </Section>
 
   {/* --------------------------------------------------------------- about */}
   <Section kicker="Who you'd be working with">
     <div class="mt-12 grid items-start gap-10 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-14">
-      <div class="surface mx-auto w-full max-w-xs overflow-hidden md:mx-0 md:max-w-none">
+      <div class="glass-panel mx-auto w-full max-w-xs overflow-hidden rounded-3xl md:mx-0 md:max-w-none">
         <Image
           src={avatar}
           alt="David Gray"
@@ -157,14 +174,14 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           class="aspect-square w-full object-cover"
           loading="lazy"
         />
-        <div class="flex items-center justify-between gap-3 border-t px-4 py-3 font-mono text-[11.5px]" style="color: var(--fg-muted)">
+        <div class="flex items-center justify-between gap-3 border-t px-4.5 py-3.5 font-mono text-[11.5px]" style="border-color: var(--rule); color: var(--fg-muted)">
           <span>{site.location}</span>
-          <span>M.S. CS @ UIUC</span>
+          <span style="color: var(--signal)">M.S. CS @ UIUC</span>
         </div>
       </div>
 
       <div>
-        <h2 class="font-semibold" style="font-size: var(--text-h2)">
+        <h2 class="font-semibold leading-tight" style="font-size: var(--text-h2)">
           Engineer. Scientist.<br />Occasionally underwater.
         </h2>
         <div class="mt-6 space-y-5 text-[17px] leading-relaxed" style="color: var(--fg-muted)">
@@ -191,7 +208,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   {
     posts.length > 0 && (
       <Section kicker="Writing" title="Notes from the workbench" alt>
-        <div class="mt-10 border-b">
+        <div class="mt-10 flex flex-col gap-2">
           {posts.map((entry) => (
             <PostCard entry={entry} />
           ))}
