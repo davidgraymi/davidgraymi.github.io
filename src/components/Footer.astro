@@ -5,10 +5,10 @@ import Icon from './Icon.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-24 border-t" style="background: var(--bg-surface)">
+<footer class="mt-24 border-t" style="border-color: var(--rule); background: var(--bg-surface)">
   <div class="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
     <div>
-      <p class="text-[15px] font-semibold">{site.name}</p>
+      <p class="text-[15.5px] font-semibold tracking-tight">{site.name}</p>
       <p class="mt-2 max-w-xs text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
         {site.role}. Based in {site.location}.
       </p>
@@ -20,11 +20,11 @@ const year = new Date().getFullYear();
     <nav aria-label="Footer">
       <p class="kicker">Pages</p>
       <ul class="mt-4 space-y-2.5 text-[14.5px]">
-        <li><a href="/" class="hover:text-[var(--signal)]" style="color: var(--fg-muted)">Home</a></li>
+        <li><a href="/" class="transition-colors hover:text-[var(--signal)]" style="color: var(--fg-muted)">Home</a></li>
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} class="hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+              <a href={item.href} class="transition-colors hover:text-[var(--signal)]" style="color: var(--fg-muted)">
                 {item.label}
               </a>
             </li>
@@ -41,7 +41,7 @@ const year = new Date().getFullYear();
             <li>
               <a
                 href={s.href}
-                class="inline-flex items-center gap-2.5 hover:text-[var(--signal)]"
+                class="inline-flex items-center gap-2.5 transition-colors hover:text-[var(--signal)]"
                 style="color: var(--fg-muted)"
                 rel={s.href.startsWith('http') ? 'me noopener' : undefined}
               >
@@ -52,19 +52,25 @@ const year = new Date().getFullYear();
           ))
         }
         <li>
-          <a href="/rss.xml" class="inline-flex items-center gap-2.5 hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+          <a href="/rss.xml" class="inline-flex items-center gap-2.5 transition-colors hover:text-[var(--signal)]" style="color: var(--fg-muted)">
             <Icon name="rss" size={15} />
-            RSS
+            RSS Feed
           </a>
         </li>
       </ul>
     </div>
   </div>
 
-  <div class="border-t">
+  <div class="border-t" style="border-color: var(--rule);">
     <div class="wrap flex flex-col gap-2 py-5 font-mono text-[12px] sm:flex-row sm:items-center sm:justify-between" style="color: var(--fg-muted)">
-      <p>© {year} {site.name}</p>
-      <p>Built with Astro. Hosted on GitHub Pages. No trackers, no cookies.</p>
+      <p>© {year} {site.name} · Cyber-minimalist design</p>
+      <button
+        type="button"
+        onclick="if(window.openCommandPalette) window.openCommandPalette()"
+        class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--signal)] text-left"
+      >
+        <span>Press <kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--rule); background: var(--bg-surface-2);">⌘K</kbd> for command menu</span>
+      </button>
     </div>
   </div>
 </footer>

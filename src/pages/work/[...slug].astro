@@ -74,7 +74,7 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
             alt={coverAlt}
             widths={[720, 1200, 1600]}
             sizes="(min-width: 1024px) 72rem, 100vw"
-            class="surface w-full"
+            class="glass-panel w-full overflow-hidden rounded-3xl"
           />
         </div>
       )
@@ -89,9 +89,9 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
         {
           highlight && (
             <aside class="lg:pt-2">
-              <div class="surface p-6" style="background: var(--signal-soft)">
-                <p class="kicker">The one number</p>
-                <p class="mt-4 text-[17px] font-medium leading-snug">{highlight}</p>
+              <div class="glass-panel rounded-2xl p-6" style="background: var(--bg-surface); border-left: 3px solid var(--signal);">
+                <p class="kicker">The key metric</p>
+                <p class="mt-4 font-mono text-[19px] font-bold leading-snug" style="color: var(--signal);">{highlight}</p>
               </div>
             </aside>
           )

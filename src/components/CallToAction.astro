@@ -13,14 +13,24 @@ const {
 } = Astro.props;
 ---
 
-<section class="border-t" style="background: var(--bg-surface)">
-  <div class="wrap py-16 md:py-24">
-    <div class="mx-auto max-w-2xl text-center">
-      <p class="kicker justify-center">Let's talk</p>
-      <h2 class="mt-5 font-semibold" style="font-size: var(--text-h2)">{title}</h2>
+<section class="border-t py-20 md:py-28" style="border-color: var(--rule);">
+  <div class="wrap">
+    <div
+      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-3xl p-8 text-center sm:p-14"
+      style="background: var(--bg-surface); border-color: var(--rule);"
+    >
+      {/* Background glow accent */}
+      <div
+        class="pointer-events-none absolute -top-24 left-1/2 -z-10 h-48 w-96 -translate-x-1/2 rounded-full opacity-35 blur-3xl"
+        style="background: var(--signal-glow);"
+      />
+
+      <p class="kicker justify-center">Let's connect</p>
+      <h2 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h2)">{title}</h2>
       <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: var(--fg-muted)">
         {body}
       </p>
+
       <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a href={`mailto:${site.email}`} class="btn btn-primary w-full sm:w-auto">
           <Icon name="mail" size={17} />
@@ -28,8 +38,9 @@ const {
         </a>
         <CopyEmail class="w-full sm:w-auto" />
       </div>
+
       <p class="mt-6 font-mono text-[12.5px]" style="color: var(--fg-muted)">
-        Usually replies within a day or two · {site.location}
+        Usually replies within 24 hours · {site.location}
       </p>
     </div>
   </div>

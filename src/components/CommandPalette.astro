@@ -1,0 +1,320 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+
+const projects = (await getCollection('work', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    id: p.id,
+    title: p.data.title,
+    subtitle: p.data.blurb,
+    href: `/work/${p.id}`,
+    category: 'Projects',
+    badge: p.data.kind,
+    stack: p.data.stack.join(' '),
+  }));
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((b) => ({
+    id: b.id,
+    title: b.data.title,
+    subtitle: b.data.description,
+    href: `/blog/${b.id}`,
+    category: 'Writing',
+    badge: 'Post',
+    stack: b.data.tags.join(' '),
+  }));
+
+const pages = [
+  { id: 'nav-home', title: 'Home', subtitle: 'Main landing page & highlights', href: '/', category: 'Navigation', badge: 'Page' },
+  { id: 'nav-work', title: 'Work', subtitle: 'All engineering projects & case studies', href: '/work', category: 'Navigation', badge: 'Page' },
+  { id: 'nav-writing', title: 'Writing', subtitle: 'Technical notes & engineering articles', href: '/blog', category: 'Navigation', badge: 'Page' },
+  { id: 'nav-photos', title: 'Photos', subtitle: 'Photography & outdoor expeditions', href: '/photos', category: 'Navigation', badge: 'Page' },
+  { id: 'nav-about', title: 'About', subtitle: 'Background, career timeline & skills', href: '/about', category: 'Navigation', badge: 'Page' },
+  { id: 'nav-contact', title: 'Contact', subtitle: 'Email, inquiries & consultation', href: '/contact', category: 'Navigation', badge: 'Page' },
+];
+
+const actions = [
+  { id: 'action-copy-email', title: 'Copy Email Address', subtitle: 'davidgraymi@gmail.com', action: 'copy-email', category: 'Actions', badge: 'Action' },
+  { id: 'action-theme', title: 'Toggle Light / Dark Theme', subtitle: 'Switch color theme', action: 'toggle-theme', category: 'Actions', badge: 'Action' },
+  { id: 'action-resume', title: 'Download Résumé', subtitle: 'Word document (.docx)', href: '/files/Resume.docx', category: 'Actions', badge: 'Download' },
+  { id: 'action-wordlet', title: 'Play Wordlet', subtitle: 'Launch the Flutter word puzzle in browser', href: '/wordlet', category: 'Actions', badge: 'Game' },
+  { id: 'action-github', title: 'Visit GitHub', subtitle: 'github.com/davidgraymi', href: 'https://github.com/davidgraymi', category: 'Actions', badge: 'External' },
+  { id: 'action-linkedin', title: 'Visit LinkedIn', subtitle: 'linkedin.com/in/david-gray-mi', href: 'https://www.linkedin.com/in/david-gray-mi/', category: 'Actions', badge: 'External' },
+];
+
+const allItems = [...pages, ...actions, ...projects, ...posts];
+---
+
+<dialog
+  id="command-palette"
+  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-2xl backdrop:bg-black/65 backdrop:backdrop-blur-md"
+  style="background: var(--bg-surface); border-color: var(--rule-strong);"
+>
+  <div class="flex flex-col">
+    {/* Header search bar */}
+    <div class="flex items-center gap-3 border-b px-4 py-3.5" style="border-color: var(--rule);">
+      <span style="color: var(--signal)">
+        <Icon name="globe" size={19} />
+      </span>
+      <input
+        id="command-search"
+        type="text"
+        placeholder="Type a command, project, or page... (e.g. Work, RTOS, Theme)"
+        autocomplete="off"
+        spellcheck="false"
+        class="w-full bg-transparent text-[15px] font-medium outline-none placeholder:text-[var(--fg-muted)]"
+        style="color: var(--fg);"
+      />
+      <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color: var(--fg-muted)">
+        <kbd class="rounded border px-1.5 py-0.5" style="background: var(--bg-surface-2); border-color: var(--rule);">ESC</kbd>
+      </div>
+    </div>
+
+    {/* Results list */}
+    <div id="command-results" class="max-h-[60vh] overflow-y-auto p-2">
+      {
+        allItems.map((item, index) => (
+          <div
+            class="command-item group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 transition-all"
+            data-index={index}
+            data-title={item.title.toLowerCase()}
+            data-subtitle={item.subtitle.toLowerCase()}
+            data-category={item.category.toLowerCase()}
+            data-stack={(item as any).stack?.toLowerCase() || ''}
+            data-href={(item as any).href || ''}
+            data-action={(item as any).action || ''}
+            tabindex="0"
+          >
+            <div class="min-w-0 pr-3">
+              <p class="truncate text-[14.5px] font-medium transition-colors group-hover:text-[var(--signal)]">
+                {item.title}
+              </p>
+              <p class="truncate text-[12.5px]" style="color: var(--fg-muted)">
+                {item.subtitle}
+              </p>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+              <span
+                class="rounded-md border px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-wider"
+                style="background: var(--bg-surface-2); border-color: var(--rule); color: var(--fg-muted);"
+              >
+                {item.badge}
+              </span>
+              <span class="opacity-0 transition-opacity group-hover:opacity-100" style="color: var(--signal)">
+                <Icon name="arrow" size={14} />
+              </span>
+            </div>
+          </div>
+        ))
+      }
+      <div id="command-empty" class="hidden py-12 text-center text-[14px]" style="color: var(--fg-muted)">
+        No matching commands or projects found.
+      </div>
+    </div>
+
+    {/* Footer shortcuts hint */}
+    <div class="flex items-center justify-between border-t px-4 py-2.5 font-mono text-[11.5px]" style="border-color: var(--rule); background: var(--bg-surface-2); color: var(--fg-muted);">
+      <div class="flex items-center gap-3">
+        <span><kbd class="rounded border px-1 py-0.5 text-[10px]" style="border-color: var(--rule);">↑</kbd> <kbd class="rounded border px-1 py-0.5 text-[10px]" style="border-color: var(--rule);">↓</kbd> to navigate</span>
+        <span><kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--rule);">↵</kbd> to select</span>
+      </div>
+      <span>Linear / Raycast mode</span>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  dialog[open] {
+    animation: dialogIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes dialogIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .command-item.active {
+    background: var(--bg-surface-2);
+    border-color: var(--rule-strong);
+  }
+
+  .command-item.active p:first-child {
+    color: var(--signal);
+  }
+
+  .command-item.active span:last-child {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('command-palette') as HTMLDialogElement | null;
+  const searchInput = document.getElementById('command-search') as HTMLInputElement | null;
+  const items = Array.from(document.querySelectorAll('.command-item')) as HTMLElement[];
+  const emptyState = document.getElementById('command-empty');
+  let activeIndex = 0;
+
+  function openPalette() {
+    if (!dialog) return;
+    dialog.showModal();
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
+    }
+    filterItems('');
+  }
+
+  function closePalette() {
+    if (!dialog) return;
+    dialog.close();
+  }
+
+  function getVisibleItems() {
+    return items.filter((item) => !item.classList.contains('hidden'));
+  }
+
+  function setActive(newIndex: number) {
+    const visible = getVisibleItems();
+    if (visible.length === 0) return;
+    visible.forEach((item) => item.classList.remove('active'));
+    activeIndex = Math.max(0, Math.min(newIndex, visible.length - 1));
+    const activeItem = visible[activeIndex];
+    if (activeItem) {
+      activeItem.classList.add('active');
+      activeItem.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  function executeItem(item: HTMLElement) {
+    const href = item.getAttribute('data-href');
+    const action = item.getAttribute('data-action');
+
+    closePalette();
+
+    if (action === 'copy-email') {
+      navigator.clipboard.writeText('davidgraymi@gmail.com');
+      alert('Email copied to clipboard: davidgraymi@gmail.com');
+      return;
+    }
+
+    if (action === 'toggle-theme') {
+      const root = document.documentElement;
+      const current = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = current;
+      try { localStorage.setItem('theme', current); } catch {}
+      return;
+    }
+
+    if (href) {
+      if (href.startsWith('http')) {
+        window.open(href, '_blank', 'noopener,noreferrer');
+      } else {
+        window.location.href = href;
+      }
+    }
+  }
+
+  function filterItems(query: string) {
+    const q = query.toLowerCase().trim();
+    let matchCount = 0;
+
+    items.forEach((item) => {
+      const title = item.getAttribute('data-title') || '';
+      const subtitle = item.getAttribute('data-subtitle') || '';
+      const category = item.getAttribute('data-category') || '';
+      const stack = item.getAttribute('data-stack') || '';
+
+      const match = !q || title.includes(q) || subtitle.includes(q) || category.includes(q) || stack.includes(q);
+      if (match) {
+        item.classList.remove('hidden');
+        matchCount++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle('hidden', matchCount > 0);
+    }
+
+    setActive(0);
+  }
+
+  // Keyboard shortcut listener: Cmd+K / Ctrl+K / slash
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (dialog?.open) {
+        closePalette();
+      } else {
+        openPalette();
+      }
+      return;
+    }
+
+    if (e.key === '/' && !dialog?.open) {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
+        e.preventDefault();
+        openPalette();
+      }
+    }
+  });
+
+  // Modal keyboard navigation
+  dialog?.addEventListener('keydown', (e) => {
+    const visible = getVisibleItems();
+    if (visible.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive(activeIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive(activeIndex - 1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const current = visible[activeIndex];
+      if (current) executeItem(current);
+    }
+  });
+
+  // Close when clicking backdrop
+  dialog?.addEventListener('click', (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const inDialog =
+      rect.top <= e.clientY &&
+      e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX &&
+      e.clientX <= rect.left + rect.width;
+    if (!inDialog) {
+      closePalette();
+    }
+  });
+
+  // Search input typing
+  searchInput?.addEventListener('input', (e) => {
+    filterItems((e.target as HTMLInputElement).value);
+  });
+
+  // Item click
+  items.forEach((item) => {
+    item.addEventListener('click', () => executeItem(item));
+    item.addEventListener('mouseenter', () => {
+      const visible = getVisibleItems();
+      const idx = visible.indexOf(item);
+      if (idx !== -1) setActive(idx);
+    });
+  });
+
+  // Expose global trigger for other components (like header button)
+  (window as any).openCommandPalette = openPalette;
+</script>

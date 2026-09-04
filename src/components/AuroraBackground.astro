@@ -1,0 +1,85 @@
+---
+/**
+ * AuroraBackground
+ * Hardware-accelerated floating ambient gradient orbs that give the obsidian
+ * ground atmospheric depth without impacting layout or performance.
+ */
+---
+
+<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+  {/* Primary amber/gold glow */}
+  <div
+    class="aurora-orb aurora-orb-1"
+    style="background: radial-gradient(circle, color-mix(in srgb, var(--signal) 22%, transparent) 0%, transparent 70%);"
+  ></div>
+
+  {/* Deep indigo / twilight secondary aura */}
+  <div
+    class="aurora-orb aurora-orb-2"
+    style="background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, transparent 70%);"
+  ></div>
+
+  {/* Subtle top horizon glow line */}
+  <div
+    class="absolute inset-x-0 top-0 h-px"
+    style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--signal) 35%, transparent) 50%, transparent 95%); opacity: 0.8;"
+  ></div>
+</div>
+
+<style>
+  .aurora-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(100px);
+    -webkit-filter: blur(100px);
+    opacity: 0.75;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .aurora-orb-1 {
+    width: clamp(350px, 45vw, 650px);
+    height: clamp(350px, 45vw, 650px);
+    top: -10%;
+    left: 20%;
+    animation: floatOrb1 18s ease-in-out infinite alternate;
+  }
+
+  .aurora-orb-2 {
+    width: clamp(300px, 40vw, 550px);
+    height: clamp(300px, 40vw, 550px);
+    top: 15%;
+    right: 10%;
+    animation: floatOrb2 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes floatOrb1 {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(60px, 40px) scale(1.1);
+    }
+    100% {
+      transform: translate(-40px, 80px) scale(0.95);
+    }
+  }
+
+  @keyframes floatOrb2 {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-50px, 60px) scale(1.08);
+    }
+    100% {
+      transform: translate(30px, -40px) scale(0.9);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-orb {
+      animation: none !important;
+    }
+  }
+</style>
