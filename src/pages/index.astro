@@ -9,7 +9,7 @@ import CallToAction from '~/components/CallToAction.astro';
 import Icon from '~/components/Icon.astro';
 import { site, socials } from '~/site.config';
 import { services, stats } from '~/data/resume';
-import avatar from '~/assets/avatar.jpeg';
+import avatar from '~/assets/avatar.png';
 
 const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => a.data.order - b.data.order)

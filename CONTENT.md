@@ -110,7 +110,7 @@ To take down the "open to consulting" pill, set `availableForWork: false`.
 
 ## Replace the photo of yourself
 
-Overwrite `src/assets/avatar.jpeg`. It appears on the homepage and `/about`.
+Overwrite `src/assets/avatar.png`. It appears on the homepage and `/about`.
 
 ## Replace the social share card
 
