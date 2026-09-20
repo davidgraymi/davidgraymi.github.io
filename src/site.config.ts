@@ -7,12 +7,12 @@ export const site = {
   shortName: 'David',
   url: 'https://davidmgray.com',
   /** Shown under the name in the header and in metadata. */
-  role: 'Software engineer — real-time systems & applied AI',
+  role: 'Product Security Engineer — Kubernetes, Azure & secure cloud systems',
   location: 'St. Louis, Missouri',
   email: 'davidgraymi@gmail.com',
   /** The one-line pitch used for <meta description> and social cards. */
   tagline:
-    'I build software for systems that are not allowed to fail — embedded, real-time, and increasingly intelligent.',
+    'I secure and scale Kubernetes and cloud-native systems, with a focus on reliable delivery, infrastructure-as-code, and security embedded in the platform.',
   /** Set to false to hide the "available for work" pill site-wide. */
   availableForWork: true,
   availabilityNote: 'Open to consulting and interesting problems',

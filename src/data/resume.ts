@@ -10,20 +10,28 @@ export type Role = {
 
 export const roles: Role[] = [
   {
+    title: 'Product Security Engineer',
+    org: 'Cloud Infrastructure',
+    period: 'Dec 2025 — Present',
+    summary:
+      'Lead cloud migration of three software toolchain applications and deliver a live demo that directly contributed to securing the company\'s share of a $90M contract award. Focused on secure cloud adoption, Kubernetes delivery, and building security into the release process itself.',
+    points: [
+      'Led cloud migration of 3 software toolchain applications and delivered a live demo that directly contributed to securing the company\'s share of a $90M contract award.',
+      'Architected and deployed cloud infrastructure using Helm charts and Infrastructure-as-Code practices, standardizing application deployments across Azure.',
+      'Configured and operated Istio service mesh for secure inter-service networking within Kubernetes deployments.',
+      'Designed and threat modeled a zero-trust continuous deployment pipeline for Configuration-as-Code and Infrastructure-as-Code delivery to Kubernetes clusters, embedding security review into the release process.',
+    ],
+  },
+  {
     title: 'Software Engineer',
     org: 'Boeing',
-    period: 'June 2021 — Present',
+    period: 'May 2024 — Dec 2025',
     summary:
-      'Real-time embedded software for weapon systems, plus the DevSecOps tooling my team lives in every day. Starting my career at the bottom of the stack taught me that most of the "magic" in software is just somebody else\'s careful engineering.',
+      'Secured multi-million dollar military contracts for Boeing\'s weapon product lines while building tooling to accelerate integration testing and standardize portable platform infrastructure across RTOS and bare-metal systems.',
     points: [
-      'Engineered a processor from the ground up — kernel, task scheduler, comms protocol — in C and Ada. In production and shipping globally.',
-      'Built a portable system library for any RTOS or bare-metal target using C++, Docker, Bazel and GitLab, cutting integration engineering hours by 4×.',
-      'Wrote a Go HTTPS server that streamlined integration testing and made the test cycle 10× faster.',
-      'Led reverse engineering of a cross-program missile interfacing application, improving real-time telemetry decoding and control (C#, WPF, XAML).',
-      'Ran integration tests and data analysis for computer vision work in a simulator and on an experimental aircraft — I got to fly on it.',
-      'Supported autonomous vehicle functions by processing GPS and sensor data in Ada and C++.',
-      'Hardened an in-house Ada static analysis tool with new security warnings, in C++.',
-      'Contributed to proposals that secured multi-million dollar contracts for Boeing weapon product lines.',
+      'Secured multi-million dollar military contracts for Boeing\'s weapon product lines.',
+      'Developed a Go HTTPS server to streamline integration testing, reducing testing time by 10X.',
+      'Created a portable system library for any RTOS or bare metal systems using C++, Docker, Bazel and GitLab, reducing engineering hours by 4X.',
     ],
   },
   {
@@ -113,8 +121,8 @@ export const stats: { value: string; label: string }[] = [
 /** What I want to be hired for. Drives the "How I can help" section. */
 export const services: { title: string; body: string }[] = [
   {
-    title: 'Embedded & real-time',
-    body: 'Bare metal, RTOS, kernels, schedulers, drivers, and the boring-but-fatal details of timing, portability and anti-tamper. If it has to be right the first time, this is the work I do daily.',
+    title: 'Kubernetes & cloud',
+    body: 'Platform engineering, Kubernetes operations, cloud-native systems, and the boring-but-critical details of reliability, automation, and production support. If it has to run at scale without surprise failures, this is the work I do daily.',
   },
   {
     title: 'Applied machine learning',
