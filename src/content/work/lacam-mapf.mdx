@@ -1,0 +1,80 @@
+---
+title: LaCam for Multi-Agent Path Finding
+blurb: A from-scratch LaCam solver for CS440 — agents searching a space of joint configurations, each expanded by a constraint tree that rules out collisions and swaps.
+kind: School
+year: '2026'
+stack: ['Python', 'Search', 'Multi-agent systems']
+highlight: Search over joint configurations, not per-agent paths — the whole trick of LaCam
+order: 4
+links:
+  - label: Source on GitHub
+    href: https://github.com/davidgraymi/CS440-MP2
+---
+
+import LacamFlipbook from '~/components/LacamFlipbook.astro';
+
+<LacamFlipbook />
+
+Every frame above is real: a trace captured by instrumenting my actual
+solver as it runs on a small two-agent instance with a single-cell doorway —
+every push, backtrack, branch, accept and reject shown is a genuine event
+from the code, not a re-enactment.
+
+For the last assignment in CS440 (Artificial Intelligence), we had to solve
+"hard" multi-agent path finding (MAPF) instances: get every agent from its
+start cell to its goal cell on a shared grid, with no two agents ever
+occupying the same cell at the same time and no two agents swapping places
+along an edge. Optimality wasn't graded — completeness and speed were. That
+combination is exactly what
+[LaCam](https://kei18.github.io/lacam/) (Okumura, 2023) is built for, so I
+implemented it.
+
+## Why not just run A* per agent?
+
+Because the moment you plan agents independently, their paths collide, and
+patching collisions one at a time (à la CBS) means re-planning individual
+agents over and over as new constraints pile up. LaCam sidesteps that by
+searching a completely different space: instead of nodes being *single-agent
+positions*, nodes are **joint configurations** — one position per agent,
+all at once. An edge in this space is a fully collision-free simultaneous
+move for every agent. Find a path from the start configuration to the goal
+configuration in that space, and you've solved the whole team in one search.
+
+The catch is that the branching factor of "every agent moves at once" is
+enormous — up to 5 choices per agent (4 directions + wait), so `5^n` for `n`
+agents. LaCam's second idea is what makes that tractable: at each
+configuration node, don't enumerate all `5^n` successors. Grow a small
+**constraint tree** instead — a breadth-first tree where each node forces one
+additional agent to a specific next cell, and a greedy assignment (nearest
+neighbor to that agent's goal, checked against everyone already assigned)
+fills in the rest. Pop one constraint tree node, try to build a full
+successor; if it collides, that branch dies and the next constraint tree node
+gets a turn. The two searches interleave: depth-first over configurations,
+breadth-first over constraints at each one.
+
+## Three spaces, one algorithm
+
+That gives you three different spaces to keep straight, which is the part
+that's genuinely hard to hold in your head from the pseudocode alone:
+
+- **The problem space** — the actual grid: walls, start cells, goal cells.
+- **The search space** — the DFS over joint configurations. Each node here
+  *is* a full grid state for every agent simultaneously.
+- **The constraint space** — the BFS tree grown at whichever configuration
+  node is currently on top of the DFS stack, used only to generate that
+  node's next valid configuration.
+
+Watch the loop at the top of the page with that in mind: the constraint
+tree (right panel) grows and gets pruned every time the two agents contend
+for the doorway, and that failure or success feeds directly into whether
+the search tree (middle panel) gains a new node or backtracks.
+
+## What I'd change
+
+The greedy assignment inside each constraint tree node has no lookahead, so
+on this doorway instance it backtracks a fair amount before it finds the
+crossing order that works — you can see it in the trace. The published LaCam
+paper adds a PIBT-style priority scheme to cut that down substantially. I
+kept mine simple on purpose: the assignment above is exactly what's in
+`hard_mapf.py`, and it's fast enough to pass every instance in the course's
+test suite well under the time limit, which was the actual assignment.

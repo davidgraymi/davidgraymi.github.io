@@ -1,0 +1,449 @@
+---
+import trace from '~/data/lacam-trace.json';
+
+const traceJson = JSON.stringify(trace);
+---
+
+<div class="lacam not-prose" data-lacam>
+  <div class="lacam-panels">
+    <div class="lacam-canvas" data-lacam-grid></div>
+    <div class="lacam-canvas lacam-canvas-radial" data-lacam-configtree></div>
+    <div class="lacam-canvas lacam-canvas-radial" data-lacam-constrainttree></div>
+  </div>
+</div>
+
+<script define:vars={{ traceJson }}>
+  (function () {
+    const trace = JSON.parse(traceJson);
+    const root = document.currentScript.previousElementSibling;
+    if (!root || !root.matches('[data-lacam]')) return;
+
+    const els = {
+      grid: root.querySelector('[data-lacam-grid]'),
+      configTree: root.querySelector('[data-lacam-configtree]'),
+      constraintTree: root.querySelector('[data-lacam-constrainttree]'),
+    };
+
+    const N = trace.frames.length;
+    const FRAME_MS = 15;
+    const HOLD_AT_GOAL_MS = 100;
+    const HOLD_AT_START_MS = 100;
+    const TAU = Math.PI * 2;
+
+    let index = 0;
+
+    function agentColor(i) {
+      return i === 0 ? 'var(--lacam-a)' : 'var(--lacam-b)';
+    }
+
+    // ---- replay engine: fold frames [0, index] into a renderable state ----
+    function computeState(upTo) {
+      const state = {
+        config: trace.starts.map((p) => p.slice()),
+        configNodes: {},
+        constraintTrees: {},
+        currentNodeId: null,
+        solved: false,
+      };
+      for (let i = 0; i <= upTo; i++) {
+        applyFrame(state, trace.frames[i]);
+      }
+      return state;
+    }
+
+    function applyFrame(state, f) {
+      switch (f.kind) {
+        case 'push': {
+          state.configNodes[f.node_id] = {
+            id: f.node_id,
+            parentId: f.parent_id,
+            depth: f.depth,
+            config: f.config,
+            status: 'open',
+          };
+          state.currentNodeId = f.node_id;
+          state.config = f.config;
+          break;
+        }
+        case 'root_constraint': {
+          state.constraintTrees[f.node_id] = {
+            nodes: {
+              [f.constraint_id]: { id: f.constraint_id, parentId: null, who: null, where: null, status: 'pending' },
+            },
+          };
+          break;
+        }
+        case 'pop_constraint': {
+          const tree = state.constraintTrees[f.node_id];
+          if (tree && tree.nodes[f.constraint_id] && tree.nodes[f.constraint_id].status === 'pending') {
+            tree.nodes[f.constraint_id].status = 'current';
+          }
+          break;
+        }
+        case 'branch_constraint': {
+          const tree = state.constraintTrees[f.node_id];
+          if (tree) {
+            tree.nodes[f.constraint_id] = {
+              id: f.constraint_id,
+              parentId: f.parent_id,
+              who: f.who,
+              agentName: f.agent_name,
+              where: f.where,
+              status: 'pending',
+            };
+          }
+          break;
+        }
+        case 'try_success': {
+          const tree = state.constraintTrees[f.node_id];
+          if (tree && tree.nodes[f.constraint_id]) tree.nodes[f.constraint_id].status = 'success';
+          break;
+        }
+        case 'try_fail': {
+          const tree = state.constraintTrees[f.node_id];
+          if (tree && tree.nodes[f.constraint_id]) tree.nodes[f.constraint_id].status = 'fail';
+          break;
+        }
+        case 'duplicate': {
+          const tree = state.constraintTrees[f.node_id];
+          if (tree && tree.nodes[f.constraint_id]) tree.nodes[f.constraint_id].status = 'duplicate';
+          break;
+        }
+        case 'backtrack': {
+          if (state.configNodes[f.node_id]) state.configNodes[f.node_id].status = 'backtracked';
+          state.currentNodeId = f.parent_id;
+          if (f.parent_id !== null && state.configNodes[f.parent_id]) {
+            state.config = state.configNodes[f.parent_id].config;
+          }
+          break;
+        }
+        case 'goal': {
+          if (state.configNodes[f.node_id]) state.configNodes[f.node_id].status = 'goal';
+          state.solved = true;
+          break;
+        }
+      }
+    }
+
+    // ---- leaf-slot layout: leaves get sequential slots, internal = mean of children ----
+    function leafLayout(nodesById) {
+      const childrenOf = {};
+      const roots = [];
+      Object.values(nodesById).forEach((n) => {
+        if (n.parentId === null || n.parentId === undefined) {
+          roots.push(n.id);
+        } else {
+          (childrenOf[n.parentId] ||= []).push(n.id);
+        }
+      });
+      let leaf = 0;
+      const slot = {};
+      function visit(id, depth) {
+        const kids = childrenOf[id] || [];
+        if (kids.length === 0) {
+          slot[id] = { x: leaf++, depth };
+          return slot[id].x;
+        }
+        const xs = kids.map((k) => visit(k, depth + 1));
+        const x = xs.reduce((a, b) => a + b, 0) / xs.length;
+        slot[id] = { x, depth };
+        return x;
+      }
+      roots.forEach((r) => visit(r, 0));
+      return { slot, maxLeaf: Math.max(leaf, 1) };
+    }
+
+    // Polar layout on top of the leaf-slot pass: depth becomes radius,
+    // leaf position becomes angle. `spiralTwist` nudges the angle forward
+    // per depth level so a plain chain (the common case in this trace)
+    // spirals outward instead of drawing a single straight ray.
+    function radialLayout(nodesById, { spiralTwist = 0, angularSpan = TAU, radiusStep = 20, sqrtRadius = false }) {
+      const { slot, maxLeaf } = leafLayout(nodesById);
+      const polar = {};
+      let maxRadius = 0;
+      Object.entries(slot).forEach(([id, s]) => {
+        const angleFrac = (s.x + 0.5) / maxLeaf;
+        const angle = angleFrac * angularSpan + s.depth * spiralTwist;
+        const radius = sqrtRadius ? Math.sqrt(s.depth) * radiusStep : s.depth * radiusStep;
+        polar[id] = { angle, radius, depth: s.depth };
+        if (radius > maxRadius) maxRadius = radius;
+      });
+      return { polar, maxRadius };
+    }
+
+    function xy(cx, cy, radius, angle) {
+      return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+    }
+
+    // Elbow-style radial edge: swing angle first at the midpoint radius,
+    // like a dendrogram link, then curve into the child.
+    function radialEdge(cx, cy, a, b, color, width) {
+      const [x0, y0] = xy(cx, cy, a.radius, a.angle);
+      const [x1, y1] = xy(cx, cy, b.radius, b.angle);
+      const [qx, qy] = xy(cx, cy, (a.radius + b.radius) / 2, a.angle);
+      return `<path d="M ${x0} ${y0} Q ${qx} ${qy} ${x1} ${y1}" fill="none" stroke="${color}" stroke-width="${width}" />`;
+    }
+
+    function guideRings(cx, cy, maxRadius, count) {
+      let s = '';
+      for (let i = 1; i <= count; i++) {
+        const r = (maxRadius * i) / count;
+        s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--rule)" stroke-width="1" />`;
+      }
+      return s;
+    }
+
+    // ---- persistent SVG scaffolding: created once so the slow spin
+    // animation on .lacam-rotor keeps running smoothly across frames
+    // instead of resetting every time we'd otherwise replace the node ----
+    function initRadialSvg(container) {
+      container.innerHTML =
+        '<svg preserveAspectRatio="xMidYMid meet" role="presentation">' +
+        '<g class="lacam-rings"></g>' +
+        '<g class="lacam-rotor"><g class="lacam-edges"></g><g class="lacam-nodes"></g></g>' +
+        '</svg>';
+      return {
+        svg: container.querySelector('svg'),
+        rings: container.querySelector('.lacam-rings'),
+        rotor: container.querySelector('.lacam-rotor'),
+        edges: container.querySelector('.lacam-edges'),
+        nodes: container.querySelector('.lacam-nodes'),
+      };
+    }
+
+    const gridRefs = { svg: null };
+    const configRefs = initRadialSvg(els.configTree);
+    const constraintRefs = initRadialSvg(els.constraintTree);
+
+    // ---- panel 1: the grid (unchanged — this one already reads well) ----
+    function renderGrid(state) {
+      const cell = 34;
+      const w = trace.width * cell;
+      const h = trace.height * cell;
+      let s = '';
+      for (let i = 0; i < trace.height; i++) {
+        for (let j = 0; j < trace.width; j++) {
+          const wall = trace.grid[i][j] === 1;
+          s += `<rect x="${j * cell}" y="${i * cell}" width="${cell}" height="${cell}" rx="3"
+            fill="${wall ? 'var(--fg-muted)' : 'var(--bg-surface-2)'}"
+            opacity="${wall ? '0.35' : '1'}"
+            stroke="var(--rule)" stroke-width="1" />`;
+        }
+      }
+      trace.goals.forEach((g, i) => {
+        const [gi, gj] = g;
+        s += `<circle cx="${gj * cell + cell / 2}" cy="${gi * cell + cell / 2}" r="${cell * 0.32}"
+          fill="none" stroke="${agentColor(i)}" stroke-width="2" stroke-dasharray="3 3" opacity="0.8" />`;
+      });
+      state.config.forEach((p, i) => {
+        const [pi, pj] = p;
+        s += `<circle cx="${pj * cell + cell / 2}" cy="${pi * cell + cell / 2}" r="${cell * 0.3}"
+          fill="${agentColor(i)}" stroke="var(--bg)" stroke-width="1.5" />`;
+      });
+      if (!gridRefs.svg) {
+        els.grid.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="presentation"></svg>`;
+        gridRefs.svg = els.grid.querySelector('svg');
+      }
+      gridRefs.svg.innerHTML = s;
+    }
+
+    // ---- panel 2: config-space DFS tree, drawn as an outward spiral ----
+    function renderConfigTree(state) {
+      const { polar, maxRadius } = radialLayout(state.configNodes, {
+        spiralTwist: 0.62,
+        angularSpan: TAU,
+        radiusStep: 15,
+        sqrtRadius: true,
+      });
+      const padding = 14;
+      const size = Math.max((maxRadius + padding) * 2, 130);
+      const cx = size / 2;
+      const cy = size / 2;
+
+      let edges = '';
+      let nodes = '';
+      Object.values(state.configNodes).forEach((n) => {
+        const p = polar[n.id];
+        if (n.parentId !== null && n.parentId !== undefined && polar[n.parentId]) {
+          const isLive = n.status !== 'backtracked';
+          edges += radialEdge(cx, cy, polar[n.parentId], p, isLive ? 'var(--rule-strong)' : 'var(--rule)', 1.25);
+        }
+        const [x, y] = xy(cx, cy, p.radius, p.angle);
+        const isActive = n.id === state.currentNodeId;
+
+        let fill = 'var(--fg-muted)';
+        let glow = '';
+        if (n.status === 'goal') { fill = '#22c55e'; glow = 'filter="url(#lacam-glow-config)"'; }
+        else if (isActive) { fill = 'var(--signal)'; glow = 'filter="url(#lacam-glow-config)"'; }
+        else if (n.status === 'backtracked') { fill = 'var(--rule-strong)'; }
+
+        const r = isActive || n.status === 'goal' ? 5 : Math.max(2, 3.6 - p.depth * 0.04);
+        nodes += `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" opacity="${n.status === 'backtracked' ? '0.35' : '1'}" ${glow} />`;
+        if (isActive) {
+          nodes += `<circle cx="${x}" cy="${y}" r="${r + 4}" fill="none" stroke="var(--signal)" stroke-width="1.25" opacity="0.55" />`;
+        }
+      });
+
+      configRefs.svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+      configRefs.rings.innerHTML = guideRings(cx, cy, maxRadius, 4);
+      configRefs.rotor.setAttribute('style', `transform-origin: ${cx}px ${cy}px`);
+      configRefs.edges.innerHTML = edges;
+      configRefs.nodes.innerHTML = nodes;
+    }
+
+    // ---- panel 3: constraint (BFS) tree, drawn as a radial burst ----
+    function renderConstraintTree(state) {
+      const tree = state.currentNodeId !== null ? state.constraintTrees[state.currentNodeId] : null;
+      if (!tree) {
+        constraintRefs.svg.setAttribute('viewBox', '0 0 120 120');
+        constraintRefs.rings.innerHTML = '';
+        constraintRefs.edges.innerHTML = '';
+        constraintRefs.nodes.innerHTML = '';
+        return;
+      }
+      const { polar, maxRadius } = radialLayout(tree.nodes, {
+        spiralTwist: 0,
+        angularSpan: TAU,
+        radiusStep: 34,
+        sqrtRadius: false,
+      });
+      const padding = 16;
+      const size = Math.max((maxRadius + padding) * 2, 130);
+      const cx = size / 2;
+      const cy = size / 2;
+
+      const statusColor = {
+        pending: 'var(--fg-muted)',
+        current: 'var(--signal)',
+        success: '#22c55e',
+        fail: '#ef4444',
+        duplicate: '#a855f7',
+      };
+
+      let edges = '';
+      let nodes = '';
+      Object.values(tree.nodes).forEach((n) => {
+        const p = polar[n.id];
+        if (n.parentId !== null && n.parentId !== undefined && polar[n.parentId]) {
+          edges += radialEdge(cx, cy, polar[n.parentId], p, 'var(--rule-strong)', 1.25);
+        }
+        const [x, y] = xy(cx, cy, p.radius, p.angle);
+        const color = statusColor[n.status] || 'var(--fg-muted)';
+        const isCurrent = n.status === 'current';
+        const isHot = n.status === 'success' || n.status === 'fail' || isCurrent;
+        const r = isCurrent ? 5.5 : n.depth === 0 ? 5 : 4;
+        nodes += `<circle cx="${x}" cy="${y}" r="${r}" fill="${n.status === 'pending' ? 'var(--bg-surface-2)' : color}"
+          stroke="${color}" stroke-width="1.5" ${isHot ? 'filter="url(#lacam-glow-constraint)"' : ''} />`;
+      });
+
+      constraintRefs.svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+      constraintRefs.rings.innerHTML = guideRings(cx, cy, maxRadius, Math.max(1, Math.round(maxRadius / 34)));
+      constraintRefs.rotor.setAttribute('style', `transform-origin: ${cx}px ${cy}px`);
+      constraintRefs.edges.innerHTML = edges;
+      constraintRefs.nodes.innerHTML = nodes;
+    }
+
+    // ---- render everything for a given frame index ----
+    function render() {
+      const state = computeState(index);
+      renderGrid(state);
+      renderConfigTree(state);
+      renderConstraintTree(state);
+      return state.solved;
+    }
+
+    function tick() {
+      const solved = render();
+      let delay = FRAME_MS;
+      if (index === 0) delay = HOLD_AT_START_MS;
+      if (solved) delay = HOLD_AT_GOAL_MS;
+
+      index = solved ? 0 : index + 1;
+      if (index >= N) index = 0;
+
+      setTimeout(tick, delay);
+    }
+
+    render();
+    setTimeout(tick, HOLD_AT_START_MS);
+  })();
+</script>
+
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+  <defs>
+    <filter id="lacam-glow-config" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="lacam-glow-constraint" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<style>
+  .lacam {
+    --lacam-a: var(--signal);
+    --lacam-b: #0ea5e9;
+    margin-block: 2.5rem;
+  }
+
+  .lacam-panels {
+    display: flex;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+
+  .lacam-canvas {
+    flex: 1 1 0;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .lacam-canvas svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  .lacam-canvas-radial svg {
+    overflow: hidden;
+  }
+
+  .lacam-rotor {
+    animation: lacam-spin 140s linear infinite;
+  }
+
+  @keyframes lacam-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lacam-rotor {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .lacam-panels {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .lacam-canvas {
+      height: 190px;
+    }
+  }
+</style>
