@@ -23,83 +23,96 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <Base>
   {/* ---------------------------------------------------------------- hero */}
   <section class="gridlines relative overflow-hidden border-b" style="border-color: var(--rule);">
-    {/* Subtle top horizon glow */}
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-px"
       style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--signal) 50%, transparent) 50%, transparent 95%); opacity: 0.8"
     >
     </div>
 
-    <div class="wrap py-20 md:py-32">
-      {
-        site.availableForWork && (
-          <div class="inline-flex">
-            <p class="glow-pill">
-              <span class="relative flex h-2 w-2">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style="background: var(--signal)" />
-                <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--signal)" />
-              </span>
-              <span style="color: var(--fg)">{site.availabilityNote}</span>
-            </p>
+    <div class="wrap py-8 sm:py-10 md:py-16 lg:py-20">
+      <div class="grid items-start gap-8 lg:grid-cols-[minmax(19rem,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        <div class="relative order-1 mx-auto w-full max-w-[18rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none">
+          <div class="absolute -inset-1.5 rounded-[1rem] border opacity-60 sm:-inset-2.5 sm:rounded-[1.5rem] lg:-inset-3 lg:rounded-[2rem]" style="border-color: var(--signal);" />
+          <div class="relative overflow-hidden rounded-[0.9rem] border sm:rounded-[1.35rem] lg:rounded-[1.75rem]" style="border-color: var(--rule-strong); background: var(--bg-surface);">
+            <Image
+              src={avatar}
+              alt="David Gray"
+              widths={[480, 720, 960]}
+              sizes="(min-width: 1024px) 38vw, 22rem"
+              class="aspect-[4/5] w-full object-cover object-top"
+              loading="eager"
+            />
+            <div class="absolute inset-x-0 bottom-0 hidden items-center justify-between gap-3 bg-black/55 px-4.5 py-3.5 font-mono text-[11.5px] text-white backdrop-blur-md sm:flex">
+              <span>{site.location}</span>
+              <span class="whitespace-nowrap" style="color: #fbbf24">M.S. CS @ UIUC</span>
+            </div>
           </div>
-        )
-      }
+        </div>
 
-      <h1 class="mt-8 max-w-4xl font-semibold leading-[1.04] tracking-tight" style="font-size: var(--text-display)">
-        I build software for <span class="shimmer-text">systems that can't fail.</span>
-      </h1>
+        <div class="order-2">
+          <h1 class="max-w-3xl font-semibold leading-[1.02] tracking-tight text-[1.35rem] sm:text-[2.2rem] md:text-[3.1rem] lg:mt-6 lg:text-[length:var(--text-display)]">
+            Engineer. Scientist.<br /><span class="shimmer-text">Occasionally underwater.</span>
+          </h1>
+          <p class="mt-3 max-w-2xl text-[11px] leading-[1.45] sm:mt-5 sm:text-[14px] md:mt-7 md:text-[18px] md:leading-relaxed lg:text-[20px]" style="color: var(--fg-muted)">
+            I'm a software engineer in St. Louis. I spend my working hours on real-time embedded
+            systems at Boeing and the rest of my brain on machine learning, a document platform
+            nobody asked me to build, and a master's degree at the University of Illinois.
+          </p>
+          <p class="mt-3 max-w-xl text-[10px] leading-[1.45] sm:mt-4 sm:text-[12px] md:mt-5 md:text-[15px] md:leading-relaxed" style="color: var(--fg-muted)">
+            Outside of that: scuba diving, rock climbing, hiking, and making things that aren't
+            software. I like problems where the consequences are real.
+          </p>
 
-      <p class="mt-7 max-w-2xl text-[18px] leading-relaxed md:text-[20px]" style="color: var(--fg-muted)">
-        Four years of real-time embedded engineering at Boeing — kernels, schedulers, anti-tamper,
-        code that ships once and has to be right. Plus a second life in applied machine learning,
-        and a master's at Illinois to make it rigorous.
-      </p>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 sm:mt-6 sm:gap-2.5 md:mt-9 md:gap-3.5">
+            <a href="/work" class="btn h-8 px-2 text-[10px] sm:h-9 sm:px-3 sm:text-[12px] md:h-[2.875rem] md:px-5 md:text-[15px]">
+              See my work
+              <Icon name="arrow" size={13} />
+            </a>
+            <a href="/contact" class="btn btn-ghost h-8 px-2 text-[10px] sm:h-9 sm:px-3 sm:text-[12px] md:h-[2.875rem] md:px-5 md:text-[15px]">
+              Get in touch
+            </a>
+            <button
+              type="button"
+              onclick="if(window.openCommandPalette) window.openCommandPalette()"
+              class="btn btn-ghost h-8 px-2 font-mono text-[10px] sm:h-9 sm:px-3 sm:text-[12px] md:h-[2.875rem] md:px-4 md:text-[13px]"
+              title="Open Command Menu (⌘K)"
+            >
+              <Icon name="globe" size={13} />
+              <span>⌘K</span>
+            </button>
+          </div>
 
-      <div class="mt-10 flex flex-wrap items-center gap-3.5">
-        <a href="/contact" class="btn btn-primary">
-          Get in touch
-          <Icon name="arrow" size={17} />
-        </a>
-        <a href="/work" class="btn btn-ghost">
-          Explore work
-        </a>
-        <button
-          type="button"
-          onclick="if(window.openCommandPalette) window.openCommandPalette()"
-          class="btn btn-ghost font-mono text-[13px]"
-          title="Open Command Menu (⌘K)"
-        >
-          <Icon name="globe" size={15} />
-          <span>Press <kbd class="rounded border px-1.5 py-0.5 text-[11px]" style="border-color: var(--rule);">⌘K</kbd></span>
-        </button>
+          <ul class="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 sm:mt-6 sm:gap-x-4 sm:gap-y-2 md:mt-8 md:gap-x-6 md:gap-y-3">
+            {
+              socials.slice(0, 3).map((s) => (
+                <li>
+                  <a
+                    href={s.href}
+                    class="inline-flex items-center gap-1 font-mono text-[8px] transition-colors hover:text-[var(--signal)] sm:gap-1.5 sm:text-[10px] md:gap-2 md:text-[12.5px]"
+                    style="color: var(--fg-muted)"
+                    rel={s.href.startsWith('http') ? 'me noopener' : undefined}
+                  >
+                    <Icon name={s.icon} size={12} />
+                    {s.handle}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+
+          {site.availableForWork && (
+            <p class="mt-4 inline-flex items-center gap-1.5 font-mono text-[7px] uppercase tracking-[0.08em] sm:mt-6 sm:gap-2 sm:text-[9px] sm:tracking-[0.1em] md:mt-8 md:text-[11px] md:tracking-[0.12em]" style="color: var(--signal)">
+              <span class="h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2" style="background: var(--signal); box-shadow: 0 0 14px var(--signal-glow);" />
+              {site.availabilityNote}
+            </p>
+          )}
+        </div>
       </div>
 
-      <ul class="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
-        {
-          socials.slice(0, 3).map((s) => (
-            <li>
-              <a
-                href={s.href}
-                class="inline-flex items-center gap-2 font-mono text-[12.5px] transition-colors hover:text-[var(--signal)]"
-                style="color: var(--fg-muted)"
-                rel={s.href.startsWith('http') ? 'me noopener' : undefined}
-              >
-                <Icon name={s.icon} size={15} />
-                {s.handle}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-
-      {/* Floating telemetry metrics capsules */}
-      <div class="mt-16 grid grid-cols-2 gap-3.5 md:grid-cols-4 md:gap-4">
+      <div class="mt-16 grid grid-cols-2 gap-3.5 border-t pt-8 md:grid-cols-4 md:gap-4" style="border-color: var(--rule);">
         {
           stats.map((stat) => (
-            <div
-              class="glass-panel p-5.5 rounded-2xl transition-all hover:border-[var(--rule-strong)]"
-              style="background: var(--bg-surface); border-color: var(--rule);"
-            >
+            <div>
               <p class="font-mono text-[25px] font-bold tracking-tight md:text-[28px]" style="color: var(--signal)">
                 {stat.value}
               </p>
@@ -118,6 +131,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     kicker="How I can help"
     title="Three kinds of problem I'm genuinely good at"
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
+    alt
   >
     <div class="mt-12 grid gap-5 md:grid-cols-3">
       {
@@ -146,12 +160,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     kicker="Selected work"
     title="A few things worth showing"
     lead="Some of it shipped to production on hardware I'll never see again. Some of it is a side project my wife asked for. Both taught me something."
-    alt
   >
     <div class="mt-12 grid gap-6 md:grid-cols-3">
       {featured.map((entry) => <WorkCard entry={entry} />)}
     </div>
-    <div class="mt-10 flex items-center gap-4">
+    <div class="mt-10 flex flex-wrap items-center gap-4">
       <a href="/work" class="btn btn-ghost">
         All projects
         <Icon name="arrow" size={16} />
@@ -159,48 +172,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <a href="/wordlet" class="btn btn-ghost font-mono text-[13px]">
         Play Wordlet in browser →
       </a>
-    </div>
-  </Section>
-
-  {/* --------------------------------------------------------------- about */}
-  <Section kicker="Who you'd be working with">
-    <div class="mt-12 grid items-start gap-10 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-14">
-      <div class="glass-panel mx-auto w-full max-w-xs overflow-hidden rounded-3xl md:mx-0 md:max-w-none">
-        <Image
-          src={avatar}
-          alt="David Gray"
-          widths={[320, 640]}
-          sizes="(min-width: 768px) 20rem, 18rem"
-          class="aspect-square w-full object-cover"
-          loading="lazy"
-        />
-        <div class="flex items-center justify-between gap-3 border-t px-4.5 py-3.5 font-mono text-[11.5px]" style="border-color: var(--rule); color: var(--fg-muted)">
-          <span>{site.location}</span>
-          <span style="color: var(--signal)">M.S. CS @ UIUC</span>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="font-semibold leading-tight" style="font-size: var(--text-h2)">
-          Engineer. Scientist.<br />Occasionally underwater.
-        </h2>
-        <div class="mt-6 space-y-5 text-[17px] leading-relaxed" style="color: var(--fg-muted)">
-          <p>
-            I'm a software engineer in St. Louis. I spend my working hours on real-time embedded
-            systems at Boeing and the rest of my brain on machine learning, a document platform
-            nobody asked me to build, and a master's degree at the University of Illinois.
-          </p>
-          <p>
-            Outside of that: scuba diving, rock climbing, hiking, and making things that aren't
-            software. I'm told the common thread is that I like problems where the consequences
-            are real.
-          </p>
-        </div>
-        <a href="/about" class="link-underline mt-6 inline-flex items-center gap-2 font-medium" style="color: var(--fg)">
-          More about me
-          <Icon name="arrow" size={16} />
-        </a>
-      </div>
     </div>
   </Section>
 
