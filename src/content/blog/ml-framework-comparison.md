@@ -7,7 +7,7 @@ tags: ['ml', 'performance', 'benchmarks', 'pytorch', 'jax', 'tensorflow']
 
 When evaluating machine learning frameworks, standard benchmarks often reduce the comparison to a single toy workload—a giant matrix multiplication or a standard ResNet-50 training pass—and declare a universal winner. But runtime performance is rarely that simple. A framework's actual execution speed depends on its memory allocator, how its compiler handles kernel fusion, whether it can eliminate Python dispatch overhead, and the arithmetic intensity of the model architecture itself.
 
-Following the release of [`neural-cost`](https://github.com/davidgraymi/neural-cost), we ran an extensive, cross-framework scientific benchmark to test how modern ML frameworks actually behave under varied architectural constraints. Rather than merely recording wall-clock time, we analyzed each workload through the lens of a **Roofline model** to determine *how close to the hardware's theoretical limits each runtime gets*.
+Following the release of [`neural-cost`](https://github.com/davidgraymi/neural-cost) (and our [introductory overview of roofline modeling](/blog/neural-cost)), we conducted an extensive cross-framework scientific benchmark—documented in full in the [GitHub Benchmark Report](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/BENCHMARK_REPORT.md)—to test how modern ML runtimes perform across diverse network topologies. Rather than merely recording wall-clock time, we analyzed each workload through the lens of a **Roofline model** to determine *how close to the hardware's theoretical limits each runtime gets*.
 
 We evaluated five distinct model topologies across **PyTorch 2.14**, **JAX 0.11**, and **TensorFlow**, comparing eager execution against compiled graph modes (`torch.compile`, `jax.jit`, and `tf.function`) across batch sizes from 1 to 128.
 
@@ -17,7 +17,7 @@ Here is what the empirical data revealed.
 
 ## The Experimental Setup
 
-All benchmarks were executed on an Apple M3 processor with unified memory architecture. Before running any model evaluations, we characterized the system's empirical limits using `neural-cost`'s built-in hardware detection and STREAM triad benchmark:
+All benchmarks were executed on an Apple M3 processor with unified memory architecture. Before running any model evaluations, we characterized the system's empirical limits using [`neural-cost`'s built-in hardware detection and STREAM triad benchmark](https://github.com/davidgraymi/neural-cost#analyze-portable-operations):
 
 - **Target Device:** Apple M3 (8-core CPU)
 - **Peak FP32 Compute:** 3.60 TFLOP/s
@@ -46,7 +46,7 @@ Each framework was tested in two modes:
 2. **JAX 0.11:** Eager XLA baseline vs. `jax.jit()` with full ahead-of-time graph compilation.
 3. **TensorFlow:** Eager baseline vs. `tf.function()` graph mode.
 
-To ensure statistical rigor:
+To ensure statistical rigor, we executed the automated benchmark runner [`benchmarks/collect_data.py`](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/benchmarks/collect_data.py):
 - **Warmup:** 15 full iterations per configuration to allow all JITs, static compilation graphs, and memory allocators to stabilize completely.
 - **Timed repeats:** 40 timed iterations per configuration.
 - **Metrics recorded:** Median latency, standard deviation ($\sigma$), coefficient of variation (CV%), roofline efficiency (`lower_bound / observed`), and achieved GFLOP/s.
@@ -138,7 +138,7 @@ Looking at the efficiency matrix:
 
 ### What is eating the headroom?
 
-Even for the best-performing compiled variants, efficiency numbers rarely exceed 15–20% on CPU. The `neural-cost` gap analysis identifies four primary sources of overhead:
+Even for the best-performing compiled variants, efficiency numbers rarely exceed 15–20% on CPU. The [`neural-cost` gap analysis](https://github.com/davidgraymi/neural-cost#the-core-idea-the-roofline-model) identifies four primary sources of overhead:
 1. **Launch & dispatch latency:** Fixed overhead per kernel invocation that cannot be amortized when total execution time is under a millisecond.
 2. **Untiled inner dimensions:** Matrix multiplications with $K=128$ fall below typical cache-blocking and register-tiling thresholds designed for matrices with dimensions in the thousands.
 3. **Activation buffer allocations:** Allocating intermediate workspaces between layers incurs page-table and memory management costs.
@@ -173,7 +173,7 @@ The stability findings are unambiguous:
 
 ## Architecture-by-Architecture Winners
 
-Summing up the optimized variants at batch=32:
+Summing up the optimized variants at batch=32 (detailed in the [full results table](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/BENCHMARK_REPORT.md#full-results-table-batch32)):
 
 | Architecture | Fastest Framework | Latency | Efficiency | Notes |
 |---|---|---|---|---|
@@ -198,8 +198,10 @@ Summing up the optimized variants at batch=32:
 
 ## Code and Reproducibility
 
-All benchmarks, automated figure generators, and full tabular data are open-source and reproducible:
+All benchmarks, automated figure generators, and full tabular data are open-source and reproducible on GitHub:
 
-- **Benchmark Suite:** [`git/ML-Framework-Comparison`](https://github.com/davidgraymi/ML-Framework-Comparison)
-- **Roofline Tooling:** [`neural-cost`](https://github.com/davidgraymi/neural-cost)
-- **Full Report:** See [`BENCHMARK_REPORT.md`](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/BENCHMARK_REPORT.md) in the repository for complete raw JSON telemetry across all batch sizes.
+- **Benchmark Repository:** [`davidgraymi/ML-Framework-Comparison`](https://github.com/davidgraymi/ML-Framework-Comparison)
+- **Scientific Benchmark Report:** [`BENCHMARK_REPORT.md`](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/BENCHMARK_REPORT.md)
+- **Raw Telemetry Dataset:** [`benchmarks/results/benchmark_data.json`](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/benchmarks/results/benchmark_data.json)
+- **Report & Plot Generator:** [`benchmarks/generate_report.py`](https://github.com/davidgraymi/ML-Framework-Comparison/blob/main/benchmarks/generate_report.py)
+- **Roofline Analysis Library:** [`neural-cost` on GitHub](https://github.com/davidgraymi/neural-cost) (see also our [neural-cost deep dive](/blog/neural-cost))
