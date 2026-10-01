@@ -127,7 +127,9 @@ Inductor was primarily designed for GPUs, where kernel fusion eliminates massive
 
 Roofline efficiency measures what percentage of the theoretical performance ceiling was achieved by the runtime:
 
-$$\text{Efficiency} = \frac{\text{Lower Bound Latency}}{\text{Observed Latency}} = \frac{\max\left(\frac{\text{FLOPs}}{\text{Peak FLOP/s}}, \frac{\text{Bytes}}{\text{Bandwidth}}\right)}{\text{Observed Runtime}}$$
+$$
+\text{Efficiency} = \frac{\text{Lower Bound Latency}}{\text{Observed Latency}} = \frac{\max\left(\frac{\text{FLOPs}}{\text{Peak FLOP/s}}, \frac{\text{Bytes}}{\text{Bandwidth}}\right)}{\text{Observed Runtime}}
+$$
 
 ![Roofline Efficiency Heatmap at batch=32](/images/benchmarks/fig3_efficiency_heatmap.png)
 

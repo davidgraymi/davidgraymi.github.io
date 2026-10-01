@@ -456,6 +456,13 @@
 .prose table { width: 100%; font-size: 0.9375rem; border-collapse: collapse; }
 .prose th, .prose td { border: 1px solid var(--rule); padding: 0.5rem 0.75rem; text-align: left; }
 
+/* KaTeX math formula container */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.5em;
+}
+
 /* Shiki emits both themes; show the one that matches. */
 :root[data-theme='dark'] .astro-code,
 :root[data-theme='dark'] .astro-code span {
