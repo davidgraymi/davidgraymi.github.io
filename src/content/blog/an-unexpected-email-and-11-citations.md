@@ -1,7 +1,7 @@
 ---
 title: "An Unexpected Email, REPRO-SIGN, and 11 Citations on Google Scholar"
 description: "Years after our college capstone, an out-of-the-blue email from European AI researchers wanting to reproduce our sign language paper led to a wild discovery: we've been cited 11 times."
-pubDate: 2026-10-01
+pubDate: 2026-10-12
 tags: ['ai', 'research', 'machine-learning', 'reproducibility', 'capstone', 'google-scholar']
 ---
 
@@ -91,4 +91,4 @@ The email asks for the dataset we collected and used to train our 14-class gestu
 
 Braden and I are already in touch and digging through old backups, external SSDs, and college cloud drives to retrieve the raw landmark coordinates and image sets so we can hand them over to Dr. De Sisto and the REPRO-SIGN team.
 
-If there’s one lesson I take away from this surprise Thursday email, it’s this: **take pride in what you build, even when you think nobody is watching.** You never know which college project or late-night experiment might ripple outwards and end up contributing to a global scientific community years down the road.
+If there’s one lesson I take away from this surprise email, it’s this: **take pride in what you build, even when you think nobody is watching.** You never know which college project or late-night experiment might ripple outwards and end up contributing to a global scientific community years down the road.
