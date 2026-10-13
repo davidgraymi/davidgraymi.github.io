@@ -5,16 +5,25 @@ import Icon from './Icon.astro';
 <button
   id="theme-toggle"
   type="button"
-  class="grid h-8.5 w-8.5 place-items-center rounded-full border transition-all hover:border-[var(--rule-strong)] hover:text-[var(--signal)]"
-  style="border-color: var(--rule); background: var(--bg-surface-2);"
+  class="m3-icon-btn grid h-8.5 w-8.5 place-items-center rounded-full border transition-all duration-300"
+  style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface);"
   aria-label="Switch between light and dark"
   title="Switch between light and dark"
 >
-  <span class="icon-when-dark"><Icon name="sun" size={15} /></span>
-  <span class="icon-when-light"><Icon name="moon" size={15} /></span>
+  <span class="icon-when-dark transition-transform duration-300 hover:rotate-45"><Icon name="sun" size={15} /></span>
+  <span class="icon-when-light transition-transform duration-300 hover:-rotate-12"><Icon name="moon" size={15} /></span>
 </button>
 
 <style>
+  .m3-icon-btn:hover {
+    border-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-primary);
+    transform: scale(1.08);
+  }
+  .m3-icon-btn:active {
+    transform: scale(0.92);
+  }
+
   /* Show the destination, not the current state: dark page offers the sun. */
   .icon-when-dark { display: none; }
   .icon-when-light { display: block; }

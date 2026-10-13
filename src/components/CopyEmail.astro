@@ -10,7 +10,7 @@ const { class: className = '' } = Astro.props;
 
 <button
   type="button"
-  class:list={['btn btn-ghost group', className]}
+  class:list={['btn btn-tonal group', className]}
   data-copy-email={site.email}
   hidden
 >
@@ -18,7 +18,7 @@ const { class: className = '' } = Astro.props;
     <Icon name="copy" size={16} />
     Copy address
   </span>
-  <span class="copy-done inline-flex items-center gap-2" hidden style="color: var(--signal)">
+  <span class="copy-done inline-flex items-center gap-2 font-semibold" hidden style="color: var(--md-sys-color-primary)">
     <Icon name="check" size={16} />
     Copied
   </span>

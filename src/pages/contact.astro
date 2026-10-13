@@ -22,14 +22,14 @@ const badFits = [
   title="Contact"
   description="The fastest way to reach me is email. No form, no funnel, no autoresponder."
 >
-  <section class="gridlines border-b" style="border-color: var(--rule);">
+  <section class="gridlines border-b" style="border-color: var(--md-sys-color-outline-variant);">
     <div class="wrap py-16 md:py-24">
       <div class="max-w-2xl">
         <p class="kicker">Contact</p>
-        <h1 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h1)">
+        <h1 class="mt-5 font-semibold leading-tight tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">
           Email me. It goes straight to me.
         </h1>
-        <p class="mt-5 text-[18px] leading-relaxed" style="color: var(--fg-muted)">
+        <p class="mt-4 text-[18px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
           No contact form, no funnel, no autoresponder pretending to be a person. One address, read
           by one human, usually answered within a day or two.
         </p>
@@ -37,12 +37,12 @@ const badFits = [
         <a
           href={`mailto:${site.email}`}
           class="link-underline mt-8 inline-block font-mono text-[clamp(1.2rem,0.9rem+1.8vw,2.1rem)] font-semibold"
-          style="color: var(--signal);"
+          style="color: var(--md-sys-color-primary);"
         >
           {site.email}
         </a>
 
-        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href={`mailto:${site.email}`} class="btn btn-primary">
             <Icon name="mail" size={17} />
             Open my mail app
@@ -50,25 +50,28 @@ const badFits = [
           <CopyEmail />
         </div>
 
-        <p class="mt-8 font-mono text-[12.5px]" style="color: var(--fg-muted)">
+        <p class="mt-8 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
           {site.location} · Central Time · {site.availabilityNote}
         </p>
       </div>
     </div>
   </section>
 
-  <section class="border-b" style="border-color: var(--rule);">
+  <section class="border-b" style="border-color: var(--md-sys-color-outline-variant);">
     <div class="wrap grid gap-8 py-16 md:grid-cols-2 md:gap-10 md:py-20">
       <div class="spotlight-card p-8">
-        <h2 class="text-[20px] font-semibold">Good reasons to write</h2>
+        <h2 class="text-[20px] font-semibold" style="color: var(--md-sys-color-on-surface);">Good reasons to write</h2>
         <ul class="mt-6 space-y-4">
           {
             goodFits.map((item) => (
               <li class="flex gap-3.5 text-[15px] leading-relaxed">
-                <span class="mt-0.5 shrink-0" style="color: var(--signal)">
-                  <Icon name="check" size={17} />
+                <span
+                  class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full"
+                  style="color: var(--md-sys-color-primary); background: var(--md-sys-color-surface-container-high);"
+                >
+                  <Icon name="check" size={15} />
                 </span>
-                <span>{item}</span>
+                <span style="color: var(--md-sys-color-on-surface);">{item}</span>
               </li>
             ))
           }
@@ -76,20 +79,23 @@ const badFits = [
       </div>
 
       <div class="spotlight-card p-8">
-        <h2 class="text-[20px] font-semibold">Honestly, probably not</h2>
+        <h2 class="text-[20px] font-semibold" style="color: var(--md-sys-color-on-surface);">Honestly, probably not</h2>
         <ul class="mt-6 space-y-4">
           {
             badFits.map((item) => (
-              <li class="flex gap-3.5 text-[15px] leading-relaxed" style="color: var(--fg-muted)">
-                <span class="mt-0.5 shrink-0 opacity-70">
-                  <Icon name="close" size={17} />
+              <li class="flex gap-3.5 text-[15px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+                <span
+                  class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full opacity-80"
+                  style="color: var(--md-sys-color-error); background: var(--md-sys-color-error-container);"
+                >
+                  <Icon name="close" size={14} />
                 </span>
                 <span>{item}</span>
               </li>
             ))
           }
         </ul>
-        <p class="mt-6 text-[14px] leading-relaxed" style="color: var(--fg-muted)">
+        <p class="mt-6 text-[14px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
           If you're not sure which list you're on, write anyway. I'd rather read a message that
           turns out to be a no than miss the one that wasn't.
         </p>
@@ -108,16 +114,19 @@ const badFits = [
               class="spotlight-card group flex items-center gap-4 p-5 transition-all"
               rel={s.href.startsWith('http') ? 'me noopener' : undefined}
             >
-              <div class="rounded-xl border p-2.5 transition-colors group-hover:border-[var(--signal)] group-hover:text-[var(--signal)]" style="background: var(--bg-surface-2); border-color: var(--rule);">
+              <div
+                class="rounded-2xl border p-2.5 transition-colors group-hover:border-[var(--md-sys-color-primary)] group-hover:text-[var(--md-sys-color-primary)]"
+                style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);"
+              >
                 <Icon name={s.icon} size={20} />
               </div>
               <div>
-                <span class="block text-[15.5px] font-semibold transition-colors group-hover:text-[var(--signal)]">{s.label}</span>
-                <span class="block font-mono text-[12.5px]" style="color: var(--fg-muted)">
+                <span class="block text-[15.5px] font-semibold transition-colors group-hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface);">{s.label}</span>
+                <span class="block font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
                   {s.handle}
                 </span>
               </div>
-              <span class="ml-auto opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" style="color: var(--signal)">
+              <span class="ml-auto opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" style="color: var(--md-sys-color-primary)">
                 <Icon name="arrowUpRight" size={17} />
               </span>
             </a>

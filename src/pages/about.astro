@@ -15,14 +15,14 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
   title="About"
   description="Product Security Engineer in St. Louis. Kubernetes, Azure, and secure cloud infrastructure by day, machine learning and a document platform nobody asked for by night."
 >
-  <section class="gridlines border-b" style="border-color: var(--rule);">
+  <section class="gridlines border-b" style="border-color: var(--md-sys-color-outline-variant);">
     <div class="wrap grid items-start gap-10 py-16 md:grid-cols-[1.5fr_1fr] md:gap-16 md:py-24">
       <div>
         <p class="kicker">About</p>
-        <h1 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h1)">
+        <h1 class="mt-5 font-semibold leading-tight tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">
           Hi, I'm David. I got into this to find out how the magic worked.
         </h1>
-        <div class="mt-7 space-y-5 text-[17.5px] leading-relaxed" style="color: var(--fg-muted)">
+        <div class="mt-7 space-y-5 text-[17.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
           <p>
             It turned out there wasn't any. Starting my career writing kernels and schedulers in C
             and Ada meant meeting the computer with nothing between us — no runtime, no framework,
@@ -52,33 +52,41 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
       </div>
 
       <div class="w-full">
-        <div class="glass-panel overflow-hidden rounded-3xl" style="background: var(--bg-surface); border-color: var(--rule);">
+        {/* Avatar: M3 Expressive Card Shape */}
+        <div
+          class="overflow-hidden rounded-[32px] border shadow-[var(--md-sys-elevation-2)]"
+          style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+        >
           <Image
             src={avatar}
             alt="David Gray"
             widths={[480, 720, 960]}
             sizes="(min-width: 768px) 36vw, 92vw"
             loading="eager"
-            class="aspect-square w-full object-cover"
+            class="aspect-square w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
           />
         </div>
 
-        <dl class="glass-panel mt-6 space-y-3.5 rounded-2xl p-5 font-mono text-[13px]" style="background: var(--bg-surface); border-color: var(--rule);">
-          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
-            <dt style="color: var(--fg-muted)">Based in</dt>
-            <dd class="text-right">{site.location}</dd>
+        {/* Info DL Block: M3 Expressive Card */}
+        <dl
+          class="mt-6 space-y-3.5 rounded-[24px] border p-6 font-mono text-[13px] shadow-[var(--md-sys-elevation-1)]"
+          style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+        >
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--md-sys-color-outline-variant);">
+            <dt style="color: var(--md-sys-color-on-surface-variant)">Based in</dt>
+            <dd class="text-right font-medium" style="color: var(--md-sys-color-on-surface);">{site.location}</dd>
           </div>
-          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
-            <dt style="color: var(--fg-muted)">Studying</dt>
-            <dd class="text-right" style="color: var(--signal)">M.S. CS, UIUC</dd>
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--md-sys-color-outline-variant);">
+            <dt style="color: var(--md-sys-color-on-surface-variant)">Studying</dt>
+            <dd class="text-right font-semibold" style="color: var(--md-sys-color-primary)">M.S. CS, UIUC</dd>
           </div>
-          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--rule);">
-            <dt style="color: var(--fg-muted)">Language</dt>
-            <dd class="text-right">English (native)</dd>
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--md-sys-color-outline-variant);">
+            <dt style="color: var(--md-sys-color-on-surface-variant)">Language</dt>
+            <dd class="text-right font-medium" style="color: var(--md-sys-color-on-surface);">English (native)</dd>
           </div>
           <div class="flex justify-between gap-4">
-            <dt style="color: var(--fg-muted)">Off the clock</dt>
-            <dd class="text-right">{interests.join(', ')}</dd>
+            <dt style="color: var(--md-sys-color-on-surface-variant)">Off the clock</dt>
+            <dd class="text-right font-medium" style="color: var(--md-sys-color-on-surface);">{interests.join(', ')}</dd>
           </div>
         </dl>
 
@@ -102,25 +110,25 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
   {/* ------------------------------------------------------------ experience */}
   <Section kicker="Experience" title="Where I've worked" alt>
-    <div class="mt-12 flex flex-col gap-4">
+    <div class="mt-12 flex flex-col gap-5">
       {
         roles.map((role) => (
           <div class="spotlight-card grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
             <div>
-              <h3 class="text-[18px] font-semibold leading-snug">{role.title}</h3>
-              <p class="mt-1.5 font-medium text-[15px]" style="color: var(--signal)">
+              <h3 class="text-[19px] font-semibold leading-snug" style="color: var(--md-sys-color-on-surface);">{role.title}</h3>
+              <p class="mt-1.5 font-medium text-[15px]" style="color: var(--md-sys-color-primary)">
                 {role.org}
               </p>
-              <p class="mt-2 font-mono text-[12px]" style="color: var(--fg-muted)">
+              <p class="mt-2 font-mono text-[12px]" style="color: var(--md-sys-color-on-surface-variant)">
                 {role.period}
               </p>
             </div>
             <div>
-              <p class="text-[15.5px] leading-relaxed">{role.summary}</p>
+              <p class="text-[15.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface);">{role.summary}</p>
               <ul class="mt-4 space-y-2.5">
                 {role.points.map((point) => (
-                  <li class="flex gap-3 text-[14.5px] leading-relaxed" style="color: var(--fg-muted)">
-                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--signal)" />
+                  <li class="flex gap-3 text-[14.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 6px var(--md-sys-color-primary);" />
                     {point}
                   </li>
                 ))}
@@ -136,16 +144,19 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
   <Section kicker="Background">
     <div class="grid gap-12 md:grid-cols-2 md:gap-16">
       <div>
-        <h2 class="text-[21px] font-semibold">Education</h2>
-        <div class="mt-6 space-y-5">
+        <h2 class="text-[22px] font-semibold" style="color: var(--md-sys-color-on-surface);">Education</h2>
+        <div class="mt-6 space-y-4">
           {
             education.map((item) => (
-              <div class="glass-panel rounded-2xl p-6 transition-all hover:border-[var(--rule-strong)]" style="border-left: 3px solid var(--signal);">
-                <p class="text-[16.5px] font-semibold">{item.degree}</p>
-                <p class="mt-1 text-[15px]" style="color: var(--fg-muted)">
+              <div
+                class="rounded-[22px] border p-6 shadow-[var(--md-sys-elevation-1)] transition-all duration-200 hover:border-[var(--md-sys-color-primary)]"
+                style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); border-left: 4px solid var(--md-sys-color-primary);"
+              >
+                <p class="text-[17px] font-semibold" style="color: var(--md-sys-color-on-surface);">{item.degree}</p>
+                <p class="mt-1 text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
                   {item.school}
                 </p>
-                <p class="mt-2 font-mono text-[12px]" style="color: var(--fg-muted)">
+                <p class="mt-2 font-mono text-[12px]" style="color: var(--md-sys-color-on-surface-variant)">
                   {item.period}
                   {item.note && ` · ${item.note}`}
                 </p>
@@ -156,7 +167,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
       </div>
 
       <div>
-        <h2 class="text-[21px] font-semibold">Tools I reach for</h2>
+        <h2 class="text-[22px] font-semibold" style="color: var(--md-sys-color-on-surface);">Tools I reach for</h2>
         <div class="mt-6 space-y-6">
           {
             skills.map((group) => (
@@ -165,8 +176,8 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
                 <div class="mt-3 flex flex-wrap gap-2">
                   {group.items.map((item) => (
                     <span
-                      class="rounded-lg border px-3 py-1.5 font-mono text-[12px] transition-all hover:border-[var(--signal)] hover:text-[var(--signal)]"
-                      style="background: var(--bg-surface); border-color: var(--rule);"
+                      class="rounded-xl border px-3 py-1.5 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
+                      style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
                     >
                       {item}
                     </span>
@@ -179,7 +190,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
       </div>
     </div>
 
-    <a href="/files/Resume.docx" class="btn btn-ghost mt-12">
+    <a href="/files/Resume.docx" class="btn btn-tonal mt-12">
       <Icon name="file" size={16} />
       Download my résumé
     </a>

@@ -23,40 +23,44 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
   />
 
   <div class="wrap py-12 md:py-16">
-    {/* Interactive Filter Pills */}
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-8" style="border-color: var(--rule);">
+    {/* Interactive Filter Pills: M3 Expressive Segmented Buttons */}
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-8" style="border-color: var(--md-sys-color-outline-variant);">
       <div id="filter-tabs" class="flex flex-wrap items-center gap-2">
         <button
           type="button"
           data-filter="all"
-          class="filter-tab active rounded-full px-4 py-1.5 font-mono text-[12.5px] font-medium transition-all"
+          class="filter-tab active"
         >
           All ({entries.length})
         </button>
         <button
           type="button"
           data-filter="embedded"
-          class="filter-tab rounded-full px-4 py-1.5 font-mono text-[12.5px] font-medium transition-all"
+          class="filter-tab"
         >
           Embedded & Real-Time
         </button>
         <button
           type="button"
           data-filter="ai"
-          class="filter-tab rounded-full px-4 py-1.5 font-mono text-[12.5px] font-medium transition-all"
+          class="filter-tab"
         >
           Applied AI / ML
         </button>
         <button
           type="button"
           data-filter="tools"
-          class="filter-tab rounded-full px-4 py-1.5 font-mono text-[12.5px] font-medium transition-all"
+          class="filter-tab"
         >
           Tools & Apps
         </button>
       </div>
 
-      <a href="/wordlet" class="inline-flex items-center gap-1.5 font-mono text-[12.5px] transition-colors hover:text-[var(--signal)]" style="color: var(--fg-muted)">
+      <a
+        href="/wordlet"
+        class="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[12.5px] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
+        style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
+      >
         <span>Launch Wordlet</span>
         <Icon name="arrowUpRight" size={14} />
       </a>
@@ -67,7 +71,7 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
       {entries.map((entry) => <WorkCard entry={entry} />)}
     </div>
 
-    <div id="no-projects" class="hidden py-16 text-center text-[15px]" style="color: var(--fg-muted)">
+    <div id="no-projects" class="hidden py-16 text-center text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
       No projects match this category.
     </div>
   </div>
@@ -78,48 +82,28 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
   />
 </Base>
 
-<style>
-  .filter-tab {
-    background: var(--bg-surface);
-    border: 1px solid var(--rule);
-    color: var(--fg-muted);
-  }
-
-  .filter-tab:hover {
-    border-color: var(--rule-strong);
-    color: var(--fg);
-  }
-
-  .filter-tab.active {
-    background: var(--signal);
-    border-color: var(--signal);
-    color: var(--signal-contrast);
-    box-shadow: 0 0 15px -3px var(--signal-glow);
-  }
-</style>
-
 <script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
-  const cards = document.querySelectorAll<HTMLElement>('#projects-grid article');
-  const emptyState = document.getElementById('no-projects');
+  const filterTabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+  const projectCards = document.querySelectorAll<HTMLElement>('#projects-grid article');
+  const noProjects = document.getElementById('no-projects');
 
-  tabs.forEach((tab) => {
+  filterTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      tabs.forEach((t) => t.classList.remove('active'));
+      filterTabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
 
-      const filter = tab.dataset.filter;
+      const filter = tab.dataset.filter ?? 'all';
       let visibleCount = 0;
 
-      cards.forEach((card) => {
-        const cat = card.dataset.category;
-        const match = filter === 'all' || cat === filter;
-        card.style.display = match ? 'flex' : 'none';
+      projectCards.forEach((card) => {
+        const category = card.dataset.category ?? '';
+        const match = filter === 'all' || category === filter;
+        card.style.display = match ? '' : 'none';
         if (match) visibleCount++;
       });
 
-      if (emptyState) {
-        emptyState.classList.toggle('hidden', visibleCount > 0);
+      if (noProjects) {
+        noProjects.classList.toggle('hidden', visibleCount > 0);
       }
     });
   });

@@ -35,8 +35,8 @@ const props = Astro.props;
     <AuroraBackground />
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:px-4 focus:py-2"
-      style="background: var(--signal); color: var(--signal-contrast)"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:px-5 focus:py-2.5 font-medium shadow-[var(--md-sys-elevation-3)]"
+      style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary)"
     >
       Skip to content
     </a>
@@ -48,9 +48,9 @@ const props = Astro.props;
     <CommandPalette />
 
     <script>
-      // High-performance pointer tracking for Linear-style spotlight cards
+      // High-performance pointer tracking for Material 3 Expressive interactive cards
       function initSpotlights() {
-        document.querySelectorAll('.spotlight-card').forEach((card) => {
+        document.querySelectorAll('.spotlight-card, .m3-card').forEach((card) => {
           if ((card as any).__hasSpotlight) return;
           (card as any).__hasSpotlight = true;
           card.addEventListener('pointermove', (e) => {

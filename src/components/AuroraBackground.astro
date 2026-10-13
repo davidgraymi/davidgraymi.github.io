@@ -1,35 +1,42 @@
 ---
 /**
  * AuroraBackground
- * Hardware-accelerated floating ambient gradient orbs that give the obsidian
- * ground atmospheric depth without impacting layout or performance.
+ * Hardware-accelerated floating ambient gradient orbs that dynamically harmonize
+ * Material 3 Expressive Primary, Secondary, and Tertiary color tokens to give the
+ * surface atmospheric depth without impacting layout or performance.
  */
 ---
 
 <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-  {/* Primary amber/gold glow */}
+  {/* Primary M3 Expressive glow */}
   <div
     class="aurora-orb aurora-orb-1"
-    style="background: radial-gradient(circle, color-mix(in srgb, var(--signal) 22%, transparent) 0%, transparent 70%);"
+    style="background: radial-gradient(circle, color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent) 0%, transparent 70%);"
   ></div>
 
-  {/* Deep indigo / twilight secondary aura */}
+  {/* Tertiary M3 Expressive aura */}
   <div
     class="aurora-orb aurora-orb-2"
-    style="background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, transparent 70%);"
+    style="background: radial-gradient(circle, color-mix(in srgb, var(--md-sys-color-tertiary) 18%, transparent) 0%, transparent 70%);"
+  ></div>
+
+  {/* Secondary M3 Expressive warm tone */}
+  <div
+    class="aurora-orb aurora-orb-3"
+    style="background: radial-gradient(circle, color-mix(in srgb, var(--md-sys-color-secondary) 15%, transparent) 0%, transparent 70%);"
   ></div>
 
   {/* Subtle top horizon glow line */}
   <div
     class="absolute inset-x-0 top-0 h-px"
-    style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--signal) 35%, transparent) 50%, transparent 95%); opacity: 0.8;"
+    style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent) 50%, transparent 95%); opacity: 0.8;"
   ></div>
 </div>
 
 <style>
   .aurora-orb {
     position: absolute;
-    border-radius: 9999px;
+    border-radius: var(--md-sys-shape-corner-full);
     filter: blur(100px);
     -webkit-filter: blur(100px);
     opacity: 0.75;
@@ -53,6 +60,14 @@
     animation: floatOrb2 22s ease-in-out infinite alternate;
   }
 
+  .aurora-orb-3 {
+    width: clamp(280px, 35vw, 480px);
+    height: clamp(280px, 35vw, 480px);
+    bottom: 5%;
+    left: 15%;
+    animation: floatOrb3 26s ease-in-out infinite alternate;
+  }
+
   @keyframes floatOrb1 {
     0% {
       transform: translate(0, 0) scale(1);
@@ -74,6 +89,18 @@
     }
     100% {
       transform: translate(30px, -40px) scale(0.9);
+    }
+  }
+
+  @keyframes floatOrb3 {
+    0% {
+      transform: translate(0, 0) scale(0.95);
+    }
+    50% {
+      transform: translate(40px, -50px) scale(1.05);
+    }
+    100% {
+      transform: translate(-30px, 30px) scale(1);
     }
   }
 

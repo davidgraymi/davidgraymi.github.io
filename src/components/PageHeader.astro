@@ -7,13 +7,13 @@ interface Props {
 const { kicker, title, lead } = Astro.props;
 ---
 
-<section class="gridlines border-b">
-  <div class="wrap py-16 md:py-20">
+<section class="gridlines border-b" style="border-color: var(--md-sys-color-outline-variant);">
+  <div class="wrap py-16 md:py-22">
     <p class="kicker">{kicker}</p>
-    <h1 class="mt-5 max-w-3xl font-semibold" style="font-size: var(--text-h1)">{title}</h1>
+    <h1 class="mt-5 max-w-3xl font-semibold tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">{title}</h1>
     {
       lead && (
-        <p class="mt-5 max-w-2xl text-[18px] leading-relaxed" style="color: var(--fg-muted)">
+        <p class="mt-5 max-w-2xl text-[18px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
           {lead}
         </p>
       )

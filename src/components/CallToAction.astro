@@ -13,21 +13,21 @@ const {
 } = Astro.props;
 ---
 
-<section class="border-t py-20 md:py-28" style="border-color: var(--rule);">
+<section class="border-t py-20 md:py-28" style="border-color: var(--md-sys-color-outline-variant);">
   <div class="wrap">
     <div
-      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-3xl p-8 text-center sm:p-14"
-      style="background: var(--bg-surface); border-color: var(--rule);"
+      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-[32px] p-8 text-center sm:p-14"
+      style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
     >
-      {/* Background glow accent */}
+      {/* Background glow accent: M3 Primary & Tertiary Glow */}
       <div
-        class="pointer-events-none absolute -top-24 left-1/2 -z-10 h-48 w-96 -translate-x-1/2 rounded-full opacity-35 blur-3xl"
-        style="background: var(--signal-glow);"
+        class="pointer-events-none absolute -top-24 left-1/2 -z-10 h-52 w-96 -translate-x-1/2 rounded-full opacity-35 blur-3xl"
+        style="background: radial-gradient(circle, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 70%, transparent 100%);"
       />
 
       <p class="kicker justify-center">Let's connect</p>
-      <h2 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h2)">{title}</h2>
-      <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: var(--fg-muted)">
+      <h2 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h2); color: var(--md-sys-color-on-surface);">{title}</h2>
+      <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
         {body}
       </p>
 
@@ -39,7 +39,7 @@ const {
         <CopyEmail class="w-full sm:w-auto" />
       </div>
 
-      <p class="mt-6 font-mono text-[12.5px]" style="color: var(--fg-muted)">
+      <p class="mt-6 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
         Usually replies within 24 hours · {site.location}
       </p>
     </div>
