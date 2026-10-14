@@ -17,18 +17,18 @@ const { title, date, location, images } = entry.data;
 ---
 
 <Base title={title} description={`${title}${location ? ` — ${location}` : ''}`} type="article">
-  <header class="border-b">
+  <header class="border-b" style="border-color: var(--md-sys-color-outline-variant);">
     <div class="wrap py-12 md:py-16">
       <a
         href="/photos"
-        class="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--signal)]"
-        style="color: var(--fg-muted)"
+        class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[11.5px] uppercase tracking-[0.12em] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
+        style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
       >
-        <span class="rotate-180 leading-none"><Icon name="arrow" size={14} /></span>
+        <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
         All albums
       </a>
-      <h1 class="mt-6 font-semibold" style="font-size: var(--text-h1)">{title}</h1>
-      <p class="mt-4 font-mono text-[12.5px]" style="color: var(--fg-muted)">
+      <h1 class="mt-6 font-semibold tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">{title}</h1>
+      <p class="mt-4 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
         {location && `${location} · `}<FormattedDate date={date} />
       </p>
       <div class="prose mt-6 max-w-2xl">
@@ -47,11 +47,12 @@ const { title, date, location, images } = entry.data;
               alt={photo.alt}
               widths={[400, 800, 1200]}
               sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
-              class="w-full rounded-[var(--radius-card)] border"
+              class="w-full rounded-xl border shadow-[var(--md-sys-elevation-1)]"
+              style="border-color: var(--md-sys-color-outline-variant);"
               loading="lazy"
             />
             {photo.caption && (
-              <figcaption class="mt-2.5 text-[13.5px] leading-relaxed" style="color: var(--fg-muted)">
+              <figcaption class="mt-2.5 text-[13.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
                 {photo.caption}
               </figcaption>
             )}

@@ -28,11 +28,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   <div class="wrap py-14 md:py-20">
     {
       posts.length === 0 ? (
-        <p class="text-[17px]" style="color: var(--fg-muted)">
+        <p class="text-[17px]" style="color: var(--md-sys-color-on-surface-variant)">
           Nothing published yet. The first post is always the hardest.
         </p>
       ) : (
-        <div class="max-w-3xl border-b">
+        <div class="max-w-3xl flex flex-col gap-3">
           {posts.map((entry) => (
             <PostCard entry={entry} />
           ))}

@@ -14,16 +14,16 @@ const { kicker, title, lead, id, alt = false, class: className = '' } = Astro.pr
 <section
   id={id}
   class:list={['border-t py-16 md:py-24', className]}
-  style={alt ? 'background: var(--bg-surface)' : ''}
+  style={`border-color: var(--md-sys-color-outline-variant); ${alt ? 'background: var(--md-sys-color-surface-container-lowest);' : ''}`}
 >
   <div class="wrap">
     {
       (kicker || title || lead) && (
         <div class="max-w-2xl">
           {kicker && <p class="kicker">{kicker}</p>}
-          {title && <h2 class="mt-5 font-semibold" style="font-size: var(--text-h2)">{title}</h2>}
+          {title && <h2 class="mt-5 font-semibold" style="font-size: var(--text-h2); color: var(--md-sys-color-on-surface);">{title}</h2>}
           {lead && (
-            <p class="mt-4 text-[17px] leading-relaxed" style="color: var(--fg-muted)">
+            <p class="mt-4 text-[17px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
               {lead}
             </p>
           )}

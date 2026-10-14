@@ -18,38 +18,38 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
 
 <Base title={title} description={blurb} type="article">
   <article>
-    <header class="gridlines border-b">
+    <header class="gridlines border-b" style="border-color: var(--md-sys-color-outline-variant);">
       <div class="wrap py-14 md:py-20">
         <a
           href="/work"
-          class="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--signal)]"
-          style="color: var(--fg-muted)"
+          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[11.5px] uppercase tracking-[0.12em] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
+          style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
         >
-          <span class="rotate-180 leading-none"><Icon name="arrow" size={14} /></span>
+          <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
           All work
         </a>
 
-        <h1 class="mt-6 max-w-3xl font-semibold" style="font-size: var(--text-h1)">{title}</h1>
-        <p class="mt-5 max-w-2xl text-[18px] leading-relaxed" style="color: var(--fg-muted)">{blurb}</p>
+        <h1 class="mt-6 max-w-3xl font-semibold tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">{title}</h1>
+        <p class="mt-4 max-w-2xl text-[18px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">{blurb}</p>
 
-        <dl class="mt-10 grid gap-6 sm:grid-cols-3">
-          <div>
+        <dl class="mt-10 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-2xl border p-4.5" style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);">
             <dt class="kicker">Type</dt>
-            <dd class="mt-3 text-[15px]">{kind}</dd>
+            <dd class="mt-2 text-[15px] font-medium" style="color: var(--md-sys-color-on-surface);">{kind}</dd>
           </div>
-          <div>
+          <div class="rounded-2xl border p-4.5" style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);">
             <dt class="kicker">Year</dt>
-            <dd class="mt-3 font-mono text-[15px]">{year}</dd>
+            <dd class="mt-2 font-mono text-[15px] font-medium" style="color: var(--md-sys-color-on-surface);">{year}</dd>
           </div>
-          <div>
+          <div class="rounded-2xl border p-4.5" style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);">
             <dt class="kicker">Built with</dt>
-            <dd class="mt-3 text-[15px]">{stack.join(' · ')}</dd>
+            <dd class="mt-2 text-[14.5px] font-medium" style="color: var(--md-sys-color-on-surface);">{stack.join(' · ')}</dd>
           </div>
         </dl>
 
         {
           links.length > 0 && (
-            <div class="mt-9 flex flex-wrap gap-3">
+            <div class="mt-8 flex flex-wrap gap-3">
               {links.map((link, i) => (
                 <a
                   href={link.href}
@@ -68,13 +68,14 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
 
     {
       cover && (
-        <div class="wrap pt-14">
+        <div class="wrap pt-12 md:pt-16">
           <Image
             src={cover}
             alt={coverAlt}
             widths={[720, 1200, 1600]}
             sizes="(min-width: 1024px) 72rem, 100vw"
-            class="glass-panel w-full overflow-hidden rounded-3xl"
+            class="w-full overflow-hidden rounded-xl border shadow-[var(--md-sys-elevation-2)]"
+            style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-low);"
           />
         </div>
       )
@@ -89,9 +90,12 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
         {
           highlight && (
             <aside class="lg:pt-2">
-              <div class="glass-panel rounded-2xl p-6" style="background: var(--bg-surface); border-left: 3px solid var(--signal);">
+              <div
+                class="glass-panel rounded-xl p-6 shadow-[var(--md-sys-elevation-2)]"
+                style="background: var(--md-sys-color-surface-container-low); border-left: 4px solid var(--md-sys-color-primary);"
+              >
                 <p class="kicker">The key metric</p>
-                <p class="mt-4 font-mono text-[19px] font-bold leading-snug" style="color: var(--signal);">{highlight}</p>
+                <p class="mt-4 font-mono text-[20px] font-bold leading-snug" style="color: var(--md-sys-color-primary);">{highlight}</p>
               </div>
             </aside>
           )

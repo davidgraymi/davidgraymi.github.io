@@ -49,14 +49,17 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
 
 <dialog
   id="command-palette"
-  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-2xl backdrop:bg-black/65 backdrop:backdrop-blur-md"
-  style="background: var(--bg-surface); border-color: var(--rule-strong);"
+  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-[var(--md-sys-elevation-4)] backdrop:bg-black/60 backdrop:backdrop-blur-md"
+  style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
 >
   <div class="flex flex-col">
-    {/* Header search bar */}
-    <div class="flex items-center gap-3 border-b px-4 py-3.5" style="border-color: var(--rule);">
-      <span style="color: var(--signal)">
-        <Icon name="globe" size={19} />
+    {/* Header Search Bar */}
+    <div
+      class="flex items-center gap-3 border-b px-5 py-4"
+      style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
+    >
+      <span style="color: var(--md-sys-color-primary)">
+        <Icon name="globe" size={20} />
       </span>
       <input
         id="command-search"
@@ -64,20 +67,20 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
         placeholder="Type a command, project, or page... (e.g. Work, RTOS, Theme)"
         autocomplete="off"
         spellcheck="false"
-        class="w-full bg-transparent text-[15px] font-medium outline-none placeholder:text-[var(--fg-muted)]"
-        style="color: var(--fg);"
+        class="w-full bg-transparent text-[15.5px] font-medium outline-none placeholder:text-[var(--md-sys-color-on-surface-variant)]"
+        style="color: var(--md-sys-color-on-surface);"
       />
-      <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color: var(--fg-muted)">
-        <kbd class="rounded border px-1.5 py-0.5" style="background: var(--bg-surface-2); border-color: var(--rule);">ESC</kbd>
+      <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color: var(--md-sys-color-on-surface-variant)">
+        <kbd class="rounded border px-2 py-0.5" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);">ESC</kbd>
       </div>
     </div>
 
-    {/* Results list */}
-    <div id="command-results" class="max-h-[60vh] overflow-y-auto p-2">
+    {/* Results List */}
+    <div id="command-results" class="max-h-[60vh] overflow-y-auto p-2.5">
       {
         allItems.map((item, index) => (
           <div
-            class="command-item group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 transition-all"
+            class="command-item group flex cursor-pointer items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-150"
             data-index={index}
             data-title={item.title.toLowerCase()}
             data-subtitle={item.subtitle.toLowerCase()}
@@ -88,39 +91,45 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
             tabindex="0"
           >
             <div class="min-w-0 pr-3">
-              <p class="truncate text-[14.5px] font-medium transition-colors group-hover:text-[var(--signal)]">
+              <p class="truncate text-[15px] font-medium transition-colors group-hover:text-[var(--md-sys-color-primary)]">
                 {item.title}
               </p>
-              <p class="truncate text-[12.5px]" style="color: var(--fg-muted)">
+              <p class="truncate text-[13px]" style="color: var(--md-sys-color-on-surface-variant)">
                 {item.subtitle}
               </p>
             </div>
             <div class="flex shrink-0 items-center gap-2">
               <span
-                class="rounded-md border px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-wider"
-                style="background: var(--bg-surface-2); border-color: var(--rule); color: var(--fg-muted);"
+                class="rounded-md border px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-wider font-semibold"
+                style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
               >
                 {item.badge}
               </span>
-              <span class="opacity-0 transition-opacity group-hover:opacity-100" style="color: var(--signal)">
-                <Icon name="arrow" size={14} />
+              <span
+                class="grid h-6 w-6 place-items-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                style="color: var(--md-sys-color-on-primary); background: var(--md-sys-color-primary);"
+              >
+                <Icon name="arrow" size={13} />
               </span>
             </div>
           </div>
         ))
       }
-      <div id="command-empty" class="hidden py-12 text-center text-[14px]" style="color: var(--fg-muted)">
+      <div id="command-empty" class="hidden py-14 text-center text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
         No matching commands or projects found.
       </div>
     </div>
 
-    {/* Footer shortcuts hint */}
-    <div class="flex items-center justify-between border-t px-4 py-2.5 font-mono text-[11.5px]" style="border-color: var(--rule); background: var(--bg-surface-2); color: var(--fg-muted);">
+    {/* Footer Shortcuts Hint */}
+    <div
+      class="flex items-center justify-between border-t px-5 py-3 font-mono text-[11.5px]"
+      style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface-variant);"
+    >
       <div class="flex items-center gap-3">
-        <span><kbd class="rounded border px-1 py-0.5 text-[10px]" style="border-color: var(--rule);">↑</kbd> <kbd class="rounded border px-1 py-0.5 text-[10px]" style="border-color: var(--rule);">↓</kbd> to navigate</span>
-        <span><kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--rule);">↵</kbd> to select</span>
+        <span><kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↑</kbd> <kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↓</kbd> to navigate</span>
+        <span><kbd class="rounded border px-2 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↵</kbd> to select</span>
       </div>
-      <span>Linear / Raycast mode</span>
+      <span class="rounded px-2 py-0.5 font-medium" style="background: var(--md-sys-color-surface-container-high);">Instrument Panel</span>
     </div>
   </div>
 </dialog>
@@ -133,7 +142,7 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
   @keyframes dialogIn {
     from {
       opacity: 0;
-      transform: scale(0.96) translateY(-8px);
+      transform: scale(0.95) translateY(-10px);
     }
     to {
       opacity: 1;
@@ -142,12 +151,18 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
   }
 
   .command-item.active {
-    background: var(--bg-surface-2);
-    border-color: var(--rule-strong);
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
   }
 
   .command-item.active p:first-child {
-    color: var(--signal);
+    color: var(--md-sys-color-on-secondary-container);
+    font-weight: 600;
+  }
+
+  .command-item.active p:last-child {
+    color: var(--md-sys-color-on-secondary-container);
+    opacity: 0.85;
   }
 
   .command-item.active span:last-child {
