@@ -31,14 +31,14 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
     <div class="wrap py-10 sm:py-14 md:py-18 lg:py-22">
       <div class="grid items-start gap-8 lg:grid-cols-[minmax(19rem,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
-        {/* Avatar: M3 Expressive Organic Container */}
+        {/* Avatar: Precision Instrument Frame */}
         <div class="relative order-1 mx-auto w-full max-w-[19rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none">
           <div
-            class="absolute -inset-2 rounded-[2rem] border opacity-60 sm:-inset-3 sm:rounded-[2.5rem] lg:-inset-3.5 lg:rounded-[3rem]"
+            class="absolute -inset-2 rounded-2xl border opacity-60 sm:-inset-2.5 sm:rounded-[1.25rem] lg:-inset-3 lg:rounded-[1.5rem]"
             style="border-color: var(--md-sys-color-primary); box-shadow: 0 0 35px -6px var(--signal-glow);"
           />
           <div
-            class="relative overflow-hidden rounded-[1.85rem] border sm:rounded-[2.25rem] lg:rounded-[2.75rem]"
+            class="relative overflow-hidden rounded-xl border sm:rounded-[1.1rem] lg:rounded-[1.35rem]"
             style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-low);"
           >
             <Image
@@ -46,7 +46,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               alt="David Gray"
               widths={[480, 720, 960]}
               sizes="(min-width: 1024px) 38vw, 22rem"
-              class="aspect-[4/5] w-full object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+              class="aspect-[4/5] w-full object-cover object-top transition-transform duration-500 ease-out hover:scale-105"
               loading="eager"
             />
             <div
@@ -54,7 +54,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               style="background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 82%, transparent); color: var(--md-sys-color-on-surface); border-top: 1px solid var(--md-sys-color-outline-variant);"
             >
               <span>{site.location}</span>
-              <span class="rounded-full px-2.5 py-0.5 font-semibold" style="background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);">
+              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-[11px]" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
                 M.S. CS @ UIUC
               </span>
             </div>
@@ -63,7 +63,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
         {/* Hero Copy & Controls */}
         <div class="order-2">
-          <div class="inline-flex items-center gap-2 rounded-full border px-3.5 py-1 font-mono text-[11.5px] uppercase tracking-wider font-semibold" style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
+          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-[11px] uppercase tracking-wider font-semibold" style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
             <span class="h-1.5 w-1.5 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);" />
             <span>Product Security & Cloud Systems</span>
           </div>
@@ -82,7 +82,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             software. I like problems where the consequences are real.
           </p>
 
-          {/* Action Button Row: M3 Expressive Buttons */}
+          {/* Action Button Row */}
           <div class="mt-7 flex flex-wrap items-center gap-2.5 sm:mt-9 sm:gap-3.5">
             <a href="/work" class="btn btn-primary">
               See my work
@@ -102,14 +102,14 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             </button>
           </div>
 
-          {/* Social Links: M3 Expressive Assist Chips */}
+          {/* Social Links: Chips */}
           <ul class="mt-7 flex flex-wrap items-center gap-2 sm:mt-8 sm:gap-2.5">
             {
               socials.slice(0, 3).map((s) => (
                 <li>
                   <a
                     href={s.href}
-                    class="m3-chip rounded-full font-mono text-[11.5px] transition-all hover:scale-105"
+                    class="m3-chip rounded-lg font-mono text-[11.5px] transition-all hover:border-[var(--md-sys-color-outline)]"
                     rel={s.href.startsWith('http') ? 'me noopener' : undefined}
                   >
                     <Icon name={s.icon} size={13} />
@@ -121,7 +121,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </ul>
 
           {site.availableForWork && (
-            <div class="mt-6 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
+            <div class="mt-6 inline-flex items-center gap-2 rounded-lg border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
               <span class="h-2 w-2 rounded-full animate-pulse" style="background: var(--md-sys-color-primary); box-shadow: 0 0 10px var(--md-sys-color-primary);" />
               <span>{site.availabilityNote}</span>
             </div>
@@ -129,12 +129,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         </div>
       </div>
 
-      {/* Stats Cards: M3 Expressive Tonal Stat Blocks */}
+      {/* Stats Cards: Precision Blocks */}
       <div class="mt-16 grid grid-cols-2 gap-4 border-t pt-10 sm:grid-cols-2 md:grid-cols-4 md:gap-5" style="border-color: var(--md-sys-color-outline-variant);">
         {
           stats.map((stat) => (
             <div
-              class="rounded-[22px] border p-5 transition-transform duration-200 hover:-translate-y-1"
+              class="rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5"
               style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); box-shadow: var(--md-sys-elevation-1);"
             >
               <p class="font-mono text-[28px] font-bold tracking-tight md:text-[32px]" style="color: var(--md-sys-color-primary)">

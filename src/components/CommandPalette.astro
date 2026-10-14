@@ -49,11 +49,11 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
 
 <dialog
   id="command-palette"
-  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-[28px] border p-0 shadow-[var(--md-sys-elevation-4)] backdrop:bg-black/60 backdrop:backdrop-blur-md"
+  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-[var(--md-sys-elevation-4)] backdrop:bg-black/60 backdrop:backdrop-blur-md"
   style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
 >
   <div class="flex flex-col">
-    {/* Header Search Bar (M3 Expressive Pill Input) */}
+    {/* Header Search Bar */}
     <div
       class="flex items-center gap-3 border-b px-5 py-4"
       style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
@@ -71,7 +71,7 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
         style="color: var(--md-sys-color-on-surface);"
       />
       <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color: var(--md-sys-color-on-surface-variant)">
-        <kbd class="rounded-md border px-2 py-0.5" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);">ESC</kbd>
+        <kbd class="rounded border px-2 py-0.5" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);">ESC</kbd>
       </div>
     </div>
 
@@ -80,7 +80,7 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
       {
         allItems.map((item, index) => (
           <div
-            class="command-item group flex cursor-pointer items-center justify-between rounded-2xl px-4 py-3 transition-all duration-150"
+            class="command-item group flex cursor-pointer items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-150"
             data-index={index}
             data-title={item.title.toLowerCase()}
             data-subtitle={item.subtitle.toLowerCase()}
@@ -100,7 +100,7 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
             </div>
             <div class="flex shrink-0 items-center gap-2">
               <span
-                class="rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-wider font-semibold"
+                class="rounded-md border px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-wider font-semibold"
                 style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
               >
                 {item.badge}
@@ -129,14 +129,14 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
         <span><kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↑</kbd> <kbd class="rounded border px-1.5 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↓</kbd> to navigate</span>
         <span><kbd class="rounded border px-2 py-0.5 text-[10px]" style="border-color: var(--md-sys-color-outline-variant);">↵</kbd> to select</span>
       </div>
-      <span class="rounded-full px-2 py-0.5" style="background: var(--md-sys-color-surface-container-high);">Material 3 Expressive Mode</span>
+      <span class="rounded px-2 py-0.5 font-medium" style="background: var(--md-sys-color-surface-container-high);">Instrument Panel</span>
     </div>
   </div>
 </dialog>
 
 <style>
   dialog[open] {
-    animation: dialogIn 0.22s cubic-bezier(0.2, 0, 0, 1) forwards;
+    animation: dialogIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes dialogIn {

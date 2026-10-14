@@ -67,9 +67,9 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           />
         </div>
 
-        {/* Info DL Block: M3 Expressive Card */}
+        {/* Info DL Block */}
         <dl
-          class="mt-6 space-y-3.5 rounded-[24px] border p-6 font-mono text-[13px] shadow-[var(--md-sys-elevation-1)]"
+          class="mt-6 space-y-3.5 rounded-xl border p-6 font-mono text-[13px] shadow-[var(--md-sys-elevation-1)]"
           style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
         >
           <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--md-sys-color-outline-variant);">
@@ -95,7 +95,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
             socials.map((s) => (
               <a
                 href={s.href}
-                class="btn btn-ghost h-9.5 rounded-full px-4 text-[13px]"
+                class="btn btn-ghost h-9.5 rounded-lg px-3.5 text-[13px]"
                 rel={s.href.startsWith('http') ? 'me noopener' : undefined}
               >
                 <Icon name={s.icon} size={15} />
@@ -149,7 +149,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           {
             education.map((item) => (
               <div
-                class="rounded-[22px] border p-6 shadow-[var(--md-sys-elevation-1)] transition-all duration-200 hover:border-[var(--md-sys-color-primary)]"
+                class="rounded-xl border p-6 shadow-[var(--md-sys-elevation-1)] transition-all duration-200 hover:border-[var(--md-sys-color-primary)]"
                 style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); border-left: 4px solid var(--md-sys-color-primary);"
               >
                 <p class="text-[17px] font-semibold" style="color: var(--md-sys-color-on-surface);">{item.degree}</p>
@@ -176,7 +176,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
                 <div class="mt-3 flex flex-wrap gap-2">
                   {group.items.map((item) => (
                     <span
-                      class="rounded-xl border px-3 py-1.5 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
+                      class="rounded-lg border px-3 py-1.5 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
                       style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
                     >
                       {item}

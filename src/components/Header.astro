@@ -14,7 +14,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     {/* Brand / Logo */}
     <a href="/" class="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
       <span
-        class="grid h-8.5 w-8.5 place-items-center rounded-2xl font-mono text-[13px] font-bold transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+        class="grid h-8.5 w-8.5 place-items-center rounded-xl font-mono text-[13px] font-bold transition-transform duration-200 group-hover:scale-105"
         style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); box-shadow: 0 0 16px -2px var(--signal-glow);"
       >dg</span>
       <span class="text-[14.5px] font-semibold tracking-tight transition-colors group-hover:text-[var(--md-sys-color-primary)] sm:text-[15px]">
@@ -22,7 +22,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       </span>
     </a>
 
-    {/* Desktop Navigation Links (M3 Expressive Navigation Bar Style) */}
+    {/* Desktop Navigation Links */}
     <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
       {
         nav.map((item) => {
@@ -33,7 +33,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
               class="relative rounded-full px-4 py-1.5 text-[14px] font-medium transition-all duration-200"
               style={
                 active
-                  ? 'color: var(--md-sys-color-on-secondary-container); background: var(--md-sys-color-secondary-container); font-weight: 600;'
+                  ? 'color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container); font-weight: 600;'
                   : 'color: var(--md-sys-color-on-surface-variant);'
               }
               aria-current={active ? 'page' : undefined}
@@ -53,7 +53,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
     {/* Header Actions */}
     <div class="flex items-center gap-2">
-      {/* Cmd+K Quick Search Trigger (M3 Expressive Search Bar) */}
+      {/* Cmd+K Quick Search Trigger */}
       <button
         id="cmd-palette-btn"
         type="button"
@@ -71,7 +71,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
       <a
         href="/contact"
-        class="btn btn-primary hidden h-8.5 rounded-full px-4 text-[13.5px] md:inline-flex"
+        class="btn btn-primary hidden h-8.5 rounded-lg px-4 text-[13.5px] md:inline-flex"
       >
         Get in touch
       </a>
@@ -95,7 +95,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   {/* Mobile Menu Overlay */}
   <nav
     id="mobile-nav"
-    class="glass-panel mt-2.5 hidden rounded-[28px] p-4 shadow-[var(--md-sys-elevation-4)] md:hidden"
+    class="glass-panel mt-2.5 hidden rounded-2xl p-4 shadow-[var(--md-sys-elevation-4)] md:hidden"
     style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
     aria-label="Mobile Navigation"
   >
@@ -105,10 +105,10 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
           <li>
             <a
               href={item.href}
-              class="flex items-center justify-between rounded-2xl px-3.5 py-2.5 text-[15px] font-medium transition-colors"
+              class="flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors"
               style={
                 isActive(item.href)
-                  ? 'color: var(--md-sys-color-on-secondary-container); background: var(--md-sys-color-secondary-container); font-weight: 600;'
+                  ? 'color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container); font-weight: 600;'
                   : 'color: var(--md-sys-color-on-surface);'
               }
             >
