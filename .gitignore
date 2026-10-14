@@ -20,3 +20,6 @@ pnpm-debug.log*
 
 # local editor/agent config
 .claude/
+
+# local test/preview artifacts
+.github/screenshots/
