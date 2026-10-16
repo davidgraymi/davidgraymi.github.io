@@ -2,6 +2,7 @@
 title: This website
 blurb: A static site built with Astro, hosted free on GitHub Pages, designed so writing a post costs one markdown file and nothing else.
 kind: Personal
+category: tools
 year: '2026'
 stack: ['Astro', 'TypeScript', 'Tailwind', 'GitHub Pages']
 highlight: Zero JavaScript on most pages

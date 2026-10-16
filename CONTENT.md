@@ -50,6 +50,7 @@ Create `src/content/work/my-project.md` → `/work/my-project`.
 title: The thing I built
 blurb: One sentence. Shows on the card and in search results.
 kind: Personal          # Professional | Personal | School | Capstone | Research
+category: tools         # Filter tab on /work: embedded | ai | tools
 year: '2026'
 stack: ['Go', 'Postgres']   # first four show on the card
 highlight: The one number worth remembering   # optional, renders in a callout

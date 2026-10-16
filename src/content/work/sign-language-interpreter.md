@@ -2,6 +2,7 @@
 title: Sign Language Interpretation System
 blurb: Control any smart device with American Sign Language — hand tracking, a gesture classifier and grammar correction, wired together over a client-server link.
 kind: Capstone
+category: ai
 year: '2021'
 stack: ['Python', 'TensorFlow', 'MediaPipe', 'C++', 'Computer vision', 'CNN']
 highlight: 98.8% accuracy across 14 hand gestures

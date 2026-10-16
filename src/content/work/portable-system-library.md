@@ -2,6 +2,7 @@
 title: A system library that runs anywhere
 blurb: One portable C++ library targeting any RTOS or bare-metal system, packaged with Docker, Bazel and GitLab CI — cutting porting work by 4×.
 kind: Professional
+category: embedded
 year: '2023'
 stack: ['C++', 'Bazel', 'Docker', 'GitLab CI']
 highlight: 4× fewer engineering hours spent on porting

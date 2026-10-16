@@ -2,6 +2,7 @@
 title: ID3 mushroom classification
 blurb: A from-scratch ID3 decision tree that predicts whether a mushroom is edible or poisonous from its attributes.
 kind: School
+category: ai
 year: '2020'
 stack: ['Python', 'Decision trees', 'Information gain']
 order: 10

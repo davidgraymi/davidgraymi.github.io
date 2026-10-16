@@ -2,6 +2,7 @@
 title: A processor built from the ground up
 blurb: Kernel, task scheduler and communication protocol written from nothing, in C and Ada, now in production and distributed globally.
 kind: Professional
+category: embedded
 year: '2021 — present'
 stack: ['C', 'Ada', 'RTOS', 'Bare metal']
 highlight: In production. Globally distributed.
