@@ -516,7 +516,7 @@
     align-items: center;
     gap: 0.55rem;
     padding: 0.35rem 0.85rem;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--md-sys-color-surface-container-high);
     border: 1px solid var(--md-sys-color-outline-variant);
     font-family: var(--font-mono);
@@ -563,7 +563,7 @@
     gap: 0.6rem;
     height: 2.75rem;
     padding-inline: 1.35rem;
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     border: 1px solid transparent;
     font-size: 0.9375rem;
     font-weight: 600;
@@ -625,7 +625,7 @@
     align-items: center;
     gap: 0.45rem;
     padding: 0.35rem 0.8rem;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     border: 1px solid var(--md-sys-color-outline-variant);
     background: var(--md-sys-color-surface-container);
     color: var(--md-sys-color-on-surface-variant);
@@ -644,7 +644,7 @@
     background: var(--md-sys-color-surface-container);
     border: 1px solid var(--md-sys-color-outline-variant);
     color: var(--md-sys-color-on-surface-variant);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 0.45rem 1.1rem;
     font-family: var(--font-mono);
     font-size: 0.785rem;
