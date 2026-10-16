@@ -44,9 +44,9 @@ const { entry } = Astro.props;
       {
         entry.data.tags.length > 0 && (
           <div class="mt-4 flex flex-wrap gap-1.5 font-mono text-[12px]">
-            {entry.data.tags.map((tag) => (
+            {entry.data.tags.slice(0, 3).map((tag) => (
               <span
-                class="rounded-md border px-2 py-0.5 transition-colors group-hover:border-[var(--md-sys-color-outline)]"
+                class="rounded-sm border px-2 py-0.5 transition-colors group-hover:border-[var(--md-sys-color-outline)]"
                 style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface-variant);"
               >
                 #{tag}

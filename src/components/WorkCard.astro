@@ -71,14 +71,14 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     {
       highlight && (
         <div
-          class="mt-4 flex items-center gap-2.5 rounded-xl border px-3.5 py-2 font-mono text-[12.5px]"
+          class="mt-4 flex items-start gap-2.5 rounded-xl border px-3.5 py-2 font-mono text-[12.5px] leading-snug"
           style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface);"
         >
           <span
-            class="h-2 w-2 rounded-full"
+            class="mt-1.5 h-2 w-2 shrink-0 rounded-full"
             style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);"
           />
-          <span class="truncate font-medium">{highlight}</span>
+          <span class="line-clamp-3 font-medium">{highlight}</span>
         </div>
       )
     }
@@ -88,7 +88,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       {
         stack.slice(0, 4).map((tech) => (
           <span
-            class="rounded-lg border px-2.5 py-1 font-mono text-[12px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
+            class="rounded-sm border px-2.5 py-1 font-mono text-[12px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
             style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant)"
           >
             {tech}
@@ -96,10 +96,10 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
         ))
       }
       <span
-        class="ml-auto grid h-7.5 w-7.5 place-items-center rounded-full transition-all duration-200 group-hover:translate-x-0.5 group-hover:translate-y--0.5 group-hover:text-[var(--md-sys-color-primary)]"
+        class="ml-auto grid h-7.5 w-7.5 place-items-center rounded-full transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--md-sys-color-primary)]"
         style="color: var(--md-sys-color-on-surface-variant); background: var(--md-sys-color-surface-container-high);"
       >
-        <Icon name="arrowUpRight" size={16} />
+        <Icon name="arrow" size={16} />
       </span>
     </div>
   </div>
