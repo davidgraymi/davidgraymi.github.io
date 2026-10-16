@@ -15,6 +15,7 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
 <Base
   title="Photos"
   description="Above water and below it — a slowly growing collection of places I've been."
+  noindex={albums.length === 0}
 >
   <PageHeader
     kicker="Photos"
@@ -35,15 +36,10 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
           >
             <Icon name="camera" size={26} />
           </span>
-          <p class="mt-5 text-[18px] font-semibold" style="color: var(--md-sys-color-on-surface);">No albums yet.</p>
+          <p class="mt-5 text-[18px] font-semibold" style="color: var(--md-sys-color-on-surface);">Still sorting through the card.</p>
           <p class="mt-2 text-[15px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
-            {'The gallery is wired up and waiting. Drop images into '}
-            <code class="font-mono text-[13.5px]">src/assets/photos/&lt;album&gt;/</code>
-            {', add a matching markdown file in '}
-            <code class="font-mono text-[13.5px]">src/content/photos/</code>
-            {', and they appear here. '}
-            <code class="font-mono text-[13.5px]">CONTENT.md</code>
-            {' has the template.'}
+            The first albums from diving and climbing trips are on their way. In the meantime, the
+            <a href="/work" class="link-underline">work</a> and <a href="/blog" class="link-underline">writing</a> are all here.
           </p>
         </div>
       ) : (

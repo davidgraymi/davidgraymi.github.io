@@ -2,6 +2,7 @@
 title: Wordlet
 blurb: A word guessing game built in Flutter and compiled to the web — playable right here, no install, no account.
 kind: Personal
+category: tools
 year: '2024'
 stack: ['Dart', 'Flutter', 'Web']
 highlight: Play it in the browser in about two seconds

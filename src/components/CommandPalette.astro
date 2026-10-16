@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Icon from './Icon.astro';
+import { visibleNav } from '~/lib/nav';
 
 const projects = (await getCollection('work', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order)
@@ -26,6 +27,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     stack: b.data.tags.join(' '),
   }));
 
+const navHrefs = new Set((await visibleNav()).map((item) => item.href));
 const pages = [
   { id: 'nav-home', title: 'Home', subtitle: 'Main landing page & highlights', href: '/', category: 'Navigation', badge: 'Page' },
   { id: 'nav-work', title: 'Work', subtitle: 'All engineering projects & case studies', href: '/work', category: 'Navigation', badge: 'Page' },
@@ -33,7 +35,7 @@ const pages = [
   { id: 'nav-photos', title: 'Photos', subtitle: 'Photography & outdoor expeditions', href: '/photos', category: 'Navigation', badge: 'Page' },
   { id: 'nav-about', title: 'About', subtitle: 'Background, career timeline & skills', href: '/about', category: 'Navigation', badge: 'Page' },
   { id: 'nav-contact', title: 'Contact', subtitle: 'Email, inquiries & consultation', href: '/contact', category: 'Navigation', badge: 'Page' },
-];
+].filter((page) => page.href === '/' || navHrefs.has(page.href));
 
 const actions = [
   { id: 'action-copy-email', title: 'Copy Email Address', subtitle: 'davidgraymi@gmail.com', action: 'copy-email', category: 'Actions', badge: 'Action' },

@@ -2,6 +2,7 @@
 title: Patient Care Portal Triage
 blurb: An NLP pipeline that routes patient portal messages to the right team and surfaces relevant evidence-based research while they wait for a human.
 kind: Research
+category: ai
 year: '2025'
 stack: ['PyTorch', 'EmbeddingGemma', 'NLP', 'Information retrieval']
 highlight: Classifies sentence embeddings into care teams, then retrieves supporting research

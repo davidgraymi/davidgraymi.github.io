@@ -2,6 +2,7 @@
 title: Healthcare length-of-stay estimator
 blurb: A data mining project predicting how long a patient will stay, from admission-time features.
 kind: School
+category: ai
 year: '2021'
 stack: ['Python', 'scikit-learn', 'Data mining']
 order: 11

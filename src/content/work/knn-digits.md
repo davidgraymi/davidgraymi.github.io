@@ -2,6 +2,7 @@
 title: Handwritten digit recognition with weighted KNN
 blurb: A KNN classifier for handwritten digits, plus a k-value optimizer that collapses repeated distance calculations into a single pass.
 kind: School
+category: ai
 year: '2020'
 stack: ['Python', 'KNN', 'Optimization']
 highlight: Optimizes k without recomputing distances per candidate

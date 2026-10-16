@@ -2,6 +2,7 @@
 title: Bindersnap
 blurb: GitHub for everyone who doesn't use GitHub — document management, review lifecycle, team collaboration, search and an in-browser editor.
 kind: Personal
+category: tools
 year: '2023 — present'
 stack: ['Go', 'Vue', 'AWS', 'SQL']
 highlight: Started because my wife complained about her company's policy platform

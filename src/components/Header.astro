@@ -1,8 +1,10 @@
 ---
-import { nav, site } from '~/site.config';
+import { site } from '~/site.config';
+import { visibleNav } from '~/lib/nav';
 import Icon from './Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
+const nav = await visibleNav();
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
 ---
