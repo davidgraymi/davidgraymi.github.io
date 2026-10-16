@@ -54,7 +54,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               style="background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 82%, transparent); color: var(--md-sys-color-on-surface); border-top: 1px solid var(--md-sys-color-outline-variant);"
             >
               <span>{site.location}</span>
-              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-[11px]" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
+              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-[12px]" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
                 M.S. CS @ UIUC
               </span>
             </div>
@@ -63,7 +63,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
         {/* Hero Copy & Controls */}
         <div class="order-2">
-          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-[11px] uppercase tracking-wider font-semibold" style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
+          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-[12px] uppercase tracking-wider font-semibold" style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
             <span class="h-1.5 w-1.5 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);" />
             <span>Product Security & Cloud Systems</span>
           </div>
@@ -109,7 +109,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                 <li>
                   <a
                     href={s.href}
-                    class="m3-chip rounded-lg font-mono text-[11.5px] transition-all hover:border-[var(--md-sys-color-outline)]"
+                    class="m3-chip min-h-10 rounded-lg font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-outline)]"
                     rel={s.href.startsWith('http') ? 'me noopener' : undefined}
                   >
                     <Icon name={s.icon} size={13} />
@@ -121,7 +121,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </ul>
 
           {site.availableForWork && (
-            <div class="mt-6 inline-flex items-center gap-2 rounded-lg border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
+            <div class="mt-6 inline-flex items-center gap-2 rounded-lg border px-3.5 py-1.5 font-mono text-[12px] uppercase tracking-[0.1em]" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
               <span class="h-2 w-2 rounded-full animate-pulse" style="background: var(--md-sys-color-primary); box-shadow: 0 0 10px var(--md-sys-color-primary);" />
               <span>{site.availabilityNote}</span>
             </div>

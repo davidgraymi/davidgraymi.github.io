@@ -24,12 +24,12 @@ const year = new Date().getFullYear();
 
     <nav aria-label="Footer">
       <p class="kicker">Pages</p>
-      <ul class="mt-4 space-y-2.5 text-[14.5px]">
-        <li><a href="/" class="transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">Home</a></li>
+      <ul class="mt-3 space-y-0.5 text-[14.5px]">
+        <li><a href="/" class="inline-block py-1.5 transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">Home</a></li>
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} class="transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">
+              <a href={item.href} class="inline-block py-1.5 transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">
                 {item.label}
               </a>
             </li>
@@ -40,13 +40,13 @@ const year = new Date().getFullYear();
 
     <div>
       <p class="kicker">Elsewhere</p>
-      <ul class="mt-4 space-y-2.5 text-[14.5px]">
+      <ul class="mt-3 space-y-0.5 text-[14.5px]">
         {
           socials.map((s) => (
             <li>
               <a
                 href={s.href}
-                class="inline-flex items-center gap-2.5 transition-colors hover:text-[var(--md-sys-color-primary)]"
+                class="inline-flex items-center gap-2.5 py-1.5 transition-colors hover:text-[var(--md-sys-color-primary)]"
                 style="color: var(--md-sys-color-on-surface-variant)"
                 rel={s.href.startsWith('http') ? 'me noopener' : undefined}
               >
@@ -57,7 +57,7 @@ const year = new Date().getFullYear();
           ))
         }
         <li>
-          <a href="/rss.xml" class="inline-flex items-center gap-2.5 transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">
+          <a href="/rss.xml" class="inline-flex items-center gap-2.5 py-1.5 transition-colors hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface-variant)">
             <Icon name="rss" size={15} />
             RSS Feed
           </a>
@@ -74,7 +74,7 @@ const year = new Date().getFullYear();
         onclick="if(window.openCommandPalette) window.openCommandPalette()"
         class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--md-sys-color-primary)] text-left cursor-pointer"
       >
-        <span>Press <kbd class="rounded-md border px-1.5 py-0.5 text-[10.5px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd> for command menu</span>
+        <span>Press <kbd class="rounded-md border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd> for command menu</span>
       </button>
     </div>
   </div>

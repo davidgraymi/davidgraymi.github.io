@@ -37,7 +37,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   <div class="flex flex-1 flex-col p-6 sm:p-7">
     {/* Header / Meta: M3 Expressive Assist Chip */}
     <div
-      class="flex items-center justify-between gap-3 font-mono text-[11.5px] uppercase tracking-[0.12em]"
+      class="flex items-center justify-between gap-3 font-mono text-[12px] uppercase tracking-[0.12em]"
       style="color: var(--md-sys-color-on-surface-variant)"
     >
       <div class="flex items-center gap-2">
@@ -47,7 +47,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       </div>
       {entry.id === 'wordlet' && (
         <span
-          class="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[10.5px] font-semibold"
+          class="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[12px] font-semibold"
           style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);"
         >
           Playable
@@ -88,7 +88,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       {
         stack.slice(0, 4).map((tech) => (
           <span
-            class="rounded-lg border px-2.5 py-1 font-mono text-[11px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
+            class="rounded-lg border px-2.5 py-1 font-mono text-[12px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
             style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant)"
           >
             {tech}
