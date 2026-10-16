@@ -14,7 +14,7 @@ export const roles: Role[] = [
     org: 'Cloud Infrastructure',
     period: 'Dec 2025 — Present',
     summary:
-      'Lead cloud migration of three software toolchain applications and deliver a live demo that directly contributed to securing the company\'s share of a $90M contract award. Focused on secure cloud adoption, Kubernetes delivery, and building security into the release process itself.',
+      'Secure cloud adoption for software toolchain applications: Kubernetes delivery on Azure, service-mesh networking, and security review built into the release process itself.',
     points: [
       'Led cloud migration of 3 software toolchain applications and delivered a live demo that directly contributed to securing the company\'s share of a $90M contract award.',
       'Architected and deployed cloud infrastructure using Helm charts and Infrastructure-as-Code practices, standardizing application deployments across Azure.',
