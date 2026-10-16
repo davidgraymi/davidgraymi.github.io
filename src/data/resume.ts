@@ -113,13 +113,17 @@ export const skills: { group: string; items: string[] }[] = [
 /** Short, checkable facts for the homepage telemetry strip. */
 export const stats: { value: string; label: string }[] = [
   { value: '4+ yrs', label: 'Shipping mission-critical software' },
-  { value: '98.8%', label: 'Gesture classifier accuracy' },
+  { value: '$90M', label: 'Contract award my cloud migration demo helped secure' },
   { value: '10×', label: 'Faster integration test cycle' },
   { value: '4×', label: 'Fewer engineering hours on porting' },
 ];
 
 /** What I want to be hired for. Drives the "How I can help" section. */
 export const services: { title: string; body: string }[] = [
+  {
+    title: 'Product & cloud security',
+    body: 'Threat modeling, zero-trust delivery pipelines, service-mesh networking, and security review built into the release process instead of bolted on at the end. This is my day job.',
+  },
   {
     title: 'Kubernetes & cloud',
     body: 'Platform engineering, Kubernetes operations, cloud-native systems, and the boring-but-critical details of reliability, automation, and production support. If it has to run at scale without surprise failures, this is the work I do daily.',
