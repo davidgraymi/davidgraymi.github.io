@@ -61,12 +61,12 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         type="button"
         class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-outline)] hover:text-[var(--md-sys-color-primary)] sm:inline-flex"
         style="background: var(--md-sys-color-surface-container-highest); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
-        title="Search & Commands (⌘K)"
+        title="Search pages, projects and posts"
         aria-label="Open Command Palette"
       >
-        <Icon name="globe" size={13} />
+        <Icon name="search" size={13} />
         <span>Search</span>
-        <kbd class="rounded border px-1.5 py-0.2 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd>
+        <kbd data-shortcut class="rounded border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd>
       </button>
 
       <ThemeToggle />
@@ -97,7 +97,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   {/* Mobile Menu Overlay */}
   <nav
     id="mobile-nav"
-    class="glass-panel mt-2.5 hidden rounded-2xl p-4 shadow-[var(--md-sys-elevation-4)] md:hidden"
+    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl p-4 shadow-[var(--md-sys-elevation-4)] sm:inset-x-6 md:hidden"
     style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
     aria-label="Mobile Navigation"
   >
@@ -128,10 +128,9 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         class="btn btn-ghost w-full justify-between text-[14px]"
       >
         <span class="flex items-center gap-2">
-          <Icon name="globe" size={15} />
-          Command Menu
+          <Icon name="search" size={15} />
+          Search
         </span>
-        <kbd class="font-mono text-[12px]">⌘K</kbd>
       </button>
       <a href="/contact" class="btn btn-primary w-full text-[14px]">
         Get in touch
@@ -146,28 +145,45 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   const openIcon = document.getElementById('menu-open');
   const closeIcon = document.getElementById('menu-close');
 
-  toggle?.addEventListener('click', () => {
-    const open = menu?.classList.toggle('hidden') === false;
+  const isOpen = () => !!menu && !menu.classList.contains('hidden');
+
+  function setMenu(open: boolean) {
+    if (!menu || !toggle) return;
+    menu.classList.toggle('hidden', !open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     if (openIcon) openIcon.hidden = open;
     if (closeIcon) closeIcon.hidden = !open;
+    // The menu floats over the page, so stop the page scrolling underneath it.
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  }
+
+  toggle?.addEventListener('click', () => setMenu(!isOpen()));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen()) {
+      setMenu(false);
+      toggle?.focus();
+    }
   });
 
-  const cmdBtn = document.getElementById('cmd-palette-btn');
-  const mobileCmdBtn = document.getElementById('mobile-cmd-btn');
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node;
+    if (isOpen() && !menu?.contains(target) && !toggle?.contains(target)) setMenu(false);
+  });
+
+  // Close if the viewport grows past the breakpoint where the menu is hidden.
+  matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
+    if (e.matches) setMenu(false);
+  });
 
   const triggerPalette = () => {
+    setMenu(false);
     if (typeof (window as any).openCommandPalette === 'function') {
       (window as any).openCommandPalette();
     }
-    if (menu && !menu.classList.contains('hidden')) {
-      menu.classList.add('hidden');
-      if (openIcon) openIcon.hidden = false;
-      if (closeIcon) closeIcon.hidden = true;
-    }
   };
 
-  cmdBtn?.addEventListener('click', triggerPalette);
-  mobileCmdBtn?.addEventListener('click', triggerPalette);
+  document.getElementById('cmd-palette-btn')?.addEventListener('click', triggerPalette);
+  document.getElementById('mobile-cmd-btn')?.addEventListener('click', triggerPalette);
 </script>
