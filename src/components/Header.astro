@@ -11,15 +11,14 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
 <header class="sticky top-3 z-50 mx-auto w-full max-w-5xl px-3.5 sm:px-6 md:top-4">
   <div
-    class="flex h-14 items-center justify-between gap-3 rounded-full border border-[var(--md-sys-color-outline-variant)] bg-[color-mix(in_srgb,var(--md-sys-color-surface-container-high)_88%,transparent)] px-3.5 shadow-[var(--md-sys-elevation-2)] backdrop-blur-xl sm:h-15 sm:px-5"
+    class="flex h-14 items-center justify-between gap-3 rounded-full border border-outline-variant bg-surface-container-high/88 px-3.5 shadow-elevation-2 backdrop-blur-xl sm:h-15 sm:px-5"
   >
     {/* Brand / Logo */}
     <a href="/" class="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
       <span
-        class="grid h-8.5 w-8.5 place-items-center rounded-xl font-mono text-[13px] font-bold transition-transform duration-200 group-hover:scale-105"
-        style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); box-shadow: 0 0 16px -2px var(--signal-glow);"
+        class="grid h-8.5 w-8.5 place-items-center rounded-xl font-mono text-caption font-bold transition-transform duration-200 group-hover:scale-105 bg-primary text-on-primary shadow-glow"
       >dg</span>
-      <span class="text-[14.5px] font-semibold tracking-tight transition-colors group-hover:text-[var(--md-sys-color-primary)] sm:text-[15px]">
+      <span class="text-body-sm font-semibold tracking-tight transition-colors group-hover:text-primary sm:text-body">
         {site.name}
       </span>
     </a>
@@ -32,19 +31,16 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
           return (
             <a
               href={item.href}
-              class="relative rounded-full px-4 py-1.5 text-[14px] font-medium transition-all duration-200"
-              style={
-                active
-                  ? 'color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container); font-weight: 600;'
-                  : 'color: var(--md-sys-color-on-surface-variant);'
-              }
+              class:list={[
+                'relative rounded-full px-4 py-1.5 text-body-sm transition-all duration-200',
+                active ? 'bg-primary-container font-semibold text-primary' : 'font-medium text-on-surface-variant',
+              ]}
               aria-current={active ? 'page' : undefined}
             >
               {item.label}
               {active && (
                 <span
-                  class="absolute -bottom-1 left-1/2 h-1 w-1.5 -translate-x-1/2 rounded-full"
-                  style="background: var(--md-sys-color-primary);"
+                  class="absolute -bottom-1 left-1/2 h-1 w-1.5 -translate-x-1/2 rounded-full bg-primary"
                 />
               )}
             </a>
@@ -59,21 +55,20 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       <button
         id="cmd-palette-btn"
         type="button"
-        class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-outline)] hover:text-[var(--md-sys-color-primary)] sm:inline-flex"
-        style="background: var(--md-sys-color-surface-container-highest); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
+        class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-label transition-all hover:border-outline hover:text-primary sm:inline-flex bg-surface-container-highest border-outline-variant text-on-surface-variant"
         title="Search pages, projects and posts"
         aria-label="Open Command Palette"
       >
         <Icon name="search" size={13} />
         <span>Search</span>
-        <kbd data-shortcut class="rounded border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd>
+        <kbd data-shortcut class="rounded border px-1.5 py-0.5 text-label border-outline-variant bg-surface-container">⌘K</kbd>
       </button>
 
       <ThemeToggle />
 
       <a
         href="/contact"
-        class="btn btn-primary hidden h-8.5 rounded-lg px-4 text-[13.5px] md:inline-flex"
+        class="btn btn-primary hidden h-8.5 rounded-lg px-4 text-caption md:inline-flex"
       >
         Get in touch
       </a>
@@ -82,8 +77,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       <button
         id="menu-toggle"
         type="button"
-        class="grid h-11 w-11 place-items-center rounded-full border md:hidden"
-        style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
+        class="grid h-11 w-11 place-items-center rounded-full border md:hidden border-outline-variant bg-surface-container-highest"
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-nav"
@@ -97,8 +91,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   {/* Mobile Menu Overlay */}
   <nav
     id="mobile-nav"
-    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl p-4 shadow-[var(--md-sys-elevation-4)] sm:inset-x-6 md:hidden"
-    style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
+    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl p-4 shadow-elevation-4 sm:inset-x-6 md:hidden bg-surface-container-high border-outline-variant"
     aria-label="Mobile Navigation"
   >
     <ul class="flex flex-col gap-1.5">
@@ -107,12 +100,10 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
           <li>
             <a
               href={item.href}
-              class="flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors"
-              style={
-                isActive(item.href)
-                  ? 'color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container); font-weight: 600;'
-                  : 'color: var(--md-sys-color-on-surface);'
-              }
+              class:list={[
+                'flex items-center justify-between rounded-xl px-3.5 py-2.5 text-body transition-colors',
+                isActive(item.href) ? 'bg-primary-container font-semibold text-primary' : 'font-medium text-on-surface',
+              ]}
             >
               {item.label}
               <Icon name="arrow" size={15} />
@@ -121,18 +112,18 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         ))
       }
     </ul>
-    <div class="mt-3.5 flex flex-col gap-2 pt-3" style="border-top: 1px solid var(--md-sys-color-outline-variant);">
+    <div class="mt-3.5 flex flex-col gap-2 border-t border-outline-variant pt-3">
       <button
         id="mobile-cmd-btn"
         type="button"
-        class="btn btn-ghost w-full justify-between text-[14px]"
+        class="btn btn-ghost w-full justify-between text-body-sm"
       >
         <span class="flex items-center gap-2">
           <Icon name="search" size={15} />
           Search
         </span>
       </button>
-      <a href="/contact" class="btn btn-primary w-full text-[14px]">
+      <a href="/contact" class="btn btn-primary w-full text-body-sm">
         Get in touch
       </a>
     </div>

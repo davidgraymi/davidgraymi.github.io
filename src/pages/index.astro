@@ -22,7 +22,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <Base>
   {/* ---------------------------------------------------------------- hero */}
-  <section class="gridlines relative overflow-hidden border-b" style="border-color: var(--md-sys-color-outline-variant);">
+  <section class="gridlines relative overflow-hidden border-b border-outline-variant">
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-px"
       style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent) 50%, transparent 95%); opacity: 0.8"
@@ -34,12 +34,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         {/* Avatar: Precision Instrument Frame */}
         <div class="relative order-1 w-36 sm:w-48 lg:w-full">
           <div
-            class="absolute -inset-2 rounded-2xl border opacity-60 sm:-inset-2.5 sm:rounded-[1.25rem] lg:-inset-3 lg:rounded-[1.5rem]"
-            style="border-color: var(--md-sys-color-primary); box-shadow: 0 0 35px -6px var(--signal-glow);"
+            class="absolute -inset-2 rounded-2xl border opacity-60 sm:-inset-2.5 sm:rounded-[1.25rem] lg:-inset-3 lg:rounded-[1.5rem] border-primary shadow-glow-lg"
           />
           <div
-            class="relative overflow-hidden rounded-xl border sm:rounded-[1.1rem] lg:rounded-[1.35rem]"
-            style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-low);"
+            class="relative overflow-hidden rounded-xl border sm:rounded-[1.1rem] lg:rounded-[1.35rem] border-outline-variant bg-surface-container-low"
           >
             <Image
               src={avatar}
@@ -50,11 +48,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               loading="eager"
             />
             <div
-              class="absolute inset-x-0 bottom-0 hidden items-center justify-between gap-3 px-5 py-4 font-mono text-[12px] backdrop-blur-xl sm:flex"
-              style="background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 82%, transparent); color: var(--md-sys-color-on-surface); border-top: 1px solid var(--md-sys-color-outline-variant);"
+              class="absolute inset-x-0 bottom-0 hidden items-center justify-between gap-3 px-5 py-4 font-mono text-label backdrop-blur-xl sm:flex text-on-surface bg-surface-container-highest/82 border-t border-outline-variant"
             >
               <span>{site.location}</span>
-              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-[12px]" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
+              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-label bg-primary-container text-on-primary-container">
                 M.S. CS @ UIUC
               </span>
             </div>
@@ -63,21 +60,21 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
         {/* Hero Copy & Controls */}
         <div class="order-2">
-          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-[12px] uppercase tracking-wider font-semibold" style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-primary);">
-            <span class="h-1.5 w-1.5 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);" />
+          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container-high border-outline-variant text-primary">
+            <span class="h-1.5 w-1.5 rounded-full bg-primary shadow-glow-sm" />
             <span>Product Security & Cloud Systems</span>
           </div>
 
-          <h1 class="mt-4 max-w-3xl font-semibold leading-[1.04] tracking-tight text-[1.85rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4.25rem]" style="color: var(--md-sys-color-on-surface);">
+          <h1 class="mt-4 max-w-3xl font-semibold leading-[1.04] tracking-tight text-[1.85rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4.25rem] text-on-surface">
             Engineer. Scientist.<br /><span class="shimmer-text">Occasionally underwater.</span>
           </h1>
 
-          <p class="mt-4 max-w-2xl text-[15px] leading-relaxed sm:mt-5 sm:text-[17px] md:mt-6 md:text-[19px]" style="color: var(--md-sys-color-on-surface-variant)">
-            <strong class="font-semibold" style="color: var(--md-sys-color-on-surface)">I'm a product security engineer in St. Louis, securing Kubernetes and Azure delivery from threat model to release.</strong>{' '}
+          <p class="mt-4 max-w-2xl text-body leading-relaxed sm:mt-5 sm:text-body-lg md:mt-6 md:text-title-sm text-on-surface-variant">
+            <strong class="font-semibold text-on-surface">I'm a product security engineer in St. Louis, securing Kubernetes and Azure delivery from threat model to release.</strong>{' '}
             The rest of my brain goes to machine learning, a document platform nobody asked me to
             build, and a master's degree at the University of Illinois.
           </p>
-          <p class="mt-3.5 max-w-xl text-[14px] leading-relaxed sm:text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
+          <p class="mt-3.5 max-w-xl text-body-sm leading-relaxed sm:text-body text-on-surface-variant">
             Outside of that: scuba diving, rock climbing, hiking, and making things that aren't
             software. I like problems where the consequences are real.
           </p>
@@ -94,14 +91,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </div>
 
           {/* Social Links: Chips */}
-          <ul class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[13px] sm:mt-7">
+          <ul class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-caption sm:mt-7">
             {
               socials.slice(0, 3).map((s) => (
                 <li>
                   <a
                     href={s.href}
-                    class="inline-flex min-h-10 items-center gap-2 transition-colors hover:text-[var(--md-sys-color-primary)]"
-                    style="color: var(--md-sys-color-on-surface-variant)"
+                    class="inline-flex min-h-10 items-center gap-2 transition-colors hover:text-primary text-on-surface-variant"
                     rel={s.href.startsWith('http') ? 'me noopener' : undefined}
                   >
                     <Icon name={s.icon} size={14} />
@@ -113,8 +109,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </ul>
 
           {site.availableForWork && (
-            <p class="mt-3 inline-flex items-center gap-2 text-[14px]" style="color: var(--md-sys-color-on-surface-variant);">
-              <span class="h-2 w-2 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);" />
+            <p class="mt-3 inline-flex items-center gap-2 text-body-sm text-on-surface-variant">
+              <span class="h-2 w-2 rounded-full bg-primary shadow-glow-sm" />
               {site.availabilityNote}
             </p>
           )}
@@ -122,17 +118,16 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
 
       {/* Stats Cards: Precision Blocks */}
-      <div class="mt-16 grid grid-cols-2 gap-4 border-t pt-10 sm:grid-cols-2 md:grid-cols-4 md:gap-5" style="border-color: var(--md-sys-color-outline-variant);">
+      <div class="mt-16 grid grid-cols-2 gap-4 border-t pt-10 sm:grid-cols-2 md:grid-cols-4 md:gap-5 border-outline-variant">
         {
           stats.map((stat) => (
             <div
-              class="rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5"
-              style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); box-shadow: var(--md-sys-elevation-1);"
+              class="rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5 bg-surface-container-low border-outline-variant shadow-elevation-1"
             >
-              <p class="font-mono text-[28px] font-bold tracking-tight md:text-[32px]" style="color: var(--md-sys-color-primary)">
+              <p class="font-mono text-headline font-bold tracking-tight md:text-headline-lg text-primary">
                 {stat.value}
               </p>
-              <p class="mt-1 text-[13.5px] leading-snug font-medium" style="color: var(--md-sys-color-on-surface-variant)">
+              <p class="mt-1 text-caption leading-snug font-medium text-on-surface-variant">
                 {stat.label}
               </p>
             </div>
@@ -155,13 +150,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <div class="spotlight-card flex flex-col justify-between p-7 md:p-8">
             <div>
               <span
-                class="inline-flex items-center justify-center rounded-xl border px-3 py-1 font-mono text-[12.5px] font-semibold"
-                style="background: var(--md-sys-color-secondary-container); border-color: transparent; color: var(--md-sys-color-on-secondary-container);"
+                class="inline-flex items-center justify-center rounded-xl border px-3 py-1 font-mono text-label font-semibold border-transparent bg-secondary-container text-on-secondary-container"
               >
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <h3 class="mt-5 text-[20px] font-semibold leading-snug" style="color: var(--md-sys-color-on-surface);">{service.title}</h3>
-              <p class="mt-3 text-[14.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+              <h3 class="mt-5 text-title font-semibold leading-snug text-on-surface">{service.title}</h3>
+              <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
                 {service.body}
               </p>
             </div>
@@ -185,7 +179,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         All projects
         <Icon name="arrow" size={16} />
       </a>
-      <a href="/wordlet" class="btn btn-tonal font-mono text-[13px]">
+      <a href="/wordlet" class="btn btn-tonal font-mono text-caption">
         Play Wordlet in browser →
       </a>
     </div>

@@ -11,7 +11,7 @@ import rehypeKatex from 'rehype-katex';
 export default defineConfig({
   site: 'https://davidmgray.com',
   trailingSlash: 'ignore',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/design-system') })],
   vite: {
     plugins: [tailwindcss()],
   },

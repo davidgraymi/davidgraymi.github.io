@@ -1,0 +1,311 @@
+/* ===========================================================================
+   Design tokens — "Instrument Panel"
+   Three layers, each only allowed to reference the layer above it:
+
+     1. ref   (--md-ref-*)   raw palette values. Never used in components.
+     2. sys   (--md-sys-*)   semantic roles. Light + dark live on one line via
+                             light-dark(); the theme is chosen by color-scheme.
+     3. comp  (--md-comp-*)  per-component knobs (buttons, cards, chips, focus).
+
+   Tailwind utilities are generated from the @theme block at the bottom, so
+   components write `text-on-surface-variant`, `bg-surface-container`,
+   `shadow-elevation-2`, `text-body-sm` — not `[var(--md-sys-…)]`.
+   See DESIGN.md for usage rules.
+=========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   Theme selection. No attribute = follow the OS; data-theme pins it.
+--------------------------------------------------------------------------- */
+:root { color-scheme: light dark; }
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+/* ---------------------------------------------------------------------------
+   1. Reference palette
+--------------------------------------------------------------------------- */
+:root {
+  /* Amber — the signal colour */
+  --md-ref-amber-100: #fef3c7;
+  --md-ref-amber-200: #fed7aa;
+  --md-ref-amber-500: #f59e0b;
+  --md-ref-amber-600: #d97706;
+  --md-ref-amber-800: #a14a07; /* darkened so white-on-amber clears AA */
+  --md-ref-amber-900: #422600;
+  --md-ref-amber-950: #451a03;
+  --md-ref-amber-ink: #1a1200;
+
+  /* Sky — secondary accent */
+  --md-ref-sky-100: #e0f2fe;
+  --md-ref-sky-200: #bae6fd;
+  --md-ref-sky-400: #38bdf8;
+  --md-ref-sky-700: #0369a1;
+  --md-ref-sky-900: #0c4a6e;
+  --md-ref-sky-950: #082f49;
+
+  /* Slate — text and outlines */
+  --md-ref-slate-50: #f8fafc;
+  --md-ref-slate-100: #f1f5f9;
+  --md-ref-slate-200: #e2e8f0;
+  --md-ref-slate-300: #cbd5e1;
+  --md-ref-slate-400: #94a3b8;
+  --md-ref-slate-500: #64748b;
+  --md-ref-slate-600: #475569;
+  --md-ref-slate-750: #273449;
+  --md-ref-slate-800: #1e293b;
+  --md-ref-slate-900: #0f172a;
+
+  /* Red — errors */
+  --md-ref-red-100: #fee2e2;
+  --md-ref-red-200: #fecaca;
+  --md-ref-red-500: #ef4444;
+  --md-ref-red-600: #dc2626;
+  --md-ref-red-900: #7f1d1d;
+  --md-ref-red-950: #450a0a;
+
+  /* Paper — light surfaces, lightest to darkest */
+  --md-ref-paper-0: #ffffff;
+  --md-ref-paper-50: #f8f9fb;
+  --md-ref-paper-100: #f1f3f7;
+  --md-ref-paper-150: #eaedf2;
+  --md-ref-paper-200: #e2e6ed;
+  --md-ref-paper-250: #dadfe7;
+  --md-ref-paper-300: #d8dde6;
+
+  /* Obsidian — dark surfaces, darkest to lightest */
+  --md-ref-obsidian-0: #030508;
+  --md-ref-obsidian-50: #04060a;
+  --md-ref-obsidian-100: #06090e;
+  --md-ref-obsidian-200: #0a0e16;
+  --md-ref-obsidian-300: #101622;
+  --md-ref-obsidian-400: #161e2d;
+  --md-ref-obsidian-500: #1e283b;
+  --md-ref-obsidian-600: #263345;
+}
+
+/* ---------------------------------------------------------------------------
+   2. System (semantic) tokens — light-dark(light, dark)
+--------------------------------------------------------------------------- */
+:root {
+  /* Accent roles */
+  --md-sys-color-primary: light-dark(var(--md-ref-amber-800), var(--md-ref-amber-500));
+  --md-sys-color-on-primary: light-dark(var(--md-ref-paper-0), var(--md-ref-amber-ink));
+  --md-sys-color-primary-container: light-dark(var(--md-ref-amber-100), var(--md-ref-amber-900));
+  --md-sys-color-on-primary-container: light-dark(var(--md-ref-amber-950), var(--md-ref-amber-200));
+
+  --md-sys-color-secondary: light-dark(var(--md-ref-sky-700), var(--md-ref-sky-400));
+  --md-sys-color-on-secondary: light-dark(var(--md-ref-paper-0), var(--md-ref-sky-950));
+  --md-sys-color-secondary-container: light-dark(var(--md-ref-sky-100), var(--md-ref-sky-900));
+  --md-sys-color-on-secondary-container: light-dark(var(--md-ref-sky-950), var(--md-ref-sky-200));
+
+  --md-sys-color-tertiary: light-dark(var(--md-ref-slate-600), var(--md-ref-slate-400));
+  --md-sys-color-on-tertiary: light-dark(var(--md-ref-paper-0), var(--md-ref-slate-900));
+  --md-sys-color-tertiary-container: light-dark(var(--md-ref-slate-100), var(--md-ref-slate-800));
+  --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-slate-900), var(--md-ref-slate-200));
+
+  --md-sys-color-error: light-dark(var(--md-ref-red-600), var(--md-ref-red-500));
+  --md-sys-color-on-error: light-dark(var(--md-ref-paper-0), var(--md-ref-red-950));
+  --md-sys-color-error-container: light-dark(var(--md-ref-red-100), var(--md-ref-red-900));
+  --md-sys-color-on-error-container: light-dark(var(--md-ref-red-950), var(--md-ref-red-200));
+
+  /* Surfaces: page → lowest → … → highest = further "up" toward the reader */
+  --md-sys-color-surface: light-dark(var(--md-ref-paper-50), var(--md-ref-obsidian-100));
+  --md-sys-color-surface-dim: light-dark(var(--md-ref-paper-300), var(--md-ref-obsidian-50));
+  --md-sys-color-surface-bright: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-600));
+  --md-sys-color-surface-container-lowest: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-0));
+  --md-sys-color-surface-container-low: light-dark(var(--md-ref-paper-100), var(--md-ref-obsidian-200));
+  --md-sys-color-surface-container: light-dark(var(--md-ref-paper-150), var(--md-ref-obsidian-300));
+  --md-sys-color-surface-container-high: light-dark(var(--md-ref-paper-200), var(--md-ref-obsidian-400));
+  --md-sys-color-surface-container-highest: light-dark(var(--md-ref-paper-250), var(--md-ref-obsidian-500));
+
+  /* Content on surfaces */
+  --md-sys-color-on-surface: light-dark(var(--md-ref-slate-900), var(--md-ref-slate-100));
+  --md-sys-color-on-surface-variant: light-dark(var(--md-ref-slate-600), var(--md-ref-slate-400));
+  --md-sys-color-outline: var(--md-ref-slate-500);
+  --md-sys-color-outline-variant: light-dark(var(--md-ref-slate-300), var(--md-ref-slate-750));
+
+  --md-sys-color-inverse-surface: light-dark(var(--md-ref-slate-800), var(--md-ref-slate-100));
+  --md-sys-color-inverse-on-surface: light-dark(var(--md-ref-slate-50), var(--md-ref-slate-900));
+  --md-sys-color-inverse-primary: light-dark(var(--md-ref-amber-500), var(--md-ref-amber-600));
+
+  --md-sys-color-scrim: #000000;
+
+  /* Effects derived from the roles above */
+  --md-sys-color-glow: light-dark(
+    color-mix(in srgb, var(--md-ref-amber-800) 28%, transparent),
+    color-mix(in srgb, var(--md-ref-amber-500) 35%, transparent)
+  );
+  --md-sys-color-gridline: light-dark(
+    color-mix(in srgb, var(--md-ref-slate-300) 30%, transparent),
+    color-mix(in srgb, var(--md-ref-slate-750) 45%, transparent)
+  );
+
+  /* Elevation: two shadow colours per theme, levels scale their strength */
+  --md-sys-shadow-umbra: light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.6));
+  --md-sys-shadow-penumbra: light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.7));
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1: 0 1px 3px 1px color-mix(in srgb, var(--md-sys-shadow-umbra) 50%, transparent),
+    0 1px 2px 0 color-mix(in srgb, var(--md-sys-shadow-penumbra) 50%, transparent);
+  --md-sys-elevation-2: 0 3px 8px 2px color-mix(in srgb, var(--md-sys-shadow-umbra) 55%, transparent),
+    0 1px 3px 0 color-mix(in srgb, var(--md-sys-shadow-penumbra) 60%, transparent);
+  --md-sys-elevation-3: 0 6px 14px 3px color-mix(in srgb, var(--md-sys-shadow-umbra) 67%, transparent),
+    0 2px 5px 0 color-mix(in srgb, var(--md-sys-shadow-penumbra) 75%, transparent);
+  --md-sys-elevation-4: 0 10px 22px 4px color-mix(in srgb, var(--md-sys-shadow-umbra) 83%, transparent),
+    0 3px 8px 0 color-mix(in srgb, var(--md-sys-shadow-penumbra) 85%, transparent);
+  --md-sys-elevation-5: 0 14px 28px 6px var(--md-sys-shadow-umbra),
+    0 5px 12px 0 var(--md-sys-shadow-penumbra);
+
+  /* Shape */
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 6px;
+  --md-sys-shape-corner-medium: 10px;
+  --md-sys-shape-corner-large: 14px;
+  --md-sys-shape-corner-large-increased: 16px;
+  --md-sys-shape-corner-extra-large: 20px;
+  --md-sys-shape-corner-extra-large-increased: 24px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* Motion */
+  --md-sys-motion-easing-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-easing-spring: cubic-bezier(0.2, 0.9, 0.3, 1);
+  --md-sys-motion-duration-short: 140ms;
+  --md-sys-motion-duration-medium: 220ms;
+  --md-sys-motion-duration-long: 320ms;
+
+  /* Layout */
+  --md-sys-layout-max-width: 76rem;
+  --md-sys-layout-gutter: 1.25rem;
+  --md-sys-layout-gutter-wide: 2rem;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Component tokens
+--------------------------------------------------------------------------- */
+:root {
+  --md-comp-focus-ring-color: var(--md-sys-color-primary);
+  --md-comp-focus-ring-width: 2px;
+  --md-comp-focus-ring-offset: 3px;
+
+  --md-comp-button-height: 2.75rem; /* 44px: minimum touch target */
+  --md-comp-button-padding-x: 1.35rem;
+  --md-comp-button-radius: var(--md-sys-shape-corner-medium);
+  --md-comp-button-font-size: 0.9375rem;
+
+  --md-comp-card-radius: var(--md-sys-shape-corner-extra-large);
+  --md-comp-card-bg: var(--md-sys-color-surface-container-low);
+  --md-comp-card-border: var(--md-sys-color-outline-variant);
+  --md-comp-card-border-hover: color-mix(in srgb, var(--md-sys-color-primary) 65%, var(--md-sys-color-outline));
+  --md-comp-card-shadow: var(--md-sys-elevation-1);
+  --md-comp-card-shadow-hover: var(--md-sys-elevation-2), 0 0 20px -4px var(--md-sys-color-glow);
+
+  --md-comp-chip-radius: var(--md-sys-shape-corner-small);
+  --md-comp-chip-bg: var(--md-sys-color-surface-container);
+  --md-comp-chip-border: var(--md-sys-color-outline-variant);
+}
+
+/* ---------------------------------------------------------------------------
+   Tailwind bridge: every utility the site uses resolves to a sys token.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Roboto Flex Variable', 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Colour roles → bg-*, text-*, border-*, ring-*, fill-* … */
+  --color-primary: var(--md-sys-color-primary);
+  --color-on-primary: var(--md-sys-color-on-primary);
+  --color-primary-container: var(--md-sys-color-primary-container);
+  --color-on-primary-container: var(--md-sys-color-on-primary-container);
+
+  --color-secondary: var(--md-sys-color-secondary);
+  --color-on-secondary: var(--md-sys-color-on-secondary);
+  --color-secondary-container: var(--md-sys-color-secondary-container);
+  --color-on-secondary-container: var(--md-sys-color-on-secondary-container);
+
+  --color-tertiary: var(--md-sys-color-tertiary);
+  --color-on-tertiary: var(--md-sys-color-on-tertiary);
+  --color-tertiary-container: var(--md-sys-color-tertiary-container);
+  --color-on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+
+  --color-surface: var(--md-sys-color-surface);
+  --color-surface-dim: var(--md-sys-color-surface-dim);
+  --color-surface-bright: var(--md-sys-color-surface-bright);
+  --color-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --color-surface-container-low: var(--md-sys-color-surface-container-low);
+  --color-surface-container: var(--md-sys-color-surface-container);
+  --color-surface-container-high: var(--md-sys-color-surface-container-high);
+  --color-surface-container-highest: var(--md-sys-color-surface-container-highest);
+
+  --color-on-surface: var(--md-sys-color-on-surface);
+  --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --color-outline: var(--md-sys-color-outline);
+  --color-outline-variant: var(--md-sys-color-outline-variant);
+
+  --color-error: var(--md-sys-color-error);
+  --color-on-error: var(--md-sys-color-on-error);
+  --color-error-container: var(--md-sys-color-error-container);
+  --color-on-error-container: var(--md-sys-color-on-error-container);
+
+  --color-glow: var(--md-sys-color-glow);
+
+  /* Shape → rounded-* */
+  --radius-xs: var(--md-sys-shape-corner-extra-small);
+  --radius-sm: var(--md-sys-shape-corner-small);
+  --radius-md: var(--md-sys-shape-corner-medium);
+  --radius-lg: var(--md-sys-shape-corner-large);
+  --radius-xl: var(--md-sys-shape-corner-large-increased);
+  --radius-2xl: var(--md-sys-shape-corner-extra-large);
+  --radius-3xl: var(--md-sys-shape-corner-extra-large-increased);
+  --radius-full: var(--md-sys-shape-corner-full);
+  --radius-card: var(--md-comp-card-radius);
+
+  /* Elevation → shadow-elevation-* */
+  --shadow-elevation-1: var(--md-sys-elevation-1);
+  --shadow-elevation-2: var(--md-sys-elevation-2);
+  --shadow-elevation-3: var(--md-sys-elevation-3);
+  --shadow-elevation-4: var(--md-sys-elevation-4);
+  --shadow-elevation-5: var(--md-sys-elevation-5);
+
+  /* Signal glow → shadow-glow-sm (status dots), shadow-glow (filled controls), shadow-glow-lg (hero frame) */
+  --shadow-glow-sm: 0 0 8px var(--md-sys-color-primary);
+  --shadow-glow: 0 0 16px -2px var(--md-sys-color-glow);
+  --shadow-glow-lg: 0 0 35px -6px var(--md-sys-color-glow);
+
+  /* Motion → ease-*, duration via Tailwind defaults */
+  --ease-standard: var(--md-sys-motion-easing-standard);
+  --ease-emphasized: var(--md-sys-motion-easing-emphasized);
+  --ease-spring: var(--md-sys-motion-easing-spring);
+
+  /* Type scale → text-*. 12px is the floor; nothing renders smaller.
+     Sizes in px for reference: 12 · 13 · 14 · 15 · 17 · 18 · 20 · 22 · 28 · 32 */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.5;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.55;
+  --text-body-lg: 1.0625rem;
+  --text-body-lg--line-height: 1.6;
+  --text-title-sm: 1.125rem;
+  --text-title-sm--line-height: 1.5;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.35;
+  --text-headline-sm: 1.375rem;
+  --text-headline-sm--line-height: 1.3;
+  --text-headline: 1.75rem;
+  --text-headline--line-height: 1.2;
+  --text-headline-lg: 2rem;
+  --text-headline-lg--line-height: 1.15;
+
+  /* Fluid display sizes for page-level headings */
+  --text-h2: clamp(1.6rem, 1.3rem + 1.5vw, 2.4rem);
+  --text-h2--line-height: 1.15;
+  --text-h1: clamp(2.1rem, 1.5rem + 2.8vw, 3.6rem);
+  --text-h1--line-height: 1.08;
+  --text-display: clamp(2.8rem, 1.8rem + 4.5vw, 5.2rem);
+  --text-display--line-height: 1.02;
+}
