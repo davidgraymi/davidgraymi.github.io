@@ -88,7 +88,7 @@ Notice the disparity in recurrent workloads. In eager mode, executing 32 recurre
 
 ## 3. The Compilation Showdown
 
-Each framework provides an optimization pipeline intended to trace operations, fuse kernels, and avoid runtime dispatch overhead. Figure 5 plots the speedup ratio ($\text{baseline latency} / \text{optimised latency}$) across all five architectures.
+Each framework provides an optimization pipeline intended to trace operations, fuse kernels, and avoid runtime dispatch overhead. Figure 5 plots the speedup ratio ($\text{baseline latency} / \text{optimized latency}$) across all five architectures.
 
 ![Compilation Speedup](/images/benchmarks/fig5_speedup.png)
 

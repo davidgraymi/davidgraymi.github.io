@@ -16,5 +16,5 @@ estimate how long a patient will be in the hospital.
 
 Length of stay is a deceptively hard target. The distribution has a long right
 tail, the extreme cases are the ones that matter operationally, and a model
-optimised for average error will quietly be worst exactly where the cost is
+optimized for average error will quietly be worst exactly where the cost is
 highest.
