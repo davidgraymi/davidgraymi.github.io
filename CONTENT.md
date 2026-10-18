@@ -122,3 +122,10 @@ into Slack, LinkedIn or iMessage.
 
 Overwrite `public/files/Resume.docx`. If you export a PDF instead, drop it in
 `public/files/` and update the `Résumé` entry in `src/site.config.ts`.
+
+---
+
+## How it should sound
+
+`docs/brand-voice.md` — voice traits, tone by context, words to avoid, sample
+rewrites and a five-question check to run before publishing.
