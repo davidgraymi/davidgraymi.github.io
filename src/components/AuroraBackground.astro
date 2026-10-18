@@ -44,6 +44,11 @@
     pointer-events: none;
   }
 
+  /* Large blurred layers cost GPU on every frame; skip them for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-orb { display: none; }
+  }
+
   .aurora-orb-1 {
     width: clamp(350px, 45vw, 650px);
     height: clamp(350px, 45vw, 650px);

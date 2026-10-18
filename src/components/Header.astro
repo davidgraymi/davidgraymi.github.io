@@ -59,14 +59,14 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       <button
         id="cmd-palette-btn"
         type="button"
-        class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-[11.5px] transition-all hover:border-[var(--md-sys-color-outline)] hover:text-[var(--md-sys-color-primary)] sm:inline-flex"
+        class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-[12px] transition-all hover:border-[var(--md-sys-color-outline)] hover:text-[var(--md-sys-color-primary)] sm:inline-flex"
         style="background: var(--md-sys-color-surface-container-highest); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
         title="Search & Commands (⌘K)"
         aria-label="Open Command Palette"
       >
         <Icon name="globe" size={13} />
         <span>Search</span>
-        <kbd class="rounded border px-1.5 py-0.2 text-[10px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd>
+        <kbd class="rounded border px-1.5 py-0.2 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">⌘K</kbd>
       </button>
 
       <ThemeToggle />
@@ -82,7 +82,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       <button
         id="menu-toggle"
         type="button"
-        class="grid h-8.5 w-8.5 place-items-center rounded-full border md:hidden"
+        class="grid h-11 w-11 place-items-center rounded-full border md:hidden"
         style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
         aria-label="Open menu"
         aria-expanded="false"
@@ -131,7 +131,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
           <Icon name="globe" size={15} />
           Command Menu
         </span>
-        <kbd class="font-mono text-[11px]">⌘K</kbd>
+        <kbd class="font-mono text-[12px]">⌘K</kbd>
       </button>
       <a href="/contact" class="btn btn-primary w-full text-[14px]">
         Get in touch

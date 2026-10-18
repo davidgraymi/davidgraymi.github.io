@@ -102,8 +102,9 @@
 :root {
   color-scheme: light;
 
-  /* Precision Signal Colors: Iconic Amber Signal & Technical Slate Blue */
-  --md-sys-color-primary: #d97706;
+  /* Precision Signal Colors: Iconic Amber Signal & Technical Slate Blue.
+     Light-mode amber is darkened so text and white-on-amber buttons clear WCAG AA (≥4.5:1). */
+  --md-sys-color-primary: #a14a07;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #fef3c7;
   --md-sys-color-on-primary-container: #451a03;
@@ -230,7 +231,7 @@
   --md-sys-color-on-surface: #f1f5f9;
   --md-sys-color-on-surface-variant: #94a3b8;
   --md-sys-color-outline: #64748b;
-  --md-sys-color-outline-variant: #1e293b;
+  --md-sys-color-outline-variant: #273449;
 
   --md-sys-color-inverse-surface: #f1f5f9;
   --md-sys-color-inverse-on-surface: #0f172a;
@@ -298,7 +299,7 @@
     --md-sys-color-on-surface: #f1f5f9;
     --md-sys-color-on-surface-variant: #94a3b8;
     --md-sys-color-outline: #64748b;
-    --md-sys-color-outline-variant: #1e293b;
+    --md-sys-color-outline-variant: #273449;
 
     --md-sys-color-inverse-surface: #f1f5f9;
     --md-sys-color-inverse-on-surface: #0f172a;
@@ -374,6 +375,11 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .shimmer-text {
+      animation: none !important;
+      background: none;
+      -webkit-text-fill-color: var(--md-sys-color-primary);
+    }
     *, *::before, *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
