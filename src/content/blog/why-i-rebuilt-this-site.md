@@ -29,7 +29,7 @@ loudly when I forget a field rather than silently render an empty card.
 ## What it runs on
 
 [Astro](https://astro.build), building to static HTML. Content lives in
-`src/content/` as markdown with typed frontmatter. Images get optimised at build
+`src/content/` as markdown with typed frontmatter. Images get optimized at build
 time. Most pages ship no JavaScript at all — the mobile menu, the theme toggle
 and the copy-email button are the only exceptions, and each of them degrades to
 a working page if the script never loads.
