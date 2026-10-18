@@ -1,7 +1,9 @@
 ---
-import { nav, site, socials } from '~/site.config';
+import { site, socials } from '~/site.config';
+import { visibleNav } from '~/lib/nav';
 import Icon from './Icon.astro';
 
+const nav = await visibleNav();
 const year = new Date().getFullYear();
 ---
 

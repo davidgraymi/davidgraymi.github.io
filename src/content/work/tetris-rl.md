@@ -2,6 +2,7 @@
 title: Reinforcement Learning applied to Tetris
 blurb: An agent that learns to play Tetris — a genuinely fun excuse to get hands-on with reward shaping.
 kind: School
+category: ai
 year: '2020'
 stack: ['Python', 'Reinforcement learning']
 order: 8

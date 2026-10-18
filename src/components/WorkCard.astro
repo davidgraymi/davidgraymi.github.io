@@ -7,16 +7,7 @@ interface Props {
   entry: CollectionEntry<'work'>;
 }
 const { entry } = Astro.props;
-const { title, blurb, kind, year, stack, highlight, cover, coverAlt } = entry.data;
-
-// Categorization helper for filtering
-let category = 'tools';
-const lower = (kind + ' ' + stack.join(' ') + ' ' + title).toLowerCase();
-if (lower.includes('real-time') || lower.includes('bare metal') || lower.includes('rtos') || lower.includes('kernel') || lower.includes('ada')) {
-  category = 'embedded';
-} else if (lower.includes('ml') || lower.includes('ai') || lower.includes('gesture') || lower.includes('classifier') || lower.includes('rl') || lower.includes('id3') || lower.includes('knn')) {
-  category = 'ai';
-}
+const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } = entry.data;
 ---
 
 <article

@@ -24,6 +24,8 @@ const work = defineCollection({
       blurb: z.string(),
       /** Free-form badge: "Professional", "Personal", "Research", ... */
       kind: z.string().default('Personal'),
+      /** Which filter tab on /work this project appears under. */
+      category: z.enum(['embedded', 'ai', 'tools']).default('tools'),
       year: z.string(),
       /** Ordered most-important-first; the first four show on cards. */
       stack: z.array(z.string()).default([]),
