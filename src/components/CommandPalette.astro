@@ -61,12 +61,13 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
       style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
     >
       <span style="color: var(--md-sys-color-primary)">
-        <Icon name="globe" size={20} />
+        <Icon name="search" size={20} />
       </span>
       <input
         id="command-search"
         type="text"
-        placeholder="Type a command, project, or page... (e.g. Work, RTOS, Theme)"
+        placeholder="Search pages, projects, posts… (try RTOS, Kubernetes, theme)"
+        aria-label="Search the site"
         autocomplete="off"
         spellcheck="false"
         class="w-full bg-transparent text-[15.5px] font-medium outline-none placeholder:text-[var(--md-sys-color-on-surface-variant)]"
@@ -331,6 +332,14 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
       if (idx !== -1) setActive(idx);
     });
   });
+
+  // Show the shortcut the visitor will actually press.
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  if (!isMac) {
+    document.querySelectorAll('[data-shortcut]').forEach((el) => {
+      el.textContent = 'Ctrl K';
+    });
+  }
 
   // Expose global trigger for other components (like header button)
   (window as any).openCommandPalette = openPalette;
