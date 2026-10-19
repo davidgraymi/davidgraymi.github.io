@@ -39,6 +39,24 @@ Your post here. Standard markdown: headings, **bold**, `code`, lists,
 `src/content/blog/starter-post.md` is a draft with every field filled in. Copy
 it when you forget the shape.
 
+### Figures and charts
+
+Put the image in `public/images/` and give it a title. A lone image with a title
+becomes a numbered, captioned figure:
+
+```markdown
+![Alt text that states what the chart shows, e.g. "JAX is fastest on 4 of 5 models"](/images/benchmarks/cpu-latency.webp "Figure 2 — Median latency at batch=32, log scale.")
+```
+
+- If `cpu-latency-dark.webp` sits next to it, dark mode shows that instead.
+- Width and height are read from the file, images lazy-load, and each one links
+  to its full-size file. On phones, charts scroll sideways rather than shrink.
+- Wide tables scroll inside their own box, and number columns right-align.
+
+The benchmark charts come from `scripts/blog-charts/generate.py`, which writes
+both variants from the data snapshots next to it. See the top of that file to
+regenerate them.
+
 ---
 
 ## Add a project

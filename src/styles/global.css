@@ -567,6 +567,47 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 .prose img, .prose video {
   border: 1px solid var(--md-sys-color-outline-variant);
 }
+/* Built by src/lib/rehype-prose.mjs from a lone image with a title */
+.prose .prose-figure { margin-block: 2.2em; }
+.prose-figure-media {
+  overflow-x: auto;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface);
+}
+.prose-figure-media a { display: block; }
+.prose .prose-figure-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+/* Charts stay legible on phones: scroll sideways rather than shrink to 6px text */
+@media (max-width: 39.99rem) {
+  .prose .prose-figure-media img { min-width: 34rem; }
+}
+.prose figcaption {
+  margin-top: 0.75rem;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.prose figcaption .figure-label {
+  margin-right: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-primary);
+}
+/* Light/dark chart variants follow the theme toggle, then the OS */
+.fig-dark { display: none !important; }
+:root[data-theme='dark'] .fig-light { display: none !important; }
+:root[data-theme='dark'] .fig-dark { display: block !important; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .fig-light { display: none !important; }
+  :root:not([data-theme='light']) .fig-dark { display: block !important; }
+}
 .prose hr {
   border-top: 1px solid var(--md-sys-color-outline-variant);
   margin-block: 2.6em;
@@ -580,6 +621,10 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   padding: 0.15em 0.4em;
   color: var(--md-sys-color-on-surface);
 }
+/* Long paths and identifiers break rather than push the page sideways */
+.prose :not(pre) > code { overflow-wrap: anywhere; }
+/* Tables scroll instead, so identifiers in cells stay whole */
+.prose table code { overflow-wrap: normal; white-space: nowrap; }
 .prose pre {
   font-size: 0.875rem;
   line-height: 1.65;
@@ -595,13 +640,14 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   padding: 0;
   font-size: inherit;
 }
+/* Wide tables scroll inside their own region instead of widening the page */
+.prose .table-scroll { overflow-x: auto; }
 .prose table {
   width: 100%;
   font-size: 0.9375rem;
   border-collapse: collapse;
-}
-.prose table {
   border: 1px solid var(--md-sys-color-outline-variant);
+  font-variant-numeric: tabular-nums;
 }
 .prose th, .prose td {
   border: 1px solid var(--md-sys-color-rule-soft);
@@ -612,6 +658,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   background: var(--md-sys-color-surface-container);
   font-weight: 600;
 }
+.prose th.num, .prose td.num { text-align: right; }
 
 /* KaTeX Math Container */
 .katex-display {
@@ -621,15 +668,15 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 }
 
 /* Shiki Syntax Highlighting */
+/* Token colours switch with the theme; the block background stays on the
+   design-system surface set by `.prose pre`, not Shiki's own theme background. */
 :root[data-theme='dark'] .astro-code,
 :root[data-theme='dark'] .astro-code span {
   color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .astro-code,
   :root:not([data-theme='light']) .astro-code span {
     color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
   }
 }

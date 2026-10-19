@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeProse from './src/lib/rehype-prose.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,7 +19,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
+      rehypePlugins: [rehypeKatex, rehypeProse],
     }),
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark-dimmed' },
