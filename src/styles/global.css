@@ -680,3 +680,31 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
     color: var(--shiki-dark) !important;
   }
 }
+
+/* Résumé sections: one rhythm on screen, tighter on paper */
+.resume-section { padding-top: 1.75rem; }
+
+/* ---------------------------------------------------------------------------
+   Print: paper is always light, and only the page content prints.
+   /resume is the page this is tuned for (npm run resume:pdf prints it).
+--------------------------------------------------------------------------- */
+@media print {
+  :root, :root[data-theme] { color-scheme: light !important; }
+  @page { size: letter; margin: 0.55in 0.6in; }
+
+  body > :not(main),
+  .no-print,
+  .tick { display: none !important; }
+
+  body { background: #fff; font-size: 10pt; }
+  main > * { padding: 0 !important; max-width: none !important; }
+  .resume { margin: 0; border: 0 !important; padding: 0 !important; }
+  .resume > div { padding: 0 !important; background: none !important; }
+  .resume-section { padding-top: 0.9rem; }
+  .resume-item { break-inside: avoid; }
+  .resume .text-h2 { font-size: 20pt; }
+  .resume .text-body-lg { font-size: 10.5pt; }
+  .resume .text-body-sm, .resume .text-body { font-size: 9.5pt; }
+  .resume .space-y-6 > * + * { margin-top: 0.7rem; }
+  a { color: inherit; text-decoration: none; }
+}

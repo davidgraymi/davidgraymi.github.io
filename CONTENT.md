@@ -136,7 +136,14 @@ Overwrite `src/assets/avatar.png`. It appears on the homepage and `/about`.
 `public/og.png`, 1200×630. This is what shows up when someone pastes a link
 into Slack, LinkedIn or iMessage.
 
-## Replace the résumé
+## Update the résumé
 
-Overwrite `public/files/Resume.docx`. If you export a PDF instead, drop it in
-`public/files/` and update the `Résumé` entry in `src/site.config.ts`.
+Edit `src/data/resume.ts`. `/about` and `/resume` both read from it. Then
+regenerate the PDF so the download matches the page:
+
+```bash
+npm run build && npm run resume:pdf   # writes public/files/David-Gray-Resume.pdf
+```
+
+It prints `/resume` with your local Chrome (set `CHROME_PATH` to use another
+Chromium). Commit the PDF along with the data change.
