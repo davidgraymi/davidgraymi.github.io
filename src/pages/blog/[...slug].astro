@@ -83,8 +83,13 @@ const jsonLd = {
       </div>
     </header>
 
-    <div class="wrap py-12 md:py-16 xl:grid xl:grid-cols-[minmax(0,48rem)_15rem] xl:justify-center xl:gap-16">
-      <div class="mx-auto max-w-3xl xl:mx-0 xl:max-w-none">
+    <div
+      class:list={[
+        'wrap py-12 md:py-16',
+        showToc && 'xl:grid xl:grid-cols-[minmax(0,48rem)_15rem] xl:justify-center xl:gap-16',
+      ]}
+    >
+      <div class:list={['mx-auto max-w-3xl', showToc && 'xl:mx-0 xl:max-w-none']}>
         {showToc && <TableOfContents headings={headings} variant="inline" />}
 
         {
