@@ -1,17 +1,17 @@
 ---
 title: "An Unexpected Email, REPRO-SIGN, and 11 Citations on Google Scholar"
-description: "Years after our college capstone, an out-of-the-blue email from European AI researchers wanting to reproduce our sign language paper led to a wild discovery: we've been cited 11 times."
+description: "Years after our college capstone, an out-of-the-blue email from European AI researchers wanting to reproduce our sign language paper sent me to Google Scholar, where we've been cited 11 times."
 pubDate: 2026-10-12
 tags: ['ai', 'research', 'machine-learning', 'reproducibility', 'capstone', 'google-scholar']
 ---
 
-Most undergraduate capstone projects have a predictable lifecycle. You spend months running on caffeine, wrestling with stubborn bugs, putting together a demo, presenting your slides to faculty, and submitting a final paper. Then graduation happens. Everyone scatters to their respective jobs, the code sits quietly in a GitHub repository, and the project becomes a pleasant memory you occasionally bring up over drinks or in an interview.
+Most undergraduate capstone projects have a predictable lifecycle. You spend months fixing bugs, putting together a demo, presenting your slides to faculty, and submitting a final paper. Then graduation happens. Everyone scatters to their respective jobs, the code sits quietly in a GitHub repository, and the project becomes a pleasant memory you occasionally bring up over drinks or in an interview.
 
 That was exactly how I viewed our senior capstone at Missouri State. Back in 2021, my teammates—Braden Bagby, Riley Hughes, Zachary Langford, Robert Stonner—and I built an American Sign Language smart home controller powered by Google MediaPipe and custom CNNs, culminating in our paper, [*Simplifying Sign Language Detection for Smart Home Devices using Google MediaPipe*](/files/sign-language-paper.pdf).
 
 I hadn’t actively thought about that project in years.
 
-Then today, an email arrived that completely caught me off guard.
+Then today, an email arrived asking for our dataset.
 
 ---
 
@@ -47,13 +47,13 @@ Reading further into the forwarded correspondence, she explained the scope of wh
 
 I had to read that twice.
 
-A consortium of roughly 30 researchers across ten prestigious institutions—the University of Zurich, Gallaudet (the premier university for Deaf and hard-of-hearing education), DFKI, Northeastern, and others—is running a systematic reproducibility study on computational sign language research. And of all the literature in the field, they selected our undergraduate capstone paper as part of their representative sample.
+A consortium of roughly 30 researchers across ten institutions—the University of Zurich, Gallaudet (a university for Deaf and hard-of-hearing students), DFKI, Northeastern, and others—is running a systematic reproducibility study on computational sign language research. And of all the literature in the field, they selected our undergraduate capstone paper as part of their representative sample.
 
 ---
 
 ## "Wait, people actually read this?"
 
-Receiving an email like that is an immediate jolt of adrenaline. But after the initial surprise settled, curiosity took over. 
+Once the surprise wore off, I got curious.
 
 If an international research group is asking to reproduce our experiments, what had become of our paper since we published it? 
 
@@ -63,9 +63,9 @@ I opened Google Scholar, typed in *Simplifying Sign Language Detection for Smart
 
 Eleven citations.
 
-For a career academic or a tenured professor with hundreds of papers, eleven citations might seem like a modest number. But for an undergraduate senior project that we submitted as college seniors, eleven citations is surreal.
+For a career academic or a tenured professor with hundreds of papers, eleven citations might seem like a modest number. But for an undergraduate senior project that we submitted as college seniors, eleven citations is far more than I ever expected.
 
-Looking through the citations, researchers working on gesture interfaces, regional sign language translation (from American Sign Language to Vietnamese Sign Language), assistive robotics, and edge computer vision had actually discovered our work, cited our findings on MediaPipe hand landmark extraction, and referenced our distributed architecture.
+Looking through the citations, researchers working on gesture interfaces, regional sign language translation (from American Sign Language to Vietnamese Sign Language), assistive robotics, and edge computer vision had found our work, cited our findings on MediaPipe hand landmark extraction, and referenced our distributed architecture.
 
 When you're an undergrad sitting in a lab at 2 AM trying to figure out why your UDP packet slicing is dropping frames or why your TensorFlow model is confusing the sign for 'J' with 'I', you assume your audience begins and ends with your capstone grading committee. You never imagine that years later, researchers on other continents will be reading those pages, citing them in peer-reviewed journals, and seeking to independently reproduce your benchmarks.
 
@@ -75,20 +75,20 @@ When you're an undergrad sitting in a lab at 2 AM trying to figure out why your 
 
 What struck me most about Dr. De Sisto’s email was the mission of **REPRO-SIGN**. 
 
-Machine learning has had a well-documented reproducibility crisis for years. Papers frequently publish eye-popping accuracy figures on closed datasets, omit subtle preprocessing steps, or keep code and model weights private. In computational sign language processing—where ethical data collection, diverse signers, lighting conditions, and dynamic movements make benchmarking particularly tricky—reproducibility is both critical and difficult.
+Machine learning has had a well-documented reproducibility crisis for years. Papers frequently publish high accuracy figures on closed datasets, omit subtle preprocessing steps, or keep code and model weights private. In computational sign language processing—where ethical data collection, diverse signers, lighting conditions, and dynamic movements make benchmarking particularly tricky—reproducibility is both critical and difficult.
 
-The fact that the REPRO-SIGN initiative exists to do the rigorous, unglamorous work of verifying whether published results actually hold up across independent teams is fantastic. Science doesn't move forward on hype; it moves forward on verifiable, reproducible evidence.
+The fact that the REPRO-SIGN initiative exists to do the rigorous, unglamorous work of verifying whether published results actually hold up across independent teams is good for the field. Science doesn't move forward on hype; it moves forward on verifiable, reproducible evidence.
 
-Hearing that our work was chosen to be part of that effort is deeply gratifying.
+Hearing that our work was chosen to be part of that effort means a lot.
 
 ---
 
 ## Digging up the archives
 
-Now comes the fun (and slightly terrifying) part: digital archaeology.
+Now comes the digital archaeology.
 
-The email asks for the dataset we collected and used to train our 14-class gesture classifier. Fortunately, our code repository has remained public on [GitHub](https://github.com/davidgraymi/Sign-Language-Interpretation-System), and our paper is permanently archived right here on [this website](/files/sign-language-paper.pdf). 
+The email asks for the dataset we collected and used to train our 14-class gesture classifier. Fortunately, our code repository has remained public on [GitHub](https://github.com/davidgraymi/Sign-Language-Interpretation-System), and our paper is archived on [this website](/files/sign-language-paper.pdf). 
 
 Braden and I are already in touch and digging through old backups, external SSDs, and college cloud drives to retrieve the raw landmark coordinates and image sets so we can hand them over to Dr. De Sisto and the REPRO-SIGN team.
 
-If there’s one lesson I take away from this surprise email, it’s this: **take pride in what you build, even when you think nobody is watching.** You never know which college project or late-night experiment might ripple outwards and end up contributing to a global scientific community years down the road.
+If there’s one lesson I take away from this email, it’s this: **take pride in what you build, even when you think nobody is watching.** You never know which college project or late-night experiment might end up in someone else's research years later.
