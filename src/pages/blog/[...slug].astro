@@ -6,6 +6,8 @@ import Base from '~/layouts/Base.astro';
 import FormattedDate from '~/components/FormattedDate.astro';
 import BackLink from '~/components/BackLink.astro';
 import CallToAction from '~/components/CallToAction.astro';
+import TableOfContents from '~/components/TableOfContents.astro';
+import { site } from '~/site.config';
 
 export const getStaticPaths = (async () => {
   const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -18,15 +20,32 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { entry, newer, older } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entry.data;
 
 // ~230 wpm, ignoring code fences so a long listing doesn't inflate it
 const words = (entry.body ?? '').replace(/```[\s\S]*?```/g, '').split(/\s+/).filter(Boolean).length;
 const readingMinutes = Math.max(1, Math.round(words / 230));
+
+// Short posts read fine without a map; only show one past a few sections.
+const showToc = headings.filter((h) => h.depth === 2).length >= 3;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  ...(updatedDate && { dateModified: updatedDate.toISOString() }),
+  keywords: tags.join(', '),
+  wordCount: words,
+  url: new URL(`/blog/${entry.id}`, Astro.site).href,
+  mainEntityOfPage: new URL(`/blog/${entry.id}`, Astro.site).href,
+  author: { '@type': 'Person', name: site.name, url: site.url },
+};
 ---
 
-<Base title={title} description={description} type="article">
+<Base title={title} description={description} type="article" jsonLd={jsonLd}>
   <article>
     <header class="gridlines border-b border-outline-variant">
       <div class="wrap max-w-4xl py-14 md:py-18">
@@ -64,46 +83,56 @@ const readingMinutes = Math.max(1, Math.round(words / 230));
       </div>
     </header>
 
-    <div class="wrap max-w-3xl py-12 md:py-16">
-      {
-        cover && (
-          <Image
-            src={cover}
-            alt={coverAlt}
-            widths={[720, 1200]}
-            sizes="(min-width: 768px) 48rem, 100vw"
-            class="mb-12 w-full border border-outline-variant bg-surface-container-low"
-          />
-        )
-      }
+    <div class="wrap py-12 md:py-16 xl:grid xl:grid-cols-[minmax(0,48rem)_15rem] xl:justify-center xl:gap-16">
+      <div class="mx-auto max-w-3xl xl:mx-0 xl:max-w-none">
+        {showToc && <TableOfContents headings={headings} variant="inline" />}
 
-      <div class="prose">
-        <Content />
+        {
+          cover && (
+            <Image
+              src={cover}
+              alt={coverAlt}
+              widths={[720, 1200]}
+              sizes="(min-width: 768px) 48rem, 100vw"
+              class="mb-12 w-full border border-outline-variant bg-surface-container-low"
+            />
+          )
+        }
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          (newer || older) && (
+            <nav class="ruled-panel mt-16" aria-label="More posts">
+              <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+              <div class="ruled-grid sm:grid-cols-2">
+                {newer ? (
+                  <a href={`/blog/${newer.id}`} class="ruled-cell is-interactive block p-5.5">
+                    <p class="kicker">Newer</p>
+                    <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
+                  </a>
+                ) : (
+                  <span class="ruled-cell hidden sm:block" />
+                )}
+                {older && (
+                  <a href={`/blog/${older.id}`} class="ruled-cell is-interactive block p-5.5 sm:text-right">
+                    <p class="kicker sm:flex-row-reverse">Older</p>
+                    <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>
+                  </a>
+                )}
+              </div>
+            </nav>
+          )
+        }
       </div>
 
-      {
-        (newer || older) && (
-          <nav class="ruled-panel mt-16" aria-label="More posts">
-            <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-            <div class="ruled-grid sm:grid-cols-2">
-              {newer ? (
-                <a href={`/blog/${newer.id}`} class="ruled-cell is-interactive block p-5.5">
-                  <p class="kicker">Newer</p>
-                  <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
-                </a>
-              ) : (
-                <span class="ruled-cell hidden sm:block" />
-              )}
-              {older && (
-                <a href={`/blog/${older.id}`} class="ruled-cell is-interactive block p-5.5 sm:text-right">
-                  <p class="kicker sm:flex-row-reverse">Older</p>
-                  <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>
-                </a>
-              )}
-            </div>
-          </nav>
-        )
-      }
+      {showToc && (
+        <aside class="hidden xl:block">
+          <TableOfContents headings={headings} variant="rail" />
+        </aside>
+      )}
     </div>
   </article>
 

@@ -7,6 +7,8 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  /** schema.org object(s) rendered as JSON-LD. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -15,6 +17,7 @@ const {
   image = '/og.png',
   type = 'website',
   noindex = false,
+  jsonLd,
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
@@ -31,8 +34,9 @@ const ogImage = new URL(image, Astro.site);
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/images/icon.png" />
+<!-- Match --md-sys-color-surface; Base.astro rewrites these when the toggle pins a theme. -->
 <meta name="theme-color" content="#06090e" media="(prefers-color-scheme: dark)" />
-<meta name="theme-color" content="#f8f9fb" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={site.name} />
@@ -47,3 +51,4 @@ const ogImage = new URL(image, Astro.site);
 
 <link rel="alternate" type="application/rss+xml" title={`${site.name} — Writing`} href="/rss.xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
