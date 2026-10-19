@@ -1,0 +1,310 @@
+---
+/**
+ * "Bot or human?" — pick which of two short texts a language model wrote.
+ * Rounds live in src/data/bot-or-human.ts. Vanilla script, no framework; the
+ * script only loads on the page that renders this component.
+ */
+import { rounds } from '~/data/bot-or-human';
+---
+
+<div class="not-prose" data-bor>
+  <noscript>
+    <p class="surface p-6 text-body text-on-surface-variant">
+      This game needs JavaScript to shuffle and score its {rounds.length} rounds.
+    </p>
+  </noscript>
+
+  <div data-bor-game hidden>
+    <div class="ruled-panel">
+      <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+      <!-- Status bar -->
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant px-5 py-3 font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant"
+      >
+        <span>Round <span class="text-on-surface" data-bor-round>01</span> / <span data-bor-total>{String(rounds.length).padStart(2, '0')}</span></span>
+        <span>Score <span class="text-primary" data-bor-score>0</span></span>
+      </div>
+
+      <!-- Play view -->
+      <div data-bor-play>
+        <div class="px-5 pt-6 pb-5 md:px-8">
+          <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant" data-bor-prompt></p>
+          <h2 class="mt-2 text-title font-semibold text-on-surface" id="bor-question">
+            Which one did the bot write?
+          </h2>
+          <p class="mt-1 text-body-sm text-on-surface-variant">
+            One is a public-domain human text, the other was written by a language model.{" "}
+            <span class="hidden md:inline">Press <kbd class="font-mono">1</kbd> / <kbd class="font-mono">2</kbd> or <kbd class="font-mono">←</kbd> / <kbd class="font-mono">→</kbd>.</span>
+          </p>
+        </div>
+
+        <div class="ruled-grid border-t border-outline-variant md:grid-cols-2" role="group" aria-labelledby="bor-question">
+          {
+            [0, 1].map((slot) => (
+              <button
+                type="button"
+                class="ruled-cell is-interactive group flex min-h-44 flex-col gap-4 p-5 text-left md:p-8 disabled:cursor-default data-[result=bot]:bg-surface-container-high"
+                data-bor-choice={slot}
+              >
+                <span class="flex items-center gap-3">
+                  <span class="cell-index grid h-7 w-7 place-items-center rounded-md font-mono text-label font-semibold">
+                    {slot + 1}
+                  </span>
+                  <span class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">
+                    {slot === 0 ? 'Left' : 'Right'}
+                  </span>
+                  <span class="ml-auto" data-bor-badge hidden></span>
+                </span>
+                <span class="whitespace-pre-line text-body-lg leading-relaxed text-on-surface" data-bor-text></span>
+                <span class="mt-auto font-mono text-label text-on-surface-variant" data-bor-source hidden></span>
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="border-t border-outline-variant px-5 py-6 md:px-8">
+          <div aria-live="polite" aria-atomic="true" data-bor-feedback>
+            <p class="text-body-sm text-on-surface-variant" data-bor-hint>Pick one to reveal the answer.</p>
+          </div>
+          <div class="mt-5" data-bor-next-wrap hidden>
+            <button type="button" class="btn btn-primary" data-bor-next>
+              <span data-bor-next-label>Next round</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary view -->
+      <div class="px-5 py-8 outline-none md:px-8" data-bor-summary hidden tabindex="-1">
+        <p class="kicker">Final score</p>
+        <p class="mt-4 font-semibold tracking-tight text-headline-lg text-on-surface">
+          <span class="text-primary" data-bor-final></span> / {rounds.length}
+        </p>
+        <p class="mt-2 max-w-2xl text-body-lg text-on-surface-variant" data-bor-verdict></p>
+
+        <ol class="ruled-list mt-8" data-bor-log></ol>
+
+        <div class="mt-8">
+          <button type="button" class="btn btn-primary" data-bor-again>Play again</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-caption text-on-surface-variant">
+      Human texts are public domain, quoted as published. Bot texts were written for this game by a
+      language model imitating each form. Left and right are shuffled every round.
+    </p>
+  </div>
+</div>
+
+<script>
+  import { rounds, type BotOrHumanRound } from '~/data/bot-or-human';
+
+  type Side = 'human' | 'bot';
+  interface Played {
+    round: BotOrHumanRound;
+    /** What sits in slot 0 and slot 1. */
+    order: [Side, Side];
+    picked?: 0 | 1;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-bor]');
+  if (root) init(root);
+
+  function shuffle<T>(arr: T[]): T[] {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function verdict(score: number, total: number): string {
+    const pct = score / total;
+    if (pct === 1) return 'Perfect. Either you know your nineteenth-century poetry or you have a very good ear for filler.';
+    if (pct >= 0.75) return 'Sharp eye. The tells were stock images, forced rhymes and modern phrasing; you caught most of them.';
+    if (pct >= 0.5) return 'Better than a coin flip. The forced rhymes are usually the giveaway, so read the last word of each line.';
+    return 'Tougher than it looks. Try again and check whether each line actually means what it says.';
+  }
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const game = $('[data-bor-game]');
+    const play = $('[data-bor-play]');
+    const summary = $('[data-bor-summary]');
+    const roundEl = $('[data-bor-round]');
+    const scoreEl = $('[data-bor-score]');
+    const promptEl = $('[data-bor-prompt]');
+    const feedback = $('[data-bor-feedback]');
+    const nextWrap = $('[data-bor-next-wrap]');
+    const nextBtn = $<HTMLButtonElement>('[data-bor-next]');
+    const nextLabel = $('[data-bor-next-label]');
+    const againBtn = $<HTMLButtonElement>('[data-bor-again]');
+    const log = $('[data-bor-log]');
+    const choices = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-bor-choice]'));
+
+    let deck: Played[] = [];
+    let index = 0;
+    let score = 0;
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+
+    function start() {
+      deck = shuffle(rounds).map((round) => ({
+        round,
+        order: Math.random() < 0.5 ? ['human', 'bot'] : ['bot', 'human'],
+      }));
+      index = 0;
+      score = 0;
+      scoreEl.textContent = '0';
+      summary.hidden = true;
+      play.hidden = false;
+      render();
+    }
+
+    function render() {
+      const p = deck[index];
+      roundEl.textContent = pad(index + 1);
+      promptEl.textContent = p.round.prompt;
+      choices.forEach((btn, slot) => {
+        const side = p.order[slot];
+        btn.disabled = false;
+        btn.removeAttribute('data-result');
+        btn.setAttribute('aria-label', `Option ${slot + 1}: ${p.round[side].text.replace(/\n/g, ' ')}`);
+        btn.querySelector('[data-bor-text]')!.textContent = p.round[side].text;
+        const badge = btn.querySelector<HTMLElement>('[data-bor-badge]')!;
+        const source = btn.querySelector<HTMLElement>('[data-bor-source]')!;
+        badge.hidden = true;
+        badge.textContent = '';
+        source.hidden = true;
+        source.textContent = '';
+      });
+      feedback.replaceChildren(
+        Object.assign(document.createElement('p'), {
+          className: 'text-body-sm text-on-surface-variant',
+          textContent: 'Pick one to reveal the answer.',
+        }),
+      );
+      nextWrap.hidden = true;
+    }
+
+    function choose(slot: 0 | 1) {
+      const p = deck[index];
+      if (p.picked !== undefined) return;
+      p.picked = slot;
+      const correct = p.order[slot] === 'bot';
+      if (correct) score++;
+      scoreEl.textContent = String(score);
+
+      choices.forEach((btn, i) => {
+        const side = p.order[i];
+        btn.disabled = true;
+        btn.dataset.result = side;
+        const badge = btn.querySelector<HTMLElement>('[data-bor-badge]')!;
+        badge.className = side === 'bot' ? 'ml-auto chip chip-accent' : 'ml-auto chip';
+        badge.textContent = (side === 'bot' ? 'Bot' : 'Human') + (i === slot ? ' · your pick' : '');
+        badge.hidden = false;
+        if (side === 'human') {
+          const source = btn.querySelector<HTMLElement>('[data-bor-source]')!;
+          source.textContent = p.round.human.source;
+          source.hidden = false;
+        }
+        btn.setAttribute('aria-label', `${side === 'bot' ? 'Bot' : 'Human'}: ${p.round[side].text.replace(/\n/g, ' ')}`);
+      });
+
+      const botSlot = p.order.indexOf('bot') + 1;
+      const head = document.createElement('p');
+      head.className = correct
+        ? 'font-semibold text-body-lg text-primary'
+        : 'font-semibold text-body-lg text-error';
+      head.textContent = correct
+        ? `Correct. Option ${botSlot} was the bot.`
+        : `Not quite. Option ${botSlot} was the bot.`;
+      const why = document.createElement('p');
+      why.className = 'mt-2 max-w-3xl text-body leading-relaxed text-on-surface';
+      why.textContent = p.round.explanation;
+      feedback.replaceChildren(head, why);
+
+      const last = index === deck.length - 1;
+      nextLabel.textContent = last ? 'See your score' : 'Next round';
+      nextWrap.hidden = false;
+      nextBtn.focus({ preventScroll: true });
+    }
+
+    function next() {
+      if (deck[index]?.picked === undefined) return;
+      if (index < deck.length - 1) {
+        index++;
+        render();
+        choices[0].focus({ preventScroll: true });
+        root.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+      } else {
+        finish();
+      }
+    }
+
+    function finish() {
+      play.hidden = true;
+      summary.hidden = false;
+      $('[data-bor-final]').textContent = String(score);
+      $('[data-bor-verdict]').textContent = verdict(score, deck.length);
+      log.replaceChildren(
+        ...deck.map((p, i) => {
+          const ok = p.picked !== undefined && p.order[p.picked] === 'bot';
+          const li = document.createElement('li');
+          li.className = 'flex items-baseline gap-4 py-3';
+          const mark = document.createElement('span');
+          mark.className = `shrink-0 font-mono text-label font-semibold ${ok ? 'text-primary' : 'text-error'}`;
+          mark.textContent = `${pad(i + 1)} ${ok ? '✓' : '✗'}`;
+          mark.setAttribute('aria-hidden', 'true');
+          const sr = Object.assign(document.createElement('span'), {
+            className: 'sr-only',
+            textContent: `Round ${i + 1}, ${ok ? 'correct' : 'missed'}: `,
+          });
+          const label = document.createElement('span');
+          label.className = 'text-body-sm text-on-surface';
+          label.textContent = `${p.round.prompt}. Human: ${p.round.human.source}`;
+          li.append(mark, sr, label);
+          return li;
+        }),
+      );
+      summary.focus({ preventScroll: true });
+      root.scrollIntoView({ block: 'start', behavior: 'auto' });
+    }
+
+    choices.forEach((btn, slot) => btn.addEventListener('click', () => choose(slot as 0 | 1)));
+    nextBtn.addEventListener('click', next);
+    againBtn.addEventListener('click', () => {
+      start();
+      choices[0].focus({ preventScroll: true });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (t?.closest('input, textarea, select, [contenteditable], dialog[open]')) return;
+      // Only steer the game when focus is on the page itself or inside the game.
+      if (t && t !== document.body && !root.contains(t)) return;
+      if (play.hidden) return;
+      const answered = deck[index]?.picked !== undefined;
+      if (!answered) {
+        if (e.key === '1' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          choose(0);
+        } else if (e.key === '2' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          choose(1);
+        }
+      } else if (e.key === 'n' || e.key === 'N' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        next();
+      }
+    });
+
+    game.hidden = false;
+    start();
+  }
+</script>
