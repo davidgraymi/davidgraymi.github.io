@@ -6,20 +6,29 @@ import WorkCard from '~/components/WorkCard.astro';
 import CallToAction from '~/components/CallToAction.astro';
 import Icon from '~/components/Icon.astro';
 
-const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => {
+const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => {
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
   return a.data.order - b.data.order;
 });
+const entries = all.filter((e) => !e.data.archived);
+const archive = all.filter((e) => e.data.archived).sort((a, b) => b.data.year.localeCompare(a.data.year));
+
+const filters = [
+  { key: 'security', label: 'Security & Cloud' },
+  { key: 'embedded', label: 'Embedded & Real-Time' },
+  { key: 'ai', label: 'Applied AI / ML' },
+  { key: 'tools', label: 'Tools & Apps' },
+].filter((f) => entries.some((e) => e.data.category === f.key));
 ---
 
 <Base
   title="Work"
-  description="Real-time embedded systems, applied machine learning, and side projects that got out of hand."
+  description="Cloud and product security, real-time embedded systems, applied machine learning, and side projects that got out of hand."
 >
   <PageHeader
     kicker="Portfolio"
     title="Things I've built, and what each one taught me"
-    lead="Production defense software I can only describe in outline, research projects with the numbers attached, and side projects I built because something annoyed me. Sorted by how much I want you to read them."
+    lead="Production security and defense work I can only describe in outline, research projects with the numbers attached, and side projects I built because something annoyed me. Sorted by how much I want you to read them."
   />
 
   <div class="wrap py-12 md:py-16">
@@ -33,27 +42,13 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
         >
           All ({entries.length})
         </button>
-        <button
-          type="button"
-          data-filter="embedded"
-          class="filter-tab"
-        >
-          Embedded & Real-Time
-        </button>
-        <button
-          type="button"
-          data-filter="ai"
-          class="filter-tab"
-        >
-          Applied AI / ML
-        </button>
-        <button
-          type="button"
-          data-filter="tools"
-          class="filter-tab"
-        >
-          Tools & Apps
-        </button>
+        {
+          filters.map((f) => (
+            <button type="button" data-filter={f.key} class="filter-tab">
+              {f.label}
+            </button>
+          ))
+        }
       </div>
 
       <a href="/wordlet" class="btn btn-ghost">
@@ -73,6 +68,42 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
     <div id="no-projects" class="hidden py-16 text-center text-body text-on-surface-variant">
       No projects match this category.
     </div>
+
+    {
+      archive.length > 0 && (
+        <section id="archive" class="mt-20" aria-labelledby="archive-title">
+          <p class="kicker">Archive</p>
+          <h2 id="archive-title" class="mt-4 text-headline-sm font-semibold text-on-surface">
+            Coursework from undergrad
+          </h2>
+          <p class="mt-3 max-w-2xl text-body text-on-surface-variant">
+            Where I learned the basics properly. Kept because the code and reports are still
+            downloadable, not because they're the best thing here.
+          </p>
+          <ul class="ruled-list mt-8">
+            {archive.map((entry) => (
+              <li data-category={entry.data.category} class="archive-row">
+                <a
+                  href={`/work/${entry.id}`}
+                  class="group grid gap-x-6 gap-y-1 py-4 sm:grid-cols-[4rem_1fr_auto] sm:items-baseline"
+                >
+                  <span class="font-mono text-label text-on-surface-variant">{entry.data.year}</span>
+                  <span>
+                    <span class="font-semibold text-on-surface transition-colors group-hover:text-primary">
+                      {entry.data.title}
+                    </span>
+                    <span class="block text-body-sm text-on-surface-variant">{entry.data.blurb}</span>
+                  </span>
+                  <span class="font-mono text-label text-on-surface-variant">
+                    {entry.data.stack.slice(0, 2).join(' · ')}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </div>
 
   <CallToAction
@@ -83,7 +114,7 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
 
 <script>
   const filterTabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
-  const projectCards = document.querySelectorAll<HTMLElement>('#projects-grid article');
+  const projectCards = document.querySelectorAll<HTMLElement>('#projects-grid article, #archive .archive-row');
   const noProjects = document.getElementById('no-projects');
 
   filterTabs.forEach((tab) => {
@@ -103,6 +134,13 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
 
       if (noProjects) {
         noProjects.classList.toggle('hidden', visibleCount > 0);
+      }
+
+      // The archive heading only makes sense when at least one of its rows is showing.
+      const archive = document.getElementById('archive');
+      if (archive) {
+        const rows = [...archive.querySelectorAll<HTMLElement>('.archive-row')];
+        archive.hidden = rows.every((row) => row.style.display === 'none');
       }
     });
   });

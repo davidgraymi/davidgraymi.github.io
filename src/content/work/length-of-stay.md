@@ -5,6 +5,7 @@ kind: School
 category: ai
 year: '2021'
 stack: ['Python', 'scikit-learn', 'Data mining']
+archived: true
 order: 11
 links:
   - label: Download the code

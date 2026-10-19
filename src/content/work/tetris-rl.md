@@ -5,6 +5,7 @@ kind: School
 category: ai
 year: '2020'
 stack: ['Python', 'Reinforcement learning']
+archived: true
 order: 8
 links:
   - label: Download the code
