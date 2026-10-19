@@ -12,7 +12,13 @@ const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascrip
 
 // Just enough static server for one page and its assets.
 const server = createServer(async (req, res) => {
-  let file = path.join(DIST, decodeURIComponent(new URL(req.url, 'http://x').pathname));
+  let file;
+  try {
+    file = path.resolve(DIST, '.' + decodeURIComponent(new URL(req.url, 'http://x').pathname));
+  } catch {
+    return res.writeHead(400).end();
+  }
+  if (file !== DIST && !file.startsWith(DIST + path.sep)) return res.writeHead(403).end();
   if (!path.extname(file)) file = path.join(file, 'index.html');
   try {
     const body = await readFile(file);
@@ -22,8 +28,8 @@ const server = createServer(async (req, res) => {
     res.writeHead(404).end();
   }
 });
-await new Promise((r) => server.listen(0, r));
-const url = `http://localhost:${server.address().port}/resume`;
+await new Promise((r) => server.listen(0, '127.0.0.1', r));
+const url = `http://127.0.0.1:${server.address().port}/resume`;
 
 const browser = await chromium.launch(
   process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : { channel: 'chrome' },

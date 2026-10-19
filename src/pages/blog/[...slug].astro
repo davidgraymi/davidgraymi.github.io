@@ -8,6 +8,8 @@ import BackLink from '~/components/BackLink.astro';
 import CallToAction from '~/components/CallToAction.astro';
 import TableOfContents from '~/components/TableOfContents.astro';
 import { site } from '~/site.config';
+// Math only renders in posts and project write-ups, so KaTeX's CSS and fonts load only here.
+import 'katex/dist/katex.min.css';
 
 export const getStaticPaths = (async () => {
   const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(

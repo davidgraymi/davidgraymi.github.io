@@ -6,6 +6,8 @@ import Base from '~/layouts/Base.astro';
 import Icon from '~/components/Icon.astro';
 import BackLink from '~/components/BackLink.astro';
 import CallToAction from '~/components/CallToAction.astro';
+// Math only renders in posts and project write-ups, so KaTeX's CSS and fonts load only here.
+import 'katex/dist/katex.min.css';
 
 export const getStaticPaths = (async () => {
   const entries = await getCollection('work', ({ data }) => !data.draft);
