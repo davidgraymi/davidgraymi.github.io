@@ -19,7 +19,7 @@ const { Content } = await render(entry);
 const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = entry.data;
 ---
 
-<Base title={title} description={blurb} type="article">
+<Base title={title} description={blurb} type="article" image={`/og/work/${entry.id}.png`}>
   <article>
     <header class="gridlines border-b border-outline-variant">
       <div class="wrap py-14 md:py-20">

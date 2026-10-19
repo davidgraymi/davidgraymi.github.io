@@ -131,10 +131,12 @@ To take down the "open to consulting" pill, set `availableForWork: false`.
 
 Overwrite `src/assets/avatar.png`. It appears on the homepage and `/about`.
 
-## Replace the social share card
+## Social share cards
 
-`public/og.png`, 1200×630. This is what shows up when someone pastes a link
-into Slack, LinkedIn or iMessage.
+Every post, project and top-level page gets its own 1200×630 card, drawn at
+build time from its title and description (`src/lib/og.ts`). Nothing to do when
+you add content. To change the wording on a top-level page's card, edit
+`src/lib/og-pages.ts`.
 
 ## Update the résumé
 
