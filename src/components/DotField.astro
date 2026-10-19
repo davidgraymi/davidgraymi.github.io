@@ -1,0 +1,15 @@
+---
+/**
+ * Loads the interactive header dot field once the browser is idle. The static
+ * `.dot-field` CSS texture is the no-JS rendering; this only enhances it.
+ */
+---
+
+<script>
+  const el = document.querySelector<HTMLElement>('.dot-field');
+  if (el && !matchMedia('(forced-colors: active)').matches) {
+    const start = () => import('~/lib/games/dot-field').then((m) => m.mountDotField(el));
+    if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 3000 });
+    else setTimeout(start, 1500);
+  }
+</script>
