@@ -9,22 +9,22 @@ const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
 ---
 
-<header class="sticky top-3 z-50 mx-auto w-full max-w-5xl px-3.5 sm:px-6 md:top-4">
-  <div
-    class="flex h-14 items-center justify-between gap-3 rounded-full border border-outline-variant bg-surface/88 px-3.5 backdrop-blur-xl sm:h-15 sm:px-5"
-  >
+<header class="site-header sticky top-0 z-50 w-full border-b border-outline-variant bg-surface/88 backdrop-blur-xl">
+  <div class="wrap flex h-16 items-center gap-4">
     {/* Brand / Logo */}
-    <a href="/" class="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
+    <a href="/" class="group flex h-full shrink-0 items-center gap-2.5 pr-2" aria-label={`${site.name} — home`}>
       <span
-        class="grid h-8.5 w-8.5 place-items-center rounded-md font-mono text-caption font-bold transition-transform duration-200 group-hover:scale-105 bg-primary text-on-primary"
+        class="grid h-8 w-8 place-items-center bg-primary font-mono text-caption font-bold text-on-primary"
       >dg</span>
-      <span class="text-body-sm font-semibold tracking-tight transition-colors group-hover:text-primary sm:text-body">
+      <span class="text-body font-semibold tracking-tight transition-colors group-hover:text-primary">
         {site.name}
       </span>
     </a>
 
+    <span class="hidden h-6 w-px bg-outline-variant md:block" aria-hidden="true"></span>
+
     {/* Desktop Navigation Links */}
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+    <nav class="hidden h-full items-stretch md:flex" aria-label="Main">
       {
         nav.map((item) => {
           const active = isActive(item.href);
@@ -32,17 +32,12 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
             <a
               href={item.href}
               class:list={[
-                'relative rounded-full px-4 py-1.5 text-body-sm transition-all duration-200',
-                active ? 'bg-primary-container font-semibold text-on-primary-container' : 'font-medium text-on-surface-variant',
+                'nav-link relative flex items-center px-4 text-body-sm transition-colors duration-150 hover:text-on-surface',
+                active ? 'is-active font-semibold text-on-surface' : 'font-medium text-on-surface-variant',
               ]}
               aria-current={active ? 'page' : undefined}
             >
               {item.label}
-              {active && (
-                <span
-                  class="absolute -bottom-1 left-1/2 h-1 w-1.5 -translate-x-1/2 rounded-full bg-primary"
-                />
-              )}
             </a>
           );
         })
@@ -50,34 +45,42 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     </nav>
 
     {/* Header Actions */}
-    <div class="flex items-center gap-2">
+    <div class="ml-auto flex items-center gap-2">
       {/* Cmd+K Quick Search Trigger */}
       <button
         id="cmd-palette-btn"
         type="button"
-        class="hidden items-center gap-2 rounded-full border px-3 py-1 font-mono text-label transition-all hover:border-outline hover:text-primary sm:inline-flex bg-surface-container-highest border-outline-variant text-on-surface-variant"
+        class="hidden h-9 w-52 items-center gap-2 border border-outline-variant bg-surface pl-3 pr-1.5 text-caption text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface lg:inline-flex"
         title="Search pages, projects and posts"
         aria-label="Open Command Palette"
       >
-        <Icon name="search" size={13} />
-        <span>Search</span>
-        <kbd data-shortcut class="rounded border px-1.5 py-0.5 text-label border-outline-variant bg-surface-container">⌘K</kbd>
+        <Icon name="search" size={14} />
+        <span class="flex-1 text-left">Search</span>
+        <kbd data-shortcut class="rounded-md border border-outline-variant bg-surface-container px-1.5 py-0.5 font-mono text-label">⌘K</kbd>
+      </button>
+
+      <button
+        id="cmd-palette-btn-compact"
+        type="button"
+        class="hidden h-9 w-9 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface md:grid lg:hidden"
+        title="Search pages, projects and posts"
+        aria-label="Open Command Palette"
+      >
+        <Icon name="search" size={15} />
       </button>
 
       <ThemeToggle />
 
-      <a
-        href="/contact"
-        class="btn btn-primary hidden h-8.5 rounded-lg px-4 text-caption md:inline-flex"
-      >
+      <a href="/contact" class="btn btn-primary hidden h-9 px-4 text-caption md:inline-flex">
         Get in touch
+        <Icon name="arrow" size={13} />
       </a>
 
       {/* Mobile menu hamburger */}
       <button
         id="menu-toggle"
         type="button"
-        class="grid h-11 w-11 place-items-center rounded-full border md:hidden border-outline-variant bg-surface-container-highest"
+        class="grid h-11 w-11 place-items-center border border-outline-variant bg-surface text-on-surface md:hidden"
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-nav"
@@ -88,40 +91,36 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     </div>
   </div>
 
-  {/* Mobile Menu Overlay */}
+  {/* Mobile Menu: full-width ruled sheet under the bar */}
   <nav
     id="mobile-nav"
-    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-md p-4 shadow-elevation-4 sm:inset-x-6 md:hidden bg-surface-container-high border-outline-variant"
+    class="absolute inset-x-0 top-full hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-outline-variant bg-surface shadow-elevation-3 md:hidden"
     aria-label="Mobile Navigation"
   >
-    <ul class="flex flex-col gap-1.5">
+    <ul class="ruled-list border-t-0">
       {
-        nav.map((item) => (
+        nav.map((item, i) => (
           <li>
             <a
               href={item.href}
               class:list={[
-                'flex items-center justify-between rounded-xl px-3.5 py-2.5 text-body transition-colors',
-                isActive(item.href) ? 'bg-primary-container font-semibold text-on-primary-container' : 'font-medium text-on-surface',
+                'wrap flex min-h-14 items-center gap-4 text-body transition-colors',
+                isActive(item.href) ? 'font-semibold text-primary' : 'font-medium text-on-surface',
               ]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
             >
-              {item.label}
+              <span class="font-mono text-label text-on-surface-variant">{String(i + 1).padStart(2, '0')}</span>
+              <span class="flex-1">{item.label}</span>
               <Icon name="arrow" size={15} />
             </a>
           </li>
         ))
       }
     </ul>
-    <div class="mt-3.5 flex flex-col gap-2 border-t border-outline-variant pt-3">
-      <button
-        id="mobile-cmd-btn"
-        type="button"
-        class="btn btn-ghost w-full justify-between text-body-sm"
-      >
-        <span class="flex items-center gap-2">
-          <Icon name="search" size={15} />
-          Search
-        </span>
+    <div class="wrap grid grid-cols-2 gap-2 py-4">
+      <button id="mobile-cmd-btn" type="button" class="btn btn-ghost w-full text-body-sm">
+        <Icon name="search" size={15} />
+        Search
       </button>
       <a href="/contact" class="btn btn-primary w-full text-body-sm">
         Get in touch
@@ -129,6 +128,27 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     </div>
   </nav>
 </header>
+
+<style>
+  /* Signal bar along the header's bottom rule: drawn for the active page, grows in on hover. */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset: auto 0.75rem -1px;
+    height: 2px;
+    background: var(--md-sys-color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+  .nav-link:not(.is-active):hover::after {
+    background: var(--md-sys-color-outline);
+  }
+</style>
 
 <script>
   const toggle = document.getElementById('menu-toggle');
@@ -176,5 +196,6 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   };
 
   document.getElementById('cmd-palette-btn')?.addEventListener('click', triggerPalette);
+  document.getElementById('cmd-palette-btn-compact')?.addEventListener('click', triggerPalette);
   document.getElementById('mobile-cmd-btn')?.addEventListener('click', triggerPalette);
 </script>

@@ -77,7 +77,7 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 
 ## Shape, elevation, motion
 
-- **Radius:** cards and panels are square (`rounded-card` = 0). Buttons and the header are `full` pills. Small chips and index tags use `rounded-md`.
+- **Radius:** cards and panels are square (`rounded-card` = 0). Buttons are `full` pills. The header is a full-width bar flush to the top, split from the page by a hairline; icon buttons and the search field in it are square. Small chips and index tags use `rounded-md`.
 - **Elevation:** cards are flat; depth comes from hairlines. 2 for floating chrome, 3–5 for overlays (command palette, menus). No glows.
 - **Motion:** 140ms for state changes, 220ms for reveals, 320ms for page-level movement; `ease-standard` by default. Everything collapses to instant under `prefers-reduced-motion`.
 
@@ -85,6 +85,7 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 
 | Class | What it is | Notes |
 | --- | --- | --- |
+| `Header` component | Sticky ruled bar: square brand mark, divider, left-aligned links | Active link draws a 2px signal bar on the bottom rule; hover draws it in `outline`. Mobile menu is a full-width `.ruled-list` sheet with mono indices |
 | `.wrap` | Page gutter + 76rem max width | 20px gutter on mobile, 32px from `md` |
 | `.kicker` | Mono uppercase eyebrow with amber rule | One per section, above the heading |
 | `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px buttons | One primary per view; `disabled` / `aria-disabled` supported |

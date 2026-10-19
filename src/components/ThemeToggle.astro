@@ -5,7 +5,7 @@ import Icon from './Icon.astro';
 <button
   id="theme-toggle"
   type="button"
-  class="m3-icon-btn grid h-11 w-11 place-items-center md:h-8.5 md:w-8.5 rounded-full border transition-all duration-300 border-outline-variant bg-surface-container-highest text-on-surface"
+  class="theme-btn grid h-11 w-11 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 md:h-9 md:w-9"
   aria-label="Switch between light and dark"
   title="Switch between light and dark"
 >
@@ -14,13 +14,9 @@ import Icon from './Icon.astro';
 </button>
 
 <style>
-  .m3-icon-btn:hover {
+  .theme-btn:hover {
     border-color: var(--md-sys-color-outline);
-    color: var(--md-sys-color-primary);
-    transform: scale(1.08);
-  }
-  .m3-icon-btn:active {
-    transform: scale(0.92);
+    color: var(--md-sys-color-on-surface);
   }
 
   /* Show the destination, not the current state: dark page offers the sun. */
