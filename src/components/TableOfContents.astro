@@ -1,0 +1,100 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** `inline` is the collapsible panel above the article; `rail` is the sticky sidebar on wide screens. */
+  variant: 'inline' | 'rail';
+}
+
+const { headings, variant } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  variant === 'inline' ? (
+    <details class="toc toc-inline glass-panel mb-12 xl:hidden">
+      <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-5 py-3">
+        <span class="kicker">On this page</span>
+        <span class="toc-chevron font-mono text-label text-on-surface-variant" aria-hidden="true">+</span>
+      </summary>
+      <ol class="border-t border-rule-soft px-5 py-4">
+        {items.map((h) => (
+          <li class:list={[h.depth === 3 && 'pl-4']}>
+            <a href={`#${h.slug}`} class="toc-link block py-1.5 text-body-sm text-on-surface-variant hover:text-primary">
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  ) : (
+    <nav class="toc toc-rail sticky top-24 hidden max-h-[calc(100dvh-8rem)] overflow-y-auto xl:block" aria-label="On this page">
+      <p class="kicker">On this page</p>
+      <ol class="mt-4 border-l border-outline-variant">
+        {items.map((h) => (
+          <li>
+            <a
+              href={`#${h.slug}`}
+              data-toc-slug={h.slug}
+              class:list={[
+                'toc-link -ml-px block border-l-2 border-transparent py-1.5 pr-2 text-caption leading-snug text-on-surface-variant transition-colors duration-150 hover:text-on-surface',
+                h.depth === 3 ? 'pl-7' : 'pl-4',
+              ]}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc-inline[open] .toc-chevron { transform: rotate(45deg); }
+  .toc-chevron { transition: transform var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard); }
+  .toc-inline summary::-webkit-details-marker { display: none; }
+
+  .toc-rail .toc-link[aria-current='true'] {
+    border-left-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-surface);
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  // Scroll-spy: mark the last heading that has passed under the sticky header.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc-rail [data-toc-slug]')];
+  const targets = links
+    .map((a) => document.getElementById(a.dataset.tocSlug!))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (targets.length) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = 120;
+      let current = targets[0];
+      for (const t of targets) {
+        if (t.getBoundingClientRect().top - line <= 0) current = t;
+        else break;
+      }
+      for (const a of links) {
+        if (a.dataset.tocSlug === current.id) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      }
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>
