@@ -42,7 +42,7 @@ src/
   styles/global.css     design tokens + light/dark themes
 public/                 copied to the site root as-is
   CNAME                 custom domain
-  files/                résumé, project archives
+  files/                resume, project archives
   wordlet/              the Flutter game, served at /wordlet
 .github/workflows/      deploy on push to master
 ```

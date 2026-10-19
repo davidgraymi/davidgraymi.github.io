@@ -21,7 +21,7 @@ the number — to a peer I respect, with a dry joke when one is earned.**
 2. **Engineers** who arrived from a search or a link. They want the technical
    meat and will notice hand-waving.
 3. **People who know me** — friends, family, old teammates. They want to see the
-   person, not the résumé.
+   person, not the resume.
 
 Write for the engineer. The hiring manager is persuaded by the same thing the
 engineer is: evidence that I understand the work all the way down.
@@ -97,7 +97,7 @@ The voice stays the same. The tone shifts with the job the words are doing.
 | "In today's fast-paced world…" | delete the sentence |
 | "It's not X, it's Y" reveals, "No X, no Y, no Z" lists | a direct statement |
 
-Résumé-speak is the main failure mode. "Developed a Go HTTPS server to
+Resume-speak is the main failure mode. "Developed a Go HTTPS server to
 streamline integration testing" is true and tells you nothing. Rewrite it as the
 problem, the decision and the number.
 
@@ -142,7 +142,8 @@ problem, the decision and the number.
 
 - **Person:** first person singular. "I", not "we", unless it was a team — then
   name the team.
-- **Spelling:** American English (optimize, behavior, meters). The site
+- **Spelling:** American English (optimize, behavior, meters, resume — no
+  accents). The site
   currently mixes in a few British spellings — fix them when you touch a file.
 - **Dashes:** em dashes are fine and part of the voice, but no more than one
   or two per paragraph. Never use one where a full stop works.

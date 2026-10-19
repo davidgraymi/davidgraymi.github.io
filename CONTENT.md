@@ -136,7 +136,7 @@ Overwrite `src/assets/avatar.png`. It appears on the homepage and `/about`.
 `public/og.png`, 1200×630. This is what shows up when someone pastes a link
 into Slack, LinkedIn or iMessage.
 
-## Replace the résumé
+## Replace the resume
 
 Overwrite `public/files/Resume.docx`. If you export a PDF instead, drop it in
-`public/files/` and update the `Résumé` entry in `src/site.config.ts`.
+`public/files/` and update the `Resume` entry in `src/site.config.ts`.
