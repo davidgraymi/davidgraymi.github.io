@@ -24,7 +24,7 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
 
   <div class="wrap py-12 md:py-16">
     {/* Interactive Filter Pills: M3 Expressive Segmented Buttons */}
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-8" style="border-color: var(--md-sys-color-outline-variant);">
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-8 border-outline-variant">
       <div id="filter-tabs" class="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -58,8 +58,7 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
 
       <a
         href="/wordlet"
-        class="inline-flex items-center gap-2 rounded-lg border px-3.5 py-1.5 font-mono text-[12.5px] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
-        style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
+        class="inline-flex items-center gap-2 rounded-lg border px-3.5 py-1.5 font-mono text-label transition-all duration-200 hover:border-primary hover:text-primary text-on-surface-variant border-outline-variant bg-surface-container"
       >
         <span>Launch Wordlet</span>
         <Icon name="arrowUpRight" size={14} />
@@ -71,7 +70,7 @@ const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a
       {entries.map((entry) => <WorkCard entry={entry} />)}
     </div>
 
-    <div id="no-projects" class="hidden py-16 text-center text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
+    <div id="no-projects" class="hidden py-16 text-center text-body text-on-surface-variant">
       No projects match this category.
     </div>
   </div>

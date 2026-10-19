@@ -28,7 +28,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   <div class="wrap py-14 md:py-20">
     {
       posts.length === 0 ? (
-        <p class="text-[17px]" style="color: var(--md-sys-color-on-surface-variant)">
+        <p class="text-body-lg text-on-surface-variant">
           Nothing published yet. The first post is always the hardest.
         </p>
       ) : (

@@ -24,21 +24,20 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
 
 <Base title={title} description={description} type="article">
   <article>
-    <header class="border-b" style="border-color: var(--md-sys-color-outline-variant);">
+    <header class="border-b border-outline-variant">
       <div class="wrap max-w-3xl py-14 md:py-18">
         <a
           href="/blog"
-          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[12px] uppercase tracking-[0.12em] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
-          style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
+          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-label uppercase tracking-[0.12em] transition-all duration-200 hover:border-primary hover:text-primary text-on-surface-variant border-outline-variant bg-surface-container"
         >
           <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
           Writing
         </a>
 
-        <h1 class="mt-6 font-semibold tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">{title}</h1>
+        <h1 class="mt-6 font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
 
-        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
-          <span class="rounded-full px-2.5 py-0.5 font-semibold" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-primary);">
+        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-label text-on-surface-variant">
+          <span class="rounded-full px-2.5 py-0.5 font-semibold bg-surface-container-high text-primary">
             <FormattedDate date={pubDate} />
           </span>
           {updatedDate && <span>· updated <FormattedDate date={updatedDate} /></span>}
@@ -46,7 +45,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             tags.length > 0 && (
               <span class="flex flex-wrap gap-1.5 pl-2">
                 {tags.map((t) => (
-                  <span class="rounded-full border px-2 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);">
+                  <span class="rounded-full border px-2 py-0.5 text-label border-outline-variant bg-surface-container">
                     #{t}
                   </span>
                 ))}
@@ -65,8 +64,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             alt={coverAlt}
             widths={[720, 1200]}
             sizes="(min-width: 768px) 48rem, 100vw"
-            class="mb-12 w-full overflow-hidden border"
-            style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-low);"
+            class="mb-12 w-full overflow-hidden border border-outline-variant bg-surface-container-low"
           />
         )
       }
@@ -75,10 +73,10 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
         <Content />
       </div>
 
-      <div class="mt-16 border-t pt-8" style="border-color: var(--md-sys-color-outline-variant);">
-        <p class="text-[15px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+      <div class="mt-16 border-t pt-8 border-outline-variant">
+        <p class="text-body leading-relaxed text-on-surface-variant">
           Thoughts, corrections, or something I got wrong? I actually want to hear it —
-          <a href={`mailto:${site.email}`} class="link-underline" style="color: var(--md-sys-color-primary)">
+          <a href={`mailto:${site.email}`} class="link-underline text-primary">
             {site.email}
           </a>.
         </p>
@@ -86,15 +84,14 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
 
       {
         (newer || older) && (
-          <nav class="mt-10 grid gap-4 border-t pt-8 sm:grid-cols-2" style="border-color: var(--md-sys-color-outline-variant);" aria-label="More posts">
+          <nav class="mt-10 grid gap-4 border-t pt-8 sm:grid-cols-2 border-outline-variant" aria-label="More posts">
             {newer ? (
               <a
                 href={`/blog/${newer.id}`}
                 class="spotlight-card p-5.5"
-                style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
               >
                 <p class="kicker">Newer</p>
-                <p class="mt-2.5 text-[16px] font-semibold" style="color: var(--md-sys-color-on-surface);">{newer.data.title}</p>
+                <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
               </a>
             ) : (
               <span />
@@ -102,11 +99,10 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             {older && (
               <a
                 href={`/blog/${older.id}`}
-                class="spotlight-card p-5.5 text-right "
-                style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+                class="spotlight-card p-5.5 text-right"
               >
                 <p class="kicker justify-end">Older</p>
-                <p class="mt-2.5 text-[16px] font-semibold" style="color: var(--md-sys-color-on-surface);">{older.data.title}</p>
+                <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>
               </a>
             )}
           </nav>

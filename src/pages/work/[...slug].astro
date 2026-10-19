@@ -18,34 +18,33 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
 
 <Base title={title} description={blurb} type="article">
   <article>
-    <header class="gridlines border-b" style="border-color: var(--md-sys-color-outline-variant);">
+    <header class="gridlines border-b border-outline-variant">
       <div class="wrap py-14 md:py-20">
         <a
           href="/work"
-          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[12px] uppercase tracking-[0.12em] transition-all duration-200 hover:border-[var(--md-sys-color-primary)] hover:text-[var(--md-sys-color-primary)]"
-          style="color: var(--md-sys-color-on-surface-variant); border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container);"
+          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-label uppercase tracking-[0.12em] transition-all duration-200 hover:border-primary hover:text-primary text-on-surface-variant border-outline-variant bg-surface-container"
         >
           <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
           All work
         </a>
 
-        <h1 class="mt-6 max-w-3xl font-semibold tracking-tight" style="font-size: var(--text-h1); color: var(--md-sys-color-on-surface);">{title}</h1>
-        <p class="mt-4 max-w-2xl text-[18px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">{blurb}</p>
+        <h1 class="mt-6 max-w-3xl font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
+        <p class="mt-4 max-w-2xl text-title-sm leading-relaxed text-on-surface-variant">{blurb}</p>
 
         <div class="ruled-panel mt-10">
           <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
         <dl class="ruled-grid sm:grid-cols-3">
           <div class="ruled-cell p-5">
             <dt class="kicker">Type</dt>
-            <dd class="mt-2 text-[15px] font-medium" style="color: var(--md-sys-color-on-surface);">{kind}</dd>
+            <dd class="mt-2 text-body font-medium text-on-surface">{kind}</dd>
           </div>
           <div class="ruled-cell p-5">
             <dt class="kicker">Year</dt>
-            <dd class="mt-2 font-mono text-[15px] font-medium" style="color: var(--md-sys-color-on-surface);">{year}</dd>
+            <dd class="mt-2 font-mono text-body font-medium text-on-surface">{year}</dd>
           </div>
           <div class="ruled-cell p-5">
             <dt class="kicker">Built with</dt>
-            <dd class="mt-2 text-[14.5px] font-medium" style="color: var(--md-sys-color-on-surface);">{stack.join(' · ')}</dd>
+            <dd class="mt-2 text-body-sm font-medium text-on-surface">{stack.join(' · ')}</dd>
           </div>
         </dl>
         </div>
@@ -77,8 +76,7 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
             alt={coverAlt}
             widths={[720, 1200, 1600]}
             sizes="(min-width: 1024px) 72rem, 100vw"
-            class="w-full overflow-hidden border"
-            style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-low);"
+            class="w-full overflow-hidden border border-outline-variant bg-surface-container-low"
           />
         </div>
       )
@@ -94,11 +92,10 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
           highlight && (
             <aside class="lg:pt-2">
               <div
-                class="glass-panel p-6"
-                style="background: var(--md-sys-color-surface-container-low); border-left: 4px solid var(--md-sys-color-primary);"
+                class="glass-panel border-l-4 border-l-primary p-6"
               >
                 <p class="kicker">The key metric</p>
-                <p class="mt-4 font-mono text-[20px] font-bold leading-snug" style="color: var(--md-sys-color-primary);">{highlight}</p>
+                <p class="mt-4 font-mono text-title font-bold leading-snug text-primary">{highlight}</p>
               </div>
             </aside>
           )

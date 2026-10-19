@@ -35,307 +35,7 @@
     U+FEFF, U+FFFD;
 }
 
-/* ---------------------------------------------------------------------------
-   Tailwind CSS v4 Theme Extensions: Material 3 Expressive System Tokens
---------------------------------------------------------------------------- */
-@theme {
-  --font-sans: 'Roboto Flex Variable', 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Material 3 Expressive Color Roles */
-  --color-primary: var(--md-sys-color-primary);
-  --color-on-primary: var(--md-sys-color-on-primary);
-  --color-primary-container: var(--md-sys-color-primary-container);
-  --color-on-primary-container: var(--md-sys-color-on-primary-container);
-
-  --color-secondary: var(--md-sys-color-secondary);
-  --color-on-secondary: var(--md-sys-color-on-secondary);
-  --color-secondary-container: var(--md-sys-color-secondary-container);
-  --color-on-secondary-container: var(--md-sys-color-on-secondary-container);
-
-  --color-tertiary: var(--md-sys-color-tertiary);
-  --color-on-tertiary: var(--md-sys-color-on-tertiary);
-  --color-tertiary-container: var(--md-sys-color-tertiary-container);
-  --color-on-tertiary-container: var(--md-sys-color-on-tertiary-container);
-
-  --color-surface: var(--md-sys-color-surface);
-  --color-surface-dim: var(--md-sys-color-surface-dim);
-  --color-surface-bright: var(--md-sys-color-surface-bright);
-  --color-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
-  --color-surface-container-low: var(--md-sys-color-surface-container-low);
-  --color-surface-container: var(--md-sys-color-surface-container);
-  --color-surface-container-high: var(--md-sys-color-surface-container-high);
-  --color-surface-container-highest: var(--md-sys-color-surface-container-highest);
-
-  --color-on-surface: var(--md-sys-color-on-surface);
-  --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
-  --color-outline: var(--md-sys-color-outline);
-  --color-outline-variant: var(--md-sys-color-outline-variant);
-
-  --color-error: var(--md-sys-color-error);
-  --color-on-error: var(--md-sys-color-on-error);
-  --color-error-container: var(--md-sys-color-error-container);
-  --color-on-error-container: var(--md-sys-color-on-error-container);
-
-  /* Expressive Shape Radii */
-  --radius-xs: var(--md-sys-shape-corner-extra-small);
-  --radius-sm: var(--md-sys-shape-corner-small);
-  --radius-md: var(--md-sys-shape-corner-medium);
-  --radius-lg: var(--md-sys-shape-corner-large);
-  --radius-xl: var(--md-sys-shape-corner-large-increased);
-  --radius-2xl: var(--md-sys-shape-corner-extra-large);
-  --radius-3xl: var(--md-sys-shape-corner-extra-large-increased);
-  --radius-full: var(--md-sys-shape-corner-full);
-
-  --radius-card: var(--md-sys-shape-corner-extra-large);
-
-  /* Typography Scales */
-  --text-display: clamp(2.8rem, 1.8rem + 4.5vw, 5.2rem);
-  --text-h1: clamp(2.1rem, 1.5rem + 2.8vw, 3.6rem);
-  --text-h2: clamp(1.6rem, 1.3rem + 1.5vw, 2.4rem);
-}
-
-/* ---------------------------------------------------------------------------
-   Material 3 System Tokens: Instrument Panel 2.0 (Light Theme)
-   Precision Amber Signal, Crisp Slates, Clean Architectural Surfaces
---------------------------------------------------------------------------- */
-:root {
-  color-scheme: light;
-
-  /* Precision Signal Colors: Iconic Amber Signal & Technical Slate Blue.
-     Light-mode amber is darkened so text and white-on-amber buttons clear WCAG AA (≥4.5:1). */
-  --md-sys-color-primary: #a14a07;
-  --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #f59e0b;
-  --md-sys-color-on-primary-container: #1a1200;
-
-  --md-sys-color-secondary: #0284c7;
-  --md-sys-color-on-secondary: #ffffff;
-  --md-sys-color-secondary-container: #e0f2fe;
-  --md-sys-color-on-secondary-container: #082f49;
-
-  --md-sys-color-tertiary: #27272a;
-  --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #ffffff;
-  --md-sys-color-on-tertiary-container: #0a0a0a;
-
-  --md-sys-color-error: #dc2626;
-  --md-sys-color-on-error: #ffffff;
-  --md-sys-color-error-container: #fee2e2;
-  --md-sys-color-on-error-container: #450a0a;
-
-  /* Surface Container Hierarchy */
-  --md-sys-color-surface: #ffffff;
-  --md-sys-color-surface-dim: #f4f4f5;
-  --md-sys-color-surface-bright: #ffffff;
-  --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #ffffff;
-  --md-sys-color-surface-container: #fff4e0;
-  --md-sys-color-surface-container-high: #ffe9c2;
-  --md-sys-color-surface-container-highest: #fddc9f;
-
-  --md-sys-color-on-surface: #0a0a0a;
-  --md-sys-color-on-surface-variant: #3f3f46;
-  --md-sys-color-outline: #0a0a0a;
-  --md-sys-color-outline-variant: #18181b;
-
-  --md-sys-color-inverse-surface: #0a0a0a;
-  --md-sys-color-inverse-on-surface: #f8fafc;
-  --md-sys-color-inverse-primary: #f59e0b;
-
-  --md-sys-color-scrim: #000000;
-  --md-sys-color-shadow: #000000;
-
-  /* Precision Shape System */
-  --md-sys-shape-corner-none: 0px;
-  --md-sys-shape-corner-extra-small: 4px;
-  --md-sys-shape-corner-small: 6px;
-  --md-sys-shape-corner-medium: 10px;
-  --md-sys-shape-corner-large: 14px;
-  --md-sys-shape-corner-large-increased: 16px;
-  --md-sys-shape-corner-extra-large: 20px;
-  --md-sys-shape-corner-extra-large-increased: 24px;
-  --md-sys-shape-corner-full: 9999px;
-
-  /* Crisp Mechanical Motion Tokens */
-  --md-sys-motion-easing-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
-  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
-  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
-  --md-sys-motion-easing-spring: cubic-bezier(0.2, 0.9, 0.3, 1);
-  --md-sys-motion-easing-standard: cubic-bezier(0.16, 1, 0.3, 1);
-  --md-sys-motion-duration-short: 140ms;
-  --md-sys-motion-duration-medium: 220ms;
-  --md-sys-motion-duration-long: 320ms;
-
-  /* Elevation Shadows */
-  --md-sys-elevation-0: none;
-  --md-sys-elevation-1: none;
-  --md-sys-elevation-2: 0 3px 8px 2px rgba(0, 0, 0, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  --md-sys-elevation-3: 0 6px 14px 3px rgba(0, 0, 0, 0.08), 0 2px 5px 0 rgba(0, 0, 0, 0.06);
-  --md-sys-elevation-4: 0 10px 22px 4px rgba(0, 0, 0, 0.1), 0 3px 8px 0 rgba(0, 0, 0, 0.06);
-  --md-sys-elevation-5: 0 14px 28px 6px rgba(0, 0, 0, 0.12), 0 5px 12px 0 rgba(0, 0, 0, 0.08);
-
-  /* Legacy Bridge Tokens (Seamless Backwards Compatibility) */
-  --bg: var(--md-sys-color-surface);
-  --bg-surface: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 88%, transparent);
-  --bg-surface-2: var(--md-sys-color-surface-container);
-  --rule: var(--md-sys-color-outline-variant);
-  --rule-strong: var(--md-sys-color-outline);
-  --fg: var(--md-sys-color-on-surface);
-  --fg-muted: var(--md-sys-color-on-surface-variant);
-  --signal: var(--md-sys-color-primary);
-  --signal-glow: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
-  --signal-soft: var(--md-sys-color-primary-container);
-  --signal-contrast: var(--md-sys-color-on-primary);
-  --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 8%, transparent);
-  --shadow-card: var(--md-sys-elevation-1);
-  --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 14%, transparent);
-  --signal-block-bg: #f59e0b;
-  --signal-block-fg: #1a1200;
-}
-
-/* ---------------------------------------------------------------------------
-   Material 3 System Tokens: Instrument Panel 2.0 (Dark Theme)
-   Obsidian ground, Hairline rules, Monospace labels, High-signal Amber
---------------------------------------------------------------------------- */
-:root[data-theme='dark'] {
-  color-scheme: dark;
-
-  --md-sys-color-primary: #f59e0b;
-  --md-sys-color-on-primary: #1a1200;
-  --md-sys-color-primary-container: #422600;
-  --md-sys-color-on-primary-container: #fed7aa;
-
-  --md-sys-color-secondary: #38bdf8;
-  --md-sys-color-on-secondary: #082f49;
-  --md-sys-color-secondary-container: #0c4a6e;
-  --md-sys-color-on-secondary-container: #bae6fd;
-
-  --md-sys-color-tertiary: #94a3b8;
-  --md-sys-color-on-tertiary: #0f172a;
-  --md-sys-color-tertiary-container: #1e293b;
-  --md-sys-color-on-tertiary-container: #e2e8f0;
-
-  --md-sys-color-error: #ef4444;
-  --md-sys-color-on-error: #450a0a;
-  --md-sys-color-error-container: #7f1d1d;
-  --md-sys-color-on-error-container: #fecaca;
-
-  /* Deep Tonal Obsidian Surface Hierarchy */
-  --md-sys-color-surface: #06090e;
-  --md-sys-color-surface-dim: #04060a;
-  --md-sys-color-surface-bright: #263345;
-  --md-sys-color-surface-container-lowest: #030508;
-  --md-sys-color-surface-container-low: #0a0e16;
-  --md-sys-color-surface-container: #101622;
-  --md-sys-color-surface-container-high: #161e2d;
-  --md-sys-color-surface-container-highest: #1e283b;
-
-  --md-sys-color-on-surface: #f1f5f9;
-  --md-sys-color-on-surface-variant: #94a3b8;
-  --md-sys-color-outline: #64748b;
-  --md-sys-color-outline-variant: #273449;
-
-  --md-sys-color-inverse-surface: #f1f5f9;
-  --md-sys-color-inverse-on-surface: #0f172a;
-  --md-sys-color-inverse-primary: #d97706;
-
-  --md-sys-color-scrim: #000000;
-  --md-sys-color-shadow: #000000;
-
-  --md-sys-elevation-0: none;
-  --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-  --md-sys-elevation-2: 0 3px 8px 2px rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.55);
-  --md-sys-elevation-3: 0 6px 14px 3px rgba(0, 0, 0, 0.5), 0 2px 5px 0 rgba(0, 0, 0, 0.6);
-  --md-sys-elevation-4: 0 10px 22px 4px rgba(0, 0, 0, 0.55), 0 3px 8px 0 rgba(0, 0, 0, 0.65);
-  --md-sys-elevation-5: 0 14px 28px 6px rgba(0, 0, 0, 0.6), 0 5px 12px 0 rgba(0, 0, 0, 0.7);
-
-  /* Legacy Bridge Tokens */
-  --bg: var(--md-sys-color-surface);
-  --bg-surface: color-mix(in srgb, var(--md-sys-color-surface-container-low) 80%, transparent);
-  --bg-surface-2: var(--md-sys-color-surface-container);
-  --rule: var(--md-sys-color-outline-variant);
-  --rule-strong: var(--md-sys-color-outline);
-  --fg: var(--md-sys-color-on-surface);
-  --fg-muted: var(--md-sys-color-on-surface-variant);
-  --signal: var(--md-sys-color-primary);
-  --signal-glow: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
-  --signal-soft: var(--md-sys-color-primary-container);
-  --signal-contrast: var(--md-sys-color-on-primary);
-  --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 45%, transparent);
-  --shadow-card: var(--md-sys-elevation-1);
-  --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 80%, transparent);
-  --signal-block-bg: #f59e0b;
-  --signal-block-fg: #1a1200;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-
-    --md-sys-color-primary: #f59e0b;
-    --md-sys-color-on-primary: #1a1200;
-    --md-sys-color-primary-container: #422600;
-    --md-sys-color-on-primary-container: #fed7aa;
-
-    --md-sys-color-secondary: #38bdf8;
-    --md-sys-color-on-secondary: #082f49;
-    --md-sys-color-secondary-container: #0c4a6e;
-    --md-sys-color-on-secondary-container: #bae6fd;
-
-    --md-sys-color-tertiary: #94a3b8;
-    --md-sys-color-on-tertiary: #0f172a;
-    --md-sys-color-tertiary-container: #1e293b;
-    --md-sys-color-on-tertiary-container: #e2e8f0;
-
-    --md-sys-color-error: #ef4444;
-    --md-sys-color-on-error: #450a0a;
-    --md-sys-color-error-container: #7f1d1d;
-    --md-sys-color-on-error-container: #fecaca;
-
-    --md-sys-color-surface: #06090e;
-    --md-sys-color-surface-dim: #04060a;
-    --md-sys-color-surface-bright: #263345;
-    --md-sys-color-surface-container-lowest: #030508;
-    --md-sys-color-surface-container-low: #0a0e16;
-    --md-sys-color-surface-container: #101622;
-    --md-sys-color-surface-container-high: #161e2d;
-    --md-sys-color-surface-container-highest: #1e283b;
-
-    --md-sys-color-on-surface: #f1f5f9;
-    --md-sys-color-on-surface-variant: #94a3b8;
-    --md-sys-color-outline: #64748b;
-    --md-sys-color-outline-variant: #273449;
-
-    --md-sys-color-inverse-surface: #f1f5f9;
-    --md-sys-color-inverse-on-surface: #0f172a;
-    --md-sys-color-inverse-primary: #d97706;
-
-    --md-sys-elevation-0: none;
-    --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-    --md-sys-elevation-2: 0 3px 8px 2px rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.55);
-    --md-sys-elevation-3: 0 6px 14px 3px rgba(0, 0, 0, 0.5), 0 2px 5px 0 rgba(0, 0, 0, 0.6);
-    --md-sys-elevation-4: 0 10px 22px 4px rgba(0, 0, 0, 0.55), 0 3px 8px 0 rgba(0, 0, 0, 0.65);
-    --md-sys-elevation-5: 0 14px 28px 6px rgba(0, 0, 0, 0.6), 0 5px 12px 0 rgba(0, 0, 0, 0.7);
-
-    --bg: var(--md-sys-color-surface);
-    --bg-surface: color-mix(in srgb, var(--md-sys-color-surface-container-low) 80%, transparent);
-    --bg-surface-2: var(--md-sys-color-surface-container);
-    --rule: var(--md-sys-color-outline-variant);
-    --rule-strong: var(--md-sys-color-outline);
-    --fg: var(--md-sys-color-on-surface);
-    --fg-muted: var(--md-sys-color-on-surface-variant);
-    --signal: var(--md-sys-color-primary);
-    --signal-glow: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
-    --signal-soft: var(--md-sys-color-primary-container);
-    --signal-contrast: var(--md-sys-color-on-primary);
-    --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 45%, transparent);
-    --shadow-card: var(--md-sys-elevation-1);
-    --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 80%, transparent);
-    --signal-block-bg: #f59e0b;
-    --signal-block-fg: #1a1200;
-  }
-}
+@import './tokens.css';
 
 /* ---------------------------------------------------------------------------
    Base Layer: Typography, Reset, Focus Rings & Motion
@@ -368,8 +68,8 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--md-sys-color-primary);
-    outline-offset: 3px;
+    outline: var(--md-comp-focus-ring-width) solid var(--md-comp-focus-ring-color);
+    outline-offset: var(--md-comp-focus-ring-offset);
     border-radius: var(--md-sys-shape-corner-extra-small);
   }
 
@@ -404,18 +104,18 @@
   /* Layout Gutter */
   .wrap {
     width: 100%;
-    max-width: 76rem;
+    max-width: var(--md-sys-layout-max-width);
     margin-inline: auto;
-    padding-inline: 1.25rem;
+    padding-inline: var(--md-sys-layout-gutter);
   }
   @media (min-width: 768px) {
-    .wrap { padding-inline: 2rem; }
+    .wrap { padding-inline: var(--md-sys-layout-gutter-wide); }
   }
 
   /* Expressive Kicker / Section Header Label */
   .kicker {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -435,10 +135,10 @@
 
   /* Material 3 Surface Containers */
   .surface {
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 0;
-    box-shadow: none;
+    background: var(--md-comp-card-bg);
+    border: 1px solid var(--md-comp-card-border);
+    border-radius: var(--md-comp-card-radius);
+    box-shadow: var(--md-comp-card-shadow);
     transition: box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
                 border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
   }
@@ -446,25 +146,31 @@
   .glass-panel {
     background: var(--md-sys-color-surface);
     border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 0;
+    border-radius: var(--md-comp-card-radius);
   }
 
-  /* Ruled Card: square hairline frame; hover fills the cell and draws a signal bar */
-  .m3-card,
+  /* Interactive card: square hairline frame; hover fills it and draws a signal bar */
   .spotlight-card {
     position: relative;
-    border-radius: 0;
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-comp-card-radius);
+    background: var(--md-comp-card-bg);
+    border: 1px solid var(--md-comp-card-border);
+    box-shadow: var(--md-comp-card-shadow);
     overflow: hidden;
     transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
   }
-  .m3-card::before,
-  .spotlight-card::before {
+  .spotlight-card:hover,
+  .spotlight-card:focus-within {
+    background: var(--md-comp-card-bg-hover);
+  }
+
+  /* Signal bar: shared by interactive cards and ruled cells */
+  .spotlight-card::before,
+  .ruled-cell.is-interactive::before {
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    height: 2px;
+    height: var(--md-comp-card-bar-height);
     z-index: 2;
     background: var(--md-sys-color-primary);
     transform: scaleX(0);
@@ -472,18 +178,64 @@
     transition: transform var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-emphasized);
     pointer-events: none;
   }
-  .m3-card:hover,
-  .spotlight-card:hover,
-  .spotlight-card:focus-within {
-    background: var(--md-sys-color-surface-container);
-  }
-  .m3-card:hover::before,
   .spotlight-card:hover::before,
-  .spotlight-card:focus-within::before {
+  .spotlight-card:focus-within::before,
+  .ruled-cell.is-interactive:hover::before,
+  .ruled-cell.is-interactive:focus-within::before {
     transform: scaleX(1);
   }
 
-  /* Ruled list: rows separated by hairlines, same hover language as cells */
+  /* -------------------------------------------------------------------------
+     Ruled panel: hairline cells with corner ticks (instrument-panel layout).
+     .ruled-panel > (.tick ×4) + .ruled-grid > .ruled-cell
+  ------------------------------------------------------------------------- */
+  .ruled-panel,
+  .ticked-frame {
+    position: relative;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface);
+  }
+  .ticked-frame {
+    padding: 0.5rem;
+  }
+  :is(.ruled-panel, .ticked-frame) > .tick {
+    position: absolute;
+    width: var(--md-comp-tick-size);
+    height: var(--md-comp-tick-size);
+    background: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    z-index: 1;
+  }
+  :is(.ruled-panel, .ticked-frame) > .tick-tl { top: -4px; left: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-tr { top: -4px; right: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-bl { bottom: -4px; left: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-br { bottom: -4px; right: -4px; }
+
+  .ruled-grid {
+    display: grid;
+    overflow: hidden;
+  }
+  .ruled-cell {
+    position: relative;
+    box-shadow: 1px 0 0 var(--md-sys-color-rule-soft), 0 1px 0 var(--md-sys-color-rule-soft);
+    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-cell.is-interactive:hover,
+  .ruled-cell.is-interactive:focus-within {
+    background: var(--md-comp-card-bg-hover);
+  }
+  .ruled-cell .cell-index {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+                color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-cell.is-interactive:hover .cell-index {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+
+  /* Ruled list: rows separated by hairlines; hover draws a bar down the left */
   .ruled-list {
     border-top: 1px solid var(--md-sys-color-outline-variant);
   }
@@ -496,7 +248,7 @@
     content: '';
     position: absolute;
     inset: 0 auto 0 0;
-    width: 2px;
+    width: var(--md-comp-card-bar-height);
     background: var(--md-sys-color-primary);
     transform: scaleY(0);
     transform-origin: top;
@@ -504,51 +256,82 @@
   }
   .ruled-list > *:hover,
   .ruled-list > *:focus-within {
-    background: var(--md-sys-color-surface-container);
+    background: var(--md-comp-card-bg-hover);
   }
   .ruled-list > *:hover::before,
   .ruled-list > *:focus-within::before {
     transform: scaleY(1);
   }
 
-  /* Ticked frame: hairline box with corner ticks around media (avatars, photos) */
-  .ticked-frame {
-    position: relative;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    padding: 0.5rem;
-    background: var(--md-sys-color-surface);
-  }
-  .ticked-frame > .tick {
+  /* Dot-matrix field that fades in from one corner of a cell on hover */
+  .dot-reveal::after {
+    content: '';
     position: absolute;
-    width: 7px;
-    height: 7px;
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(var(--md-sys-color-primary) 1px, transparent 1.4px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
+    mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard);
   }
-  .ticked-frame > .tick-tl { top: -4px; left: -4px; }
-  .ticked-frame > .tick-tr { top: -4px; right: -4px; }
-  .ticked-frame > .tick-bl { bottom: -4px; left: -4px; }
-  .ticked-frame > .tick-br { bottom: -4px; right: -4px; }
+  .dot-reveal:hover::after,
+  .dot-reveal:focus-within::after {
+    opacity: 0.45;
+  }
 
-  /* Badges / Glow Pills */
-  .glow-pill {
+  /* Signal block: full-bleed amber band with a dot texture (the CTA) */
+  .signal-block {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--md-sys-shape-corner-small);
-    background: var(--md-sys-color-surface-container-high);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    background-color: var(--md-sys-color-signal-block);
+    color: var(--md-sys-color-on-signal-block);
+    overflow: hidden;
   }
-  .glow-pill:hover {
-    border-color: var(--md-sys-color-primary);
+  .signal-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(color-mix(in srgb, var(--md-sys-color-on-signal-block) 22%, transparent) 1px, transparent 1.5px);
+    background-size: 12px 12px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 70%);
+    mask-image: linear-gradient(to bottom, transparent, #000 70%);
+  }
+  .signal-block .btn-ink {
+    background: var(--md-sys-color-on-signal-block);
+    color: var(--md-sys-color-signal-block);
+  }
+  .signal-block .btn-ink:hover { transform: translateY(-1px); }
+  .signal-block .btn-tonal {
+    background: transparent;
+    color: var(--md-sys-color-on-signal-block);
+    border-color: color-mix(in srgb, var(--md-sys-color-on-signal-block) 45%, transparent);
+  }
+  .signal-block .btn-tonal:hover {
+    background: color-mix(in srgb, var(--md-sys-color-on-signal-block) 10%, transparent);
+    border-color: var(--md-sys-color-on-signal-block);
+  }
+  .signal-block .btn-tonal .copy-done { color: inherit !important; }
+
+  /* Ticker: endless horizontal strip under the signal block */
+  .ticker {
+    display: flex;
+    overflow: hidden;
+    border-top: 1px solid color-mix(in srgb, var(--md-sys-color-on-signal-block) 25%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .ticker-track {
+    display: flex;
+    flex: none;
+    gap: 2.5rem;
+    padding: 0.9rem 1.25rem;
+    animation: ticker 40s linear infinite;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes ticker {
+    to { transform: translateX(-100%); }
   }
 
   /* Shimmer Text */
@@ -580,11 +363,11 @@
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
-    height: 2.75rem;
-    padding-inline: 1.35rem;
-    border-radius: var(--md-sys-shape-corner-full);
+    height: var(--md-comp-button-height);
+    padding-inline: var(--md-comp-button-padding-x);
+    border-radius: var(--md-comp-button-radius);
     border: 1px solid transparent;
-    font-size: 0.9375rem;
+    font-size: var(--md-comp-button-font-size);
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
@@ -600,6 +383,13 @@
 
   .btn:active {
     transform: scale(0.97);
+  }
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 
   /* Filled Button (High Emphasis) */
@@ -637,26 +427,6 @@
     transform: translateY(-1px);
   }
 
-  /* Chips & Segmented Controls */
-  .m3-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.35rem 0.8rem;
-    border-radius: var(--md-sys-shape-corner-small);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    background: var(--md-sys-color-surface-container);
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
-  }
-  .m3-chip:hover {
-    background: var(--md-sys-color-surface-container-high);
-    border-color: var(--md-sys-color-outline);
-    color: var(--md-sys-color-on-surface);
-  }
-
   /* Segmented Filter Controls */
   .filter-tab {
     background: var(--md-sys-color-surface-container);
@@ -665,7 +435,7 @@
     border-radius: var(--md-sys-shape-corner-medium);
     padding: 0.45rem 1.1rem;
     font-family: var(--font-mono);
-    font-size: 0.785rem;
+    font-size: var(--text-caption);
     font-weight: 550;
     cursor: pointer;
     transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
@@ -680,145 +450,31 @@
     color: var(--md-sys-color-on-primary);
   }
 
-  /* -------------------------------------------------------------------------
-     Ruled Panel: hairline cells with corner ticks (instrument-panel layout).
-     Wrap cells in .ruled-panel > .ruled-grid; add four .tick spans for corners.
-  ------------------------------------------------------------------------- */
-  .ruled-panel {
-    position: relative;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    background: var(--md-sys-color-surface);
+  /* Chips: tags, tech stacks, metadata. .chip-accent marks the one that matters. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--md-comp-chip-radius);
+    border: 1px solid var(--md-comp-chip-border);
+    background: var(--md-comp-chip-bg);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.5;
   }
-  .ruled-panel > .tick {
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    z-index: 1;
-  }
-  .ruled-panel > .tick-tl { top: -4px; left: -4px; }
-  .ruled-panel > .tick-tr { top: -4px; right: -4px; }
-  .ruled-panel > .tick-bl { bottom: -4px; left: -4px; }
-  .ruled-panel > .tick-br { bottom: -4px; right: -4px; }
-
-  .ruled-grid {
-    display: grid;
-    overflow: hidden;
-  }
-  .ruled-cell {
-    position: relative;
-    box-shadow: 1px 0 0 var(--rule-soft), 0 1px 0 var(--rule-soft);
-    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
-  }
-  /* Signal bar that draws across the top of a cell on hover */
-  .ruled-cell.is-interactive::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: var(--md-sys-color-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-emphasized);
-  }
-  .ruled-cell.is-interactive:hover,
-  .ruled-cell.is-interactive:focus-within {
-    background: var(--md-sys-color-surface-container);
-  }
-  .ruled-cell.is-interactive:hover::before,
-  .ruled-cell.is-interactive:focus-within::before {
-    transform: scaleX(1);
-  }
-  .ruled-cell .cell-index {
-    background: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
-    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
-                color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
-  }
-  .ruled-cell.is-interactive:hover .cell-index {
-    background: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-  }
-
-  /* Dot-matrix field that fades in from one corner of a cell on hover */
-  .dot-reveal::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: radial-gradient(var(--md-sys-color-primary) 1px, transparent 1.4px);
-    background-size: 10px 10px;
-    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
-    mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard);
-  }
-  .dot-reveal:hover::after,
-  .dot-reveal:focus-within::after {
-    opacity: 0.45;
-  }
-
-  /* Signal Block: full-bleed amber band with a dot texture */
-  .signal-block {
-    position: relative;
-    background-color: var(--signal-block-bg);
-    color: var(--signal-block-fg);
-    overflow: hidden;
-  }
-  .signal-block::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: radial-gradient(color-mix(in srgb, var(--signal-block-fg) 22%, transparent) 1px, transparent 1.5px);
-    background-size: 12px 12px;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 70%);
-    mask-image: linear-gradient(to bottom, transparent, #000 70%);
-  }
-  .signal-block .btn-ink {
-    background: var(--signal-block-fg);
-    color: var(--signal-block-bg);
-    border-radius: var(--md-sys-shape-corner-full);
-  }
-  .signal-block .btn-ink:hover { transform: translateY(-1px); }
-  .signal-block .btn-tonal {
-    background: transparent;
-    color: var(--signal-block-fg);
-    border-color: color-mix(in srgb, var(--signal-block-fg) 45%, transparent);
-    border-radius: var(--md-sys-shape-corner-full);
-  }
-  .signal-block .btn-tonal:hover {
-    background: color-mix(in srgb, var(--signal-block-fg) 10%, transparent);
-    border-color: var(--signal-block-fg);
-  }
-  .signal-block .btn-tonal .copy-done { color: inherit !important; }
-
-  /* Ticker: endless horizontal strip under the signal block */
-  .ticker {
-    display: flex;
-    overflow: hidden;
-    border-top: 1px solid color-mix(in srgb, var(--signal-block-fg) 25%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  }
-  .ticker-track {
-    display: flex;
-    flex: none;
-    gap: 2.5rem;
-    padding: 0.9rem 1.25rem;
-    animation: ticker 40s linear infinite;
-  }
-  .ticker:hover .ticker-track { animation-play-state: paused; }
-  @keyframes ticker {
-    to { transform: translateX(-100%); }
+  .chip-accent {
+    border-color: transparent;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
   }
 
   /* Subtle Gridlines */
   .gridlines {
     background-image:
-      linear-gradient(to right, var(--grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      linear-gradient(to right, var(--md-sys-color-gridline) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--md-sys-color-gridline) 1px, transparent 1px);
     background-size: 4rem 4rem;
   }
 

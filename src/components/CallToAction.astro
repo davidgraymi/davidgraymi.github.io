@@ -27,9 +27,9 @@ const ticker = [
 
 <section class="signal-block mt-20 md:mt-28">
   <div class="wrap relative py-16 text-center md:py-24">
-    <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.14em]">Let's connect</p>
-    <h2 class="mx-auto mt-5 max-w-3xl font-semibold leading-tight" style="font-size: var(--text-h2);">{title}</h2>
-    <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: color-mix(in srgb, var(--signal-block-fg) 82%, transparent);">
+    <p class="font-mono text-label font-semibold uppercase tracking-[0.14em]">Let's connect</p>
+    <h2 class="mx-auto mt-5 max-w-3xl font-semibold leading-tight text-h2">{title}</h2>
+    <p class="mx-auto mt-4 max-w-xl text-body-lg leading-relaxed text-on-signal-block/80">
       {body}
     </p>
 
@@ -41,18 +41,18 @@ const ticker = [
       <CopyEmail class="w-full sm:w-auto" />
     </div>
 
-    <p class="mt-6 font-mono text-[12.5px]" style="color: color-mix(in srgb, var(--signal-block-fg) 75%, transparent);">
+    <p class="mt-6 font-mono text-label text-on-signal-block/75">
       Usually replies within a day or two · {site.location}
     </p>
   </div>
 
-  <div class="ticker relative font-mono text-[13px]" aria-hidden="true">
+  <div class="ticker relative font-mono text-caption" aria-hidden="true">
     {
       [0, 1].map(() => (
         <div class="ticker-track">
           {ticker.map((item) => (
             <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
-              <span class="h-1.5 w-1.5 rotate-45" style="background: var(--signal-block-fg);" />
+              <span class="h-1.5 w-1.5 rotate-45 bg-on-signal-block" />
               {item}
             </span>
           ))}

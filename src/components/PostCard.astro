@@ -15,8 +15,7 @@ const { entry } = Astro.props;
   <div class="flex flex-col gap-2.5 md:flex-row md:items-baseline md:gap-8">
     <div class="md:w-34 md:shrink-0">
       <span
-        class="inline-block rounded-md px-2.5 py-0.5 font-mono text-[12px] uppercase tracking-wider font-semibold"
-        style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-primary);"
+        class="inline-block rounded-md px-2.5 py-0.5 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container-high text-primary"
       >
         <FormattedDate date={entry.data.pubDate} />
       </span>
@@ -24,30 +23,28 @@ const { entry } = Astro.props;
 
     <div class="min-w-0 flex-1">
       <div class="flex items-start justify-between gap-4">
-        <h3 class="text-[20px] font-semibold leading-snug transition-colors duration-200 group-hover:text-[var(--md-sys-color-primary)]">
+        <h3 class="text-title font-semibold leading-snug transition-colors duration-200 group-hover:text-primary">
           <a href={`/blog/${entry.id}`} class="after:absolute after:inset-0 after:content-['']">
             {entry.data.title}
           </a>
         </h3>
         <span
-          class="grid h-7 w-7 shrink-0 place-items-center rounded-full opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-          style="color: var(--md-sys-color-on-primary); background: var(--md-sys-color-primary);"
+          class="grid h-7 w-7 shrink-0 place-items-center rounded-full opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100 text-on-primary bg-primary"
         >
           <Icon name="arrow" size={15} />
         </span>
       </div>
 
-      <p class="mt-2 text-[15px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+      <p class="mt-2 text-body leading-relaxed text-on-surface-variant">
         {entry.data.description}
       </p>
 
       {
         entry.data.tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-1.5 font-mono text-[12px]">
+          <div class="mt-4 flex flex-wrap gap-1.5 font-mono text-label">
             {entry.data.tags.slice(0, 3).map((tag) => (
               <span
-                class="rounded-sm border px-2 py-0.5 transition-colors group-hover:border-[var(--md-sys-color-outline)]"
-                style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface-variant);"
+                class="chip transition-colors group-hover:border-outline"
               >
                 #{tag}
               </span>

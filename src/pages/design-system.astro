@@ -1,0 +1,257 @@
+---
+/**
+ * Living style guide. Every swatch and specimen here renders from the same
+ * tokens and classes the rest of the site uses, so if it looks wrong here it
+ * looks wrong everywhere. Not linked from the nav; noindex.
+ */
+import Base from '~/layouts/Base.astro';
+import PageHeader from '~/components/PageHeader.astro';
+import Section from '~/components/Section.astro';
+import Icon from '~/components/Icon.astro';
+
+const colorGroups = [
+  {
+    name: 'Accent',
+    roles: [
+      ['primary', 'on-primary'],
+      ['primary-container', 'on-primary-container'],
+      ['secondary', 'on-secondary'],
+      ['secondary-container', 'on-secondary-container'],
+      ['tertiary', 'on-tertiary'],
+      ['error', 'on-error'],
+    ],
+  },
+  {
+    name: 'Surface',
+    roles: [
+      ['surface', 'on-surface'],
+      ['surface-container-lowest', 'on-surface'],
+      ['surface-container-low', 'on-surface'],
+      ['surface-container', 'on-surface'],
+      ['surface-container-high', 'on-surface'],
+      ['surface-container-highest', 'on-surface'],
+    ],
+  },
+  {
+    name: 'Content & lines',
+    roles: [
+      ['on-surface', 'surface'],
+      ['on-surface-variant', 'surface'],
+      ['outline', 'surface'],
+      ['outline-variant', 'on-surface'],
+    ],
+  },
+];
+
+const typeScale = [
+  ['text-display', 'clamp 45–83px', 'Hero headline'],
+  ['text-h1', 'clamp 34–58px', 'Page title'],
+  ['text-h2', 'clamp 26–38px', 'Section title'],
+  ['text-headline-lg', '32px', 'Large stat'],
+  ['text-headline', '28px', 'Stat, feature heading'],
+  ['text-headline-sm', '22px', 'Sub-section heading'],
+  ['text-title', '20px', 'Card title'],
+  ['text-title-sm', '18px', 'Page lead'],
+  ['text-body-lg', '17px', 'Section lead, intro paragraph'],
+  ['text-body', '15px', 'Default UI body'],
+  ['text-body-sm', '14px', 'Secondary copy, nav'],
+  ['text-caption', '13px', 'Metadata, filters'],
+  ['text-label', '12px', 'Mono labels, chips — the floor'],
+];
+
+const radii = [
+  ['rounded-xs', '4px'],
+  ['rounded-sm', '6px'],
+  ['rounded-md', '10px'],
+  ['rounded-lg', '14px'],
+  ['rounded-xl', '16px'],
+  ['rounded-2xl', '20px · card'],
+  ['rounded-3xl', '24px'],
+  ['rounded-full', 'pill'],
+];
+---
+
+<Base title="Design system" description="Tokens and components behind davidmgray.com." noindex>
+  <PageHeader
+    kicker="Design system"
+    title="Instrument Panel"
+    lead="Amber signal on slate and obsidian. Every value on this page is a token, and every component here is the one the site ships. Flip the theme toggle to check both modes."
+  />
+
+  <Section kicker="01 · Colour" title="Roles, not hex codes" lead="Components ask for a role (primary, surface-container, on-surface-variant). Each role resolves to a light and dark value from the reference palette.">
+    <div class="mt-10 space-y-10">
+      {
+        colorGroups.map((group) => (
+          <div>
+            <h3 class="kicker">{group.name}</h3>
+            <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {group.roles.map(([bg, fg]) => (
+                <div class="overflow-hidden rounded-lg border border-outline-variant">
+                  <div class="flex h-20 items-end p-3 font-mono text-label" style={`background: var(--md-sys-color-${bg}); color: var(--md-sys-color-${fg});`}>
+                    Aa
+                  </div>
+                  <div class="bg-surface-container-low px-3 py-2 font-mono text-label text-on-surface-variant">{bg}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section alt kicker="02 · Type" title="One scale, twelve pixels up" lead="Roboto Flex for everything readable, JetBrains Mono for labels and data. Nothing renders below 12px.">
+    <div class="mt-10 divide-y divide-outline-variant rounded-card border border-outline-variant bg-surface-container-low">
+      {
+        typeScale.map(([cls, size, use]) => (
+          <div class="grid gap-2 px-5 py-4 md:grid-cols-[12rem_1fr] md:items-baseline md:gap-6">
+            <div class="font-mono text-label text-on-surface-variant">
+              <span class="text-primary">{cls}</span> · {size}
+            </div>
+            <p class:list={[cls, 'truncate font-semibold tracking-tight text-on-surface']}>{use}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section kicker="03 · Shape & depth" title="Crisp corners, quiet shadows">
+    <div class="mt-10 grid gap-10 lg:grid-cols-2">
+      <div>
+        <h3 class="kicker">Radius</h3>
+        <div class="mt-4 grid grid-cols-4 gap-3">
+          {
+            radii.map(([cls, label]) => (
+              <div class="text-center">
+                <div class:list={[cls, 'mx-auto h-16 w-16 border border-primary bg-primary-container']} />
+                <p class="mt-2 font-mono text-label text-on-surface-variant">{label}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div>
+        <h3 class="kicker">Elevation</h3>
+        <div class="mt-4 grid grid-cols-5 gap-3">
+          {
+            ['shadow-elevation-1', 'shadow-elevation-2', 'shadow-elevation-3', 'shadow-elevation-4', 'shadow-elevation-5'].map((cls, i) => (
+              <div class="text-center">
+                <div class={`${cls} mx-auto h-16 w-full rounded-lg border border-outline-variant bg-surface-container-low`} />
+                <p class="mt-2 font-mono text-label text-on-surface-variant">{i + 1}</p>
+              </div>
+            ))
+          }
+        </div>
+        <p class="mt-6 text-body-sm text-on-surface-variant">
+          Cards are flat: depth comes from hairlines, not shadows. Use 2 for floating chrome and 3–5 for overlays only.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <Section alt kicker="04 · Components" title="The parts bin">
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div class="surface p-6">
+        <h3 class="kicker">Buttons</h3>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button class="btn btn-primary" type="button">Primary <Icon name="arrow" size={16} /></button>
+          <button class="btn btn-tonal" type="button">Tonal</button>
+          <button class="btn btn-ghost" type="button">Ghost</button>
+          <button class="btn btn-primary" type="button" disabled>Disabled</button>
+        </div>
+        <p class="mt-5 text-body-sm text-on-surface-variant">One primary per view. 44px tall so they clear the touch-target minimum.</p>
+      </div>
+
+      <div class="surface p-6">
+        <h3 class="kicker">Chips & filters</h3>
+        <div class="mt-5 flex flex-wrap gap-1.5">
+          <span class="chip">kubernetes</span>
+          <span class="chip">azure</span>
+          <span class="chip">python</span>
+          <span class="chip chip-accent">Playable</span>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <button class="filter-tab active" type="button">All</button>
+          <button class="filter-tab" type="button">Security</button>
+          <button class="filter-tab" type="button">ML</button>
+        </div>
+      </div>
+
+      <article class="spotlight-card p-6">
+        <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Spotlight card</p>
+        <h3 class="mt-3 text-title font-semibold text-on-surface">Hover me</h3>
+        <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">
+          Square hairline frame. On hover it fills and a signal bar draws across the top. Used for anything clickable that leads somewhere: work, posts.
+        </p>
+      </article>
+
+      <div class="glass-panel p-6">
+        <p class="kicker">Glass panel</p>
+        <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
+          Static callout frame. For asides and floating menus.
+        </p>
+        <a href="#main" class="link-underline mt-4 inline-block text-body-sm font-medium text-on-surface">Inline link style</a>
+      </div>
+    </div>
+
+    <h3 class="kicker mt-16">Ruled panel</h3>
+    <div class="ruled-panel mt-5">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid md:grid-cols-3">
+        <div class="ruled-cell p-6">
+          <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Static cell</p>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">Hairline cells inside a framed panel with corner ticks. No hover on content that isn't clickable.</p>
+        </div>
+        <div class="ruled-cell is-interactive p-6">
+          <span class="cell-index inline-flex rounded-md px-2.5 py-1 font-mono text-label font-semibold">02</span>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant"><code class="font-mono">.is-interactive</code> fills the cell and draws the signal bar.</p>
+        </div>
+        <div class="ruled-cell is-interactive dot-reveal p-6">
+          <p class="font-mono text-label uppercase tracking-[0.12em] text-primary">Dot reveal</p>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant"><code class="font-mono">.dot-reveal</code> fades a dot matrix in from the corner.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-2">
+      <div>
+        <h3 class="kicker">Ruled list</h3>
+        <div class="ruled-list mt-5">
+          <div class="p-5 text-body-sm text-on-surface-variant">Rows split by hairlines. Hover draws a bar down the left.</div>
+          <div class="p-5 text-body-sm text-on-surface-variant">Used for the post list.</div>
+        </div>
+      </div>
+      <div>
+        <h3 class="kicker">Ticked frame</h3>
+        <div class="ticked-frame mt-5 max-w-xs">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="grid aspect-[4/3] place-items-center bg-surface-container font-mono text-label text-on-surface-variant">media</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="kicker mt-16">Signal block</h3>
+  </Section>
+
+  <section class="signal-block">
+    <div class="wrap relative py-12">
+      <p class="font-mono text-label font-semibold uppercase tracking-[0.14em]">Signal block</p>
+      <p class="mt-3 max-w-xl text-body-lg">Full-bleed amber band with a dot texture, for the one call to action on a page. Pair with <code class="font-mono">.btn-ink</code> and an optional <code class="font-mono">.ticker</code>.</p>
+      <div class="mt-6 flex gap-3">
+        <button class="btn btn-ink" type="button">Ink button</button>
+        <button class="btn btn-tonal" type="button">Tonal</button>
+      </div>
+    </div>
+  </section>
+
+  <Section kicker="05 · Long-form" title="Prose">
+    <div class="prose mt-10 max-w-3xl">
+      <p>Articles use <code>.prose</code>: 17px body, 1.8 line height, and amber <a href="#main">links</a> with a soft underline.</p>
+      <blockquote>Quotes get a signal-coloured rule and a faint container tint.</blockquote>
+      <ul>
+        <li>List markers pick up the primary colour.</li>
+        <li><strong>Bold</strong> stays on-surface so it reads as weight, not colour.</li>
+      </ul>
+    </div>
+  </Section>
+</Base>
