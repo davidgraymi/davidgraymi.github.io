@@ -2,7 +2,8 @@
 title: "An Unexpected Email, REPRO-SIGN, and 11 Citations on Google Scholar"
 description: "Years after our college capstone, an out-of-the-blue email from European AI researchers wanting to reproduce our sign language paper sent me to Google Scholar, where we've been cited 11 times."
 pubDate: 2026-10-12
-tags: ['ai', 'research', 'machine-learning', 'reproducibility', 'capstone', 'google-scholar']
+tags: ['machine-learning', 'research', 'reproducibility', 'capstone', 'google-scholar']
+series: sign-language-capstone
 ---
 
 Most undergraduate capstone projects have a predictable lifecycle. You spend months fixing bugs, putting together a demo, presenting your slides to faculty, and submitting a final paper. Then graduation happens. Everyone scatters to their respective jobs, the code sits quietly in a GitHub repository, and the project becomes a pleasant memory you occasionally bring up over drinks or in an interview.

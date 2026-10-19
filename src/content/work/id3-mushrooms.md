@@ -5,6 +5,7 @@ kind: School
 category: ai
 year: '2020'
 stack: ['Python', 'Decision trees', 'Information gain']
+archived: true
 order: 10
 links:
   - label: Research report

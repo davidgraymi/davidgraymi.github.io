@@ -19,6 +19,8 @@ npm run dev      # http://localhost:4321
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the built site locally |
 | `npm run check` | Type-check content collections, props and links |
+| `npm run check:site` | After a build: internal links, `#anchors` and `security.txt` expiry |
+| `npm run resume:pdf` | After a build: print `/resume` to `public/files/David-Gray-Resume.pdf` |
 
 ## Adding content
 
@@ -54,6 +56,18 @@ with `actions/deploy-pages`. It requires the repository's **Settings → Pages �
 Build and deployment → Source** to be set to **GitHub Actions**.
 
 The `CNAME` file lives in `public/`, so the custom domain survives every deploy.
+
+Pull requests also run Lighthouse CI (`lighthouserc.json`) over five pages:
+accessibility must stay at 95+, best practices and SEO at 90+.
+
+### Security headers
+
+GitHub Pages can't send response headers, so every page carries a
+Content-Security-Policy `<meta>` instead, written at the end of the build by
+`src/lib/csp-integration.mjs` (inline scripts are allowed by hash only).
+HSTS, `frame-ancestors`, `X-Content-Type-Options` and `Permissions-Policy` need
+real headers, which means a proxy such as Cloudflare in front of Pages.
+`/.well-known/security.txt` expires yearly; `check:site` fails 30 days before.
 
 ## Design
 
