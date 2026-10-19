@@ -4,7 +4,8 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '~/layouts/Base.astro';
 import FormattedDate from '~/components/FormattedDate.astro';
-import Icon from '~/components/Icon.astro';
+import BackLink from '~/components/BackLink.astro';
+import CallToAction from '~/components/CallToAction.astro';
 
 export const getStaticPaths = (async () => {
   const albums = await getCollection('photos', ({ data }) => !data.draft);
@@ -17,18 +18,14 @@ const { title, date, location, images } = entry.data;
 ---
 
 <Base title={title} description={`${title}${location ? ` — ${location}` : ''}`} type="article">
-  <header class="border-b border-outline-variant">
+  <header class="gridlines border-b border-outline-variant">
     <div class="wrap py-12 md:py-16">
-      <a
-        href="/photos"
-        class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-label uppercase tracking-[0.12em] transition-all duration-200 hover:border-primary hover:text-primary text-on-surface-variant border-outline-variant bg-surface-container"
-      >
-        <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
-        All albums
-      </a>
+      <BackLink href="/photos" label="All albums" />
       <h1 class="mt-6 font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
-      <p class="mt-4 font-mono text-label text-on-surface-variant">
-        {location && `${location} · `}<FormattedDate date={date} />
+      <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">
+        {location && <span class="text-primary">{location}</span>}
+        <FormattedDate date={date} />
+        <span>{images.length} {images.length === 1 ? 'photo' : 'photos'}</span>
       </p>
       <div class="prose mt-6 max-w-2xl">
         <Content />
@@ -59,4 +56,9 @@ const { title, date, location, images } = entry.data;
       }
     </div>
   </div>
+
+  <CallToAction
+    title="Know a good dive site?"
+    body="Or a crag, a trail, or a game I should be playing. Recommendations are as welcome as work."
+  />
 </Base>

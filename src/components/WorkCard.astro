@@ -11,7 +11,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
 ---
 
 <article
-  class="spotlight-card group relative flex flex-col"
+  class="ruled-cell is-interactive group flex flex-col"
   data-category={category}
   data-kind={kind.toLowerCase()}
   data-stack={stack.join(' ').toLowerCase()}
@@ -19,7 +19,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   {
     cover && (
       <div
-        class="aspect-[16/9] overflow-hidden border-b border-outline-variant bg-surface-container"
+        class="aspect-[16/9] overflow-hidden border-b border-rule-soft bg-surface-container"
       >
         <Image
           src={cover}
@@ -68,7 +68,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     {
       highlight && (
         <div
-          class="mt-4 flex items-start gap-2.5 border-l-2 border-primary px-3.5 py-2 font-mono text-label leading-snug bg-surface-container text-on-surface"
+          class="mt-4 flex items-start gap-2.5 border-l-2 border-primary px-3.5 py-2 font-mono text-label leading-snug bg-surface-container text-on-surface transition-colors duration-200 group-hover:bg-surface-container-high"
         >
           <span class="line-clamp-3 font-medium">{highlight}</span>
         </div>

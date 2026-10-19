@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  label: string;
+}
+const { href, label } = Astro.props;
+---
+
+<a
+  href={href}
+  class="group inline-flex min-h-11 items-center gap-2.5 font-mono text-label font-semibold uppercase tracking-[0.12em] text-on-surface-variant transition-colors duration-200 hover:text-on-surface"
+>
+  <span
+    class="grid h-7 w-7 place-items-center border border-outline-variant transition-colors duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-on-primary"
+  >
+    <span class="rotate-180 leading-none transition-transform duration-200 group-hover:translate-x-0.5"><Icon name="arrow" size={13} /></span>
+  </span>
+  {label}
+</a>
