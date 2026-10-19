@@ -51,16 +51,14 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
 
 <dialog
   id="command-palette"
-  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-[var(--md-sys-elevation-4)] backdrop:bg-black/60 backdrop:backdrop-blur-md"
-  style="background: var(--md-sys-color-surface-container-high); border-color: var(--md-sys-color-outline-variant);"
+  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-elevation-4 backdrop:bg-black/60 backdrop:backdrop-blur-md bg-surface-container-high border-outline-variant"
 >
   <div class="flex flex-col">
     {/* Header Search Bar */}
     <div
-      class="flex items-center gap-3 border-b px-5 py-4"
-      style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-highest);"
+      class="flex items-center gap-3 border-b px-5 py-4 border-outline-variant bg-surface-container-highest"
     >
-      <span style="color: var(--md-sys-color-primary)">
+      <span class="text-primary">
         <Icon name="search" size={20} />
       </span>
       <input
@@ -70,11 +68,10 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
         aria-label="Search the site"
         autocomplete="off"
         spellcheck="false"
-        class="w-full bg-transparent text-[15.5px] font-medium outline-none placeholder:text-[var(--md-sys-color-on-surface-variant)]"
-        style="color: var(--md-sys-color-on-surface);"
+        class="w-full bg-transparent text-body font-medium outline-none placeholder:text-on-surface-variant text-on-surface"
       />
-      <div class="flex items-center gap-1.5 font-mono text-[12px]" style="color: var(--md-sys-color-on-surface-variant)">
-        <kbd class="rounded border px-2 py-0.5" style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);">ESC</kbd>
+      <div class="flex items-center gap-1.5 font-mono text-label text-on-surface-variant">
+        <kbd class="rounded border px-2 py-0.5 bg-surface-container border-outline-variant">ESC</kbd>
       </div>
     </div>
 
@@ -94,23 +91,21 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
             tabindex="0"
           >
             <div class="min-w-0 pr-3">
-              <p class="truncate text-[15px] font-medium transition-colors group-hover:text-[var(--md-sys-color-primary)]">
+              <p class="truncate text-body font-medium transition-colors group-hover:text-primary">
                 {item.title}
               </p>
-              <p class="truncate text-[13px]" style="color: var(--md-sys-color-on-surface-variant)">
+              <p class="truncate text-caption text-on-surface-variant">
                 {item.subtitle}
               </p>
             </div>
             <div class="flex shrink-0 items-center gap-2">
               <span
-                class="rounded-md border px-2 py-0.5 font-mono text-[12px] uppercase tracking-wider font-semibold"
-                style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant);"
+                class="rounded-md border px-2 py-0.5 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container border-outline-variant text-on-surface-variant"
               >
                 {item.badge}
               </span>
               <span
-                class="grid h-6 w-6 place-items-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                style="color: var(--md-sys-color-on-primary); background: var(--md-sys-color-primary);"
+                class="grid h-6 w-6 place-items-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 text-on-primary bg-primary"
               >
                 <Icon name="arrow" size={13} />
               </span>
@@ -118,21 +113,20 @@ const allItems = [...pages, ...actions, ...projects, ...posts];
           </div>
         ))
       }
-      <div id="command-empty" class="hidden py-14 text-center text-[15px]" style="color: var(--md-sys-color-on-surface-variant)">
+      <div id="command-empty" class="hidden py-14 text-center text-body text-on-surface-variant">
         No matching commands or projects found.
       </div>
     </div>
 
     {/* Footer Shortcuts Hint */}
     <div
-      class="flex items-center justify-between border-t px-5 py-3 font-mono text-[12px]"
-      style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface-variant);"
+      class="flex items-center justify-between border-t px-5 py-3 font-mono text-label border-outline-variant bg-surface-container text-on-surface-variant"
     >
       <div class="flex items-center gap-3">
-        <span><kbd class="rounded border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant);">↑</kbd> <kbd class="rounded border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant);">↓</kbd> to navigate</span>
-        <span><kbd class="rounded border px-2 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant);">↵</kbd> to select</span>
+        <span><kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">↑</kbd> <kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">↓</kbd> to navigate</span>
+        <span><kbd class="rounded border px-2 py-0.5 text-label border-outline-variant">↵</kbd> to select</span>
       </div>
-      <span><kbd class="rounded border px-1.5 py-0.5 text-[12px]" style="border-color: var(--md-sys-color-outline-variant);">esc</kbd> to close</span>
+      <span><kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">esc</kbd> to close</span>
     </div>
   </div>
 </dialog>

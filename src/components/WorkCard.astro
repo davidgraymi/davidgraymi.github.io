@@ -19,8 +19,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   {
     cover && (
       <div
-        class="aspect-[16/9] overflow-hidden border-b"
-        style="border-color: var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container)"
+        class="aspect-[16/9] overflow-hidden border-b border-outline-variant bg-surface-container"
       >
         <Image
           src={cover}
@@ -37,8 +36,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   <div class="flex flex-1 flex-col p-6 sm:p-7">
     {/* Header / Meta: M3 Expressive Assist Chip */}
     <div
-      class="flex items-center justify-between gap-3 font-mono text-[12px] uppercase tracking-[0.12em]"
-      style="color: var(--md-sys-color-on-surface-variant)"
+      class="flex items-center justify-between gap-3 font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant"
     >
       <div class="flex items-center gap-2">
         <span>{kind}</span>
@@ -47,8 +45,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       </div>
       {entry.id === 'wordlet' && (
         <span
-          class="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[12px] font-semibold"
-          style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);"
+          class="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-label font-semibold bg-primary-container text-on-primary-container"
         >
           Playable
         </span>
@@ -56,14 +53,14 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     </div>
 
     {/* Title */}
-    <h3 class="mt-3.5 text-[20px] font-semibold leading-snug transition-colors duration-200 group-hover:text-[var(--md-sys-color-primary)]">
+    <h3 class="mt-3.5 text-title font-semibold leading-snug transition-colors duration-200 group-hover:text-primary">
       <a href={`/work/${entry.id}`} class="after:absolute after:inset-0 after:content-['']">
         {title}
       </a>
     </h3>
 
     {/* Blurb */}
-    <p class="mt-2.5 text-[14.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+    <p class="mt-2.5 text-body-sm leading-relaxed text-on-surface-variant">
       {blurb}
     </p>
 
@@ -71,12 +68,10 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     {
       highlight && (
         <div
-          class="mt-4 flex items-start gap-2.5 rounded-xl border px-3.5 py-2 font-mono text-[12.5px] leading-snug"
-          style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface);"
+          class="mt-4 flex items-start gap-2.5 rounded-xl border px-3.5 py-2 font-mono text-label leading-snug bg-surface-container border-outline-variant text-on-surface"
         >
           <span
-            class="mt-1.5 h-2 w-2 shrink-0 rounded-full"
-            style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);"
+            class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary shadow-glow-sm"
           />
           <span class="line-clamp-3 font-medium">{highlight}</span>
         </div>
@@ -88,16 +83,14 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       {
         stack.slice(0, 4).map((tech) => (
           <span
-            class="rounded-sm border px-2.5 py-1 font-mono text-[12px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
-            style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant)"
+            class="chip py-1 transition-colors group-hover:border-outline"
           >
             {tech}
           </span>
         ))
       }
       <span
-        class="ml-auto grid h-7.5 w-7.5 place-items-center rounded-full transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--md-sys-color-primary)]"
-        style="color: var(--md-sys-color-on-surface-variant); background: var(--md-sys-color-surface-container-high);"
+        class="ml-auto grid h-7.5 w-7.5 place-items-center rounded-full transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-primary text-on-surface-variant bg-surface-container-high"
       >
         <Icon name="arrow" size={16} />
       </span>

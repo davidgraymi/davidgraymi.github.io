@@ -27,17 +27,15 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
     {
       albums.length === 0 ? (
         <div
-          class="surface flex max-w-xl flex-col items-start p-8 shadow-[var(--md-sys-elevation-1)]"
-          style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+          class="surface flex max-w-xl flex-col items-start p-8 shadow-elevation-1 bg-surface-container-low border-outline-variant"
         >
           <span
-            class="grid h-12 w-12 place-items-center rounded-2xl"
-            style="color: var(--md-sys-color-primary); background: var(--md-sys-color-surface-container-high);"
+            class="grid h-12 w-12 place-items-center rounded-2xl text-primary bg-surface-container-high"
           >
             <Icon name="camera" size={26} />
           </span>
-          <p class="mt-5 text-[18px] font-semibold" style="color: var(--md-sys-color-on-surface);">Still sorting through the card.</p>
-          <p class="mt-2 text-[15px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+          <p class="mt-5 text-title-sm font-semibold text-on-surface">Still sorting through the card.</p>
+          <p class="mt-2 text-body leading-relaxed text-on-surface-variant">
             The first albums from diving and climbing trips are on their way. In the meantime, the
             <a href="/work" class="link-underline">work</a> and <a href="/blog" class="link-underline">writing</a> are all here.
           </p>
@@ -49,11 +47,10 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
             return (
               <a
                 href={`/photos/${album.id}`}
-                class="spotlight-card group relative overflow-hidden transition-all duration-300"
-                style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+                class="spotlight-card group relative overflow-hidden transition-all duration-300 bg-surface-container-low border-outline-variant"
               >
                 {cover && (
-                  <div class="aspect-[4/3] overflow-hidden" style="background: var(--md-sys-color-surface-container)">
+                  <div class="aspect-[4/3] overflow-hidden bg-surface-container">
                     <Image
                       src={cover}
                       alt=""
@@ -64,9 +61,9 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
                     />
                   </div>
                 )}
-                <div class="border-t p-5.5" style="border-color: var(--md-sys-color-outline-variant);">
-                  <h2 class="text-[18px] font-semibold transition-colors group-hover:text-[var(--md-sys-color-primary)]" style="color: var(--md-sys-color-on-surface);">{album.data.title}</h2>
-                  <p class="mt-1.5 font-mono text-[12px]" style="color: var(--md-sys-color-on-surface-variant)">
+                <div class="border-t p-5.5 border-outline-variant">
+                  <h2 class="text-title-sm font-semibold transition-colors group-hover:text-primary text-on-surface">{album.data.title}</h2>
+                  <p class="mt-1.5 font-mono text-label text-on-surface-variant">
                     {album.data.location && `${album.data.location} · `}
                     {album.data.images.length}{' '}
                     {album.data.images.length === 1 ? 'photo' : 'photos'}

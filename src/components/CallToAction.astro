@@ -13,11 +13,10 @@ const {
 } = Astro.props;
 ---
 
-<section class="border-t py-20 md:py-28" style="border-color: var(--md-sys-color-outline-variant);">
+<section class="border-t py-20 md:py-28 border-outline-variant">
   <div class="wrap">
     <div
-      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-8 text-center sm:p-14"
-      style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
+      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-8 text-center sm:p-14 bg-surface-container-low border-outline-variant"
     >
       {/* Background glow accent: M3 Primary & Tertiary Glow */}
       <div
@@ -26,8 +25,8 @@ const {
       />
 
       <p class="kicker justify-center">Let's connect</p>
-      <h2 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h2); color: var(--md-sys-color-on-surface);">{title}</h2>
-      <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
+      <h2 class="mt-5 font-semibold leading-tight text-h2 text-on-surface">{title}</h2>
+      <p class="mx-auto mt-4 max-w-xl text-body-lg leading-relaxed text-on-surface-variant">
         {body}
       </p>
 
@@ -39,7 +38,7 @@ const {
         <CopyEmail class="w-full sm:w-auto" />
       </div>
 
-      <p class="mt-6 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
+      <p class="mt-6 font-mono text-label text-on-surface-variant">
         Usually replies within a day or two · {site.location}
       </p>
     </div>

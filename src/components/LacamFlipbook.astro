@@ -188,7 +188,7 @@ const traceJson = JSON.stringify(trace);
       let s = '';
       for (let i = 1; i <= count; i++) {
         const r = (maxRadius * i) / count;
-        s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--rule)" stroke-width="1" />`;
+        s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="1" />`;
       }
       return s;
     }
@@ -225,9 +225,9 @@ const traceJson = JSON.stringify(trace);
         for (let j = 0; j < trace.width; j++) {
           const wall = trace.grid[i][j] === 1;
           s += `<rect x="${j * cell}" y="${i * cell}" width="${cell}" height="${cell}" rx="3"
-            fill="${wall ? 'var(--fg-muted)' : 'var(--bg-surface-2)'}"
+            fill="${wall ? 'var(--md-sys-color-on-surface-variant)' : 'var(--md-sys-color-surface-container)'}"
             opacity="${wall ? '0.35' : '1'}"
-            stroke="var(--rule)" stroke-width="1" />`;
+            stroke="var(--md-sys-color-outline-variant)" stroke-width="1" />`;
         }
       }
       trace.goals.forEach((g, i) => {
@@ -238,7 +238,7 @@ const traceJson = JSON.stringify(trace);
       state.config.forEach((p, i) => {
         const [pi, pj] = p;
         s += `<circle cx="${pj * cell + cell / 2}" cy="${pi * cell + cell / 2}" r="${cell * 0.3}"
-          fill="${agentColor(i)}" stroke="var(--bg)" stroke-width="1.5" />`;
+          fill="${agentColor(i)}" stroke="var(--md-sys-color-surface)" stroke-width="1.5" />`;
       });
       if (!gridRefs.svg) {
         els.grid.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="presentation"></svg>`;
@@ -266,21 +266,21 @@ const traceJson = JSON.stringify(trace);
         const p = polar[n.id];
         if (n.parentId !== null && n.parentId !== undefined && polar[n.parentId]) {
           const isLive = n.status !== 'backtracked';
-          edges += radialEdge(cx, cy, polar[n.parentId], p, isLive ? 'var(--rule-strong)' : 'var(--rule)', 1.25);
+          edges += radialEdge(cx, cy, polar[n.parentId], p, isLive ? 'var(--md-sys-color-outline)' : 'var(--md-sys-color-outline-variant)', 1.25);
         }
         const [x, y] = xy(cx, cy, p.radius, p.angle);
         const isActive = n.id === state.currentNodeId;
 
-        let fill = 'var(--fg-muted)';
+        let fill = 'var(--md-sys-color-on-surface-variant)';
         let glow = '';
         if (n.status === 'goal') { fill = '#22c55e'; glow = 'filter="url(#lacam-glow-config)"'; }
-        else if (isActive) { fill = 'var(--signal)'; glow = 'filter="url(#lacam-glow-config)"'; }
-        else if (n.status === 'backtracked') { fill = 'var(--rule-strong)'; }
+        else if (isActive) { fill = 'var(--md-sys-color-primary)'; glow = 'filter="url(#lacam-glow-config)"'; }
+        else if (n.status === 'backtracked') { fill = 'var(--md-sys-color-outline)'; }
 
         const r = isActive || n.status === 'goal' ? 5 : Math.max(2, 3.6 - p.depth * 0.04);
         nodes += `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" opacity="${n.status === 'backtracked' ? '0.35' : '1'}" ${glow} />`;
         if (isActive) {
-          nodes += `<circle cx="${x}" cy="${y}" r="${r + 4}" fill="none" stroke="var(--signal)" stroke-width="1.25" opacity="0.55" />`;
+          nodes += `<circle cx="${x}" cy="${y}" r="${r + 4}" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="1.25" opacity="0.55" />`;
         }
       });
 
@@ -313,10 +313,10 @@ const traceJson = JSON.stringify(trace);
       const cy = size / 2;
 
       const statusColor = {
-        pending: 'var(--fg-muted)',
-        current: 'var(--signal)',
+        pending: 'var(--md-sys-color-on-surface-variant)',
+        current: 'var(--md-sys-color-primary)',
         success: '#22c55e',
-        fail: '#ef4444',
+        fail: 'var(--md-sys-color-error)',
         duplicate: '#a855f7',
       };
 
@@ -325,14 +325,14 @@ const traceJson = JSON.stringify(trace);
       Object.values(tree.nodes).forEach((n) => {
         const p = polar[n.id];
         if (n.parentId !== null && n.parentId !== undefined && polar[n.parentId]) {
-          edges += radialEdge(cx, cy, polar[n.parentId], p, 'var(--rule-strong)', 1.25);
+          edges += radialEdge(cx, cy, polar[n.parentId], p, 'var(--md-sys-color-outline)', 1.25);
         }
         const [x, y] = xy(cx, cy, p.radius, p.angle);
-        const color = statusColor[n.status] || 'var(--fg-muted)';
+        const color = statusColor[n.status] || 'var(--md-sys-color-on-surface-variant)';
         const isCurrent = n.status === 'current';
         const isHot = n.status === 'success' || n.status === 'fail' || isCurrent;
         const r = isCurrent ? 5.5 : n.depth === 0 ? 5 : 4;
-        nodes += `<circle cx="${x}" cy="${y}" r="${r}" fill="${n.status === 'pending' ? 'var(--bg-surface-2)' : color}"
+        nodes += `<circle cx="${x}" cy="${y}" r="${r}" fill="${n.status === 'pending' ? 'var(--md-sys-color-surface-container)' : color}"
           stroke="${color}" stroke-width="1.5" ${isHot ? 'filter="url(#lacam-glow-constraint)"' : ''} />`;
       });
 
@@ -390,7 +390,7 @@ const traceJson = JSON.stringify(trace);
 
 <style>
   .lacam {
-    --lacam-a: var(--signal);
+    --lacam-a: var(--md-sys-color-primary);
     --lacam-b: #0ea5e9;
     margin-block: 2.5rem;
   }
