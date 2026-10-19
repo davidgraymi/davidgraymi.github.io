@@ -144,15 +144,12 @@
   }
 
   .glass-panel {
-    background: color-mix(in srgb, var(--md-sys-color-surface-container) 85%, transparent);
+    background: var(--md-sys-color-surface);
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: var(--md-comp-card-radius);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: var(--md-sys-elevation-2);
   }
 
-  /* Interactive Precision Card: Crisp geometry with mechanical responsiveness */
+  /* Interactive card: square hairline frame; hover fills it and draws a signal bar */
   .spotlight-card {
     position: relative;
     border-radius: var(--md-comp-card-radius);
@@ -160,60 +157,181 @@
     border: 1px solid var(--md-comp-card-border);
     box-shadow: var(--md-comp-card-shadow);
     overflow: hidden;
-    transition:
-      border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
-      transform var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
-      box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .spotlight-card:hover,
+  .spotlight-card:focus-within {
+    background: var(--md-comp-card-bg-hover);
   }
 
-  .spotlight-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--md-comp-card-border-hover);
-    box-shadow: var(--md-comp-card-shadow-hover);
-  }
-
-  /* Dynamic spotlight border sheen */
-  .spotlight-card::before {
+  /* Signal bar: shared by interactive cards and ruled cells */
+  .spotlight-card::before,
+  .ruled-cell.is-interactive::before {
     content: '';
     position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: radial-gradient(
-      480px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
-      color-mix(in srgb, var(--md-sys-color-primary) 60%, transparent),
-      transparent 65%
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    inset: 0 0 auto 0;
+    height: var(--md-comp-card-bar-height);
+    z-index: 2;
+    background: var(--md-sys-color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-emphasized);
     pointer-events: none;
-    opacity: 0;
-    transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .spotlight-card:hover::before,
+  .spotlight-card:focus-within::before,
+  .ruled-cell.is-interactive:hover::before,
+  .ruled-cell.is-interactive:focus-within::before {
+    transform: scaleX(1);
   }
 
-  .spotlight-card:hover::before {
-    opacity: 1;
+  /* -------------------------------------------------------------------------
+     Ruled panel: hairline cells with corner ticks (instrument-panel layout).
+     .ruled-panel > (.tick ×4) + .ruled-grid > .ruled-cell
+  ------------------------------------------------------------------------- */
+  .ruled-panel,
+  .ticked-frame {
+    position: relative;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface);
+  }
+  .ticked-frame {
+    padding: 0.5rem;
+  }
+  :is(.ruled-panel, .ticked-frame) > .tick {
+    position: absolute;
+    width: var(--md-comp-tick-size);
+    height: var(--md-comp-tick-size);
+    background: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    z-index: 1;
+  }
+  :is(.ruled-panel, .ticked-frame) > .tick-tl { top: -4px; left: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-tr { top: -4px; right: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-bl { bottom: -4px; left: -4px; }
+  :is(.ruled-panel, .ticked-frame) > .tick-br { bottom: -4px; right: -4px; }
+
+  .ruled-grid {
+    display: grid;
+    overflow: hidden;
+  }
+  .ruled-cell {
+    position: relative;
+    box-shadow: 1px 0 0 var(--md-sys-color-rule-soft), 0 1px 0 var(--md-sys-color-rule-soft);
+    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-cell.is-interactive:hover,
+  .ruled-cell.is-interactive:focus-within {
+    background: var(--md-comp-card-bg-hover);
+  }
+  .ruled-cell .cell-index {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+                color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-cell.is-interactive:hover .cell-index {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
   }
 
-  /* Inner ambient highlight */
-  .spotlight-card::after {
+  /* Ruled list: rows separated by hairlines; hover draws a bar down the left */
+  .ruled-list {
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+  .ruled-list > * {
+    position: relative;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-list > *::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--md-comp-card-bar-height);
+    background: var(--md-sys-color-primary);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-emphasized);
+  }
+  .ruled-list > *:hover,
+  .ruled-list > *:focus-within {
+    background: var(--md-comp-card-bg-hover);
+  }
+  .ruled-list > *:hover::before,
+  .ruled-list > *:focus-within::before {
+    transform: scaleY(1);
+  }
+
+  /* Dot-matrix field that fades in from one corner of a cell on hover */
+  .dot-reveal::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      520px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
-      color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent),
-      transparent 70%
-    );
     pointer-events: none;
+    background-image: radial-gradient(var(--md-sys-color-primary) 1px, transparent 1.4px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
+    mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
     opacity: 0;
-    transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    transition: opacity var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard);
+  }
+  .dot-reveal:hover::after,
+  .dot-reveal:focus-within::after {
+    opacity: 0.45;
   }
 
-  .spotlight-card:hover::after {
-    opacity: 1;
+  /* Signal block: full-bleed amber band with a dot texture (the CTA) */
+  .signal-block {
+    position: relative;
+    background-color: var(--md-sys-color-signal-block);
+    color: var(--md-sys-color-on-signal-block);
+    overflow: hidden;
+  }
+  .signal-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(color-mix(in srgb, var(--md-sys-color-on-signal-block) 22%, transparent) 1px, transparent 1.5px);
+    background-size: 12px 12px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 70%);
+    mask-image: linear-gradient(to bottom, transparent, #000 70%);
+  }
+  .signal-block .btn-ink {
+    background: var(--md-sys-color-on-signal-block);
+    color: var(--md-sys-color-signal-block);
+  }
+  .signal-block .btn-ink:hover { transform: translateY(-1px); }
+  .signal-block .btn-tonal {
+    background: transparent;
+    color: var(--md-sys-color-on-signal-block);
+    border-color: color-mix(in srgb, var(--md-sys-color-on-signal-block) 45%, transparent);
+  }
+  .signal-block .btn-tonal:hover {
+    background: color-mix(in srgb, var(--md-sys-color-on-signal-block) 10%, transparent);
+    border-color: var(--md-sys-color-on-signal-block);
+  }
+  .signal-block .btn-tonal .copy-done { color: inherit !important; }
+
+  /* Ticker: endless horizontal strip under the signal block */
+  .ticker {
+    display: flex;
+    overflow: hidden;
+    border-top: 1px solid color-mix(in srgb, var(--md-sys-color-on-signal-block) 25%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .ticker-track {
+    display: flex;
+    flex: none;
+    gap: 2.5rem;
+    padding: 0.9rem 1.25rem;
+    animation: ticker 40s linear infinite;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes ticker {
+    to { transform: translateX(-100%); }
   }
 
   /* Shimmer Text */
@@ -278,10 +396,9 @@
   .btn-primary {
     background: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
-    box-shadow: var(--md-sys-elevation-1), 0 0 16px -2px var(--md-sys-color-glow);
   }
   .btn-primary:hover {
-    box-shadow: var(--md-sys-elevation-2), 0 0 24px 0 var(--md-sys-color-glow);
+    background: color-mix(in srgb, var(--md-sys-color-primary) 88%, var(--md-sys-color-on-surface));
     transform: translateY(-1px);
   }
 
@@ -300,7 +417,7 @@
   /* Outlined / Ghost Button */
   .btn-ghost {
     border-color: var(--md-sys-color-outline-variant);
-    background: var(--md-sys-color-surface-container);
+    background: transparent;
     color: var(--md-sys-color-on-surface);
   }
   .btn-ghost:hover {
@@ -331,7 +448,6 @@
     background: var(--md-sys-color-primary);
     border-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
-    box-shadow: var(--md-sys-elevation-1), 0 0 16px -2px var(--md-sys-color-glow);
   }
 
   /* Chips: tags, tech stacks, metadata. .chip-accent marks the one that matters. */
@@ -375,6 +491,10 @@
     color: var(--md-sys-color-primary);
   }
 }
+
+/* When a page ends on the signal block, the footer sits flush against it.
+   Unlayered so it wins over the footer's mt-24 utility. */
+main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {

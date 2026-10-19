@@ -137,3 +137,33 @@ export const services: { title: string; body: string }[] = [
     body: 'Build systems, CI pipelines, test harnesses and internal tools. Most teams are one good tool away from moving twice as fast, and nobody has time to build it.',
   },
 ];
+
+/** The rest of it. Drives the "Off the clock" section on the homepage. */
+export const offTheClock: { label: string; title: string; body: string; href?: string; cta?: string }[] = [
+  {
+    label: 'Underwater',
+    title: 'Scuba diving',
+    body: 'Checklists, gas planning, and a buddy who checks your work. Turns out I like that underwater too.',
+    href: '/photos',
+    cta: 'Photos',
+  },
+  {
+    label: 'On the wall',
+    title: 'Climbing and hiking',
+    body: 'Problems you solve with your hands, where the feedback loop is very short and very honest.',
+    href: '/photos',
+    cta: 'Photos',
+  },
+  {
+    label: 'Player two',
+    title: 'Video games',
+    body: 'Research, I tell myself. One of them ended up as a reinforcement learning project.',
+    href: '/work/tetris-rl',
+    cta: 'Tetris RL',
+  },
+  {
+    label: 'Sketchbook',
+    title: 'Making art',
+    body: 'Things that aren’t software, with nothing to compile and no tests to pass.',
+  },
+];

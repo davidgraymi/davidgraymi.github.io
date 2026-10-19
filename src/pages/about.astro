@@ -53,9 +53,9 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
       <div class="w-full">
         {/* Avatar: M3 Expressive Card Shape */}
-        <div
-          class="overflow-hidden rounded-[32px] border shadow-elevation-2 bg-surface-container-low border-outline-variant"
-        >
+        <div class="ticked-frame">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="overflow-hidden bg-surface-container-low">
           <Image
             src={avatar}
             alt="David Gray"
@@ -64,11 +64,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
             loading="eager"
             class="aspect-square w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
           />
+          </div>
         </div>
 
         {/* Info DL Block */}
         <dl
-          class="mt-6 space-y-3.5 rounded-xl border p-6 font-mono text-caption shadow-elevation-1 bg-surface-container-low border-outline-variant"
+          class="mt-6 space-y-3.5 border p-6 font-mono text-caption bg-surface border-outline-variant"
         >
           <div class="flex justify-between gap-4 border-b pb-3 border-outline-variant">
             <dt class="text-on-surface-variant">Based in</dt>
@@ -108,10 +109,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
   {/* ------------------------------------------------------------ experience */}
   <Section kicker="Experience" title="Where I've worked" alt>
-    <div class="mt-12 flex flex-col gap-5">
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+    <div class="ruled-grid">
       {
         roles.map((role) => (
-          <div class="spotlight-card grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
+          <div class="ruled-cell grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
             <div>
               <h3 class="text-title-sm font-semibold leading-snug text-on-surface">{role.title}</h3>
               <p class="mt-1.5 font-medium text-body text-primary">
@@ -126,7 +129,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
               <ul class="mt-4 space-y-2.5">
                 {role.points.map((point) => (
                   <li class="flex gap-3 text-body-sm leading-relaxed text-on-surface-variant">
-                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary shadow-glow-sm" />
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                     {point}
                   </li>
                 ))}
@@ -135,6 +138,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           </div>
         ))
       }
+    </div>
     </div>
   </Section>
 
@@ -147,7 +151,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           {
             education.map((item) => (
               <div
-                class="rounded-xl border border-l-4 border-outline-variant border-l-primary bg-surface-container-low p-6 shadow-elevation-1 transition-all duration-200 hover:border-primary"
+                class="border border-l-4 border-outline-variant border-l-primary bg-surface p-6"
               >
                 <p class="text-body-lg font-semibold text-on-surface">{item.degree}</p>
                 <p class="mt-1 text-body text-on-surface-variant">

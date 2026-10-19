@@ -11,12 +11,12 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
 <header class="sticky top-3 z-50 mx-auto w-full max-w-5xl px-3.5 sm:px-6 md:top-4">
   <div
-    class="flex h-14 items-center justify-between gap-3 rounded-full border border-outline-variant bg-surface-container-high/88 px-3.5 shadow-elevation-2 backdrop-blur-xl sm:h-15 sm:px-5"
+    class="flex h-14 items-center justify-between gap-3 rounded-full border border-outline-variant bg-surface/88 px-3.5 backdrop-blur-xl sm:h-15 sm:px-5"
   >
     {/* Brand / Logo */}
     <a href="/" class="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
       <span
-        class="grid h-8.5 w-8.5 place-items-center rounded-xl font-mono text-caption font-bold transition-transform duration-200 group-hover:scale-105 bg-primary text-on-primary shadow-glow"
+        class="grid h-8.5 w-8.5 place-items-center rounded-md font-mono text-caption font-bold transition-transform duration-200 group-hover:scale-105 bg-primary text-on-primary"
       >dg</span>
       <span class="text-body-sm font-semibold tracking-tight transition-colors group-hover:text-primary sm:text-body">
         {site.name}
@@ -33,7 +33,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
               href={item.href}
               class:list={[
                 'relative rounded-full px-4 py-1.5 text-body-sm transition-all duration-200',
-                active ? 'bg-primary-container font-semibold text-primary' : 'font-medium text-on-surface-variant',
+                active ? 'bg-primary-container font-semibold text-on-primary-container' : 'font-medium text-on-surface-variant',
               ]}
               aria-current={active ? 'page' : undefined}
             >
@@ -91,7 +91,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   {/* Mobile Menu Overlay */}
   <nav
     id="mobile-nav"
-    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl p-4 shadow-elevation-4 sm:inset-x-6 md:hidden bg-surface-container-high border-outline-variant"
+    class="glass-panel absolute inset-x-3.5 top-full mt-2.5 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-md p-4 shadow-elevation-4 sm:inset-x-6 md:hidden bg-surface-container-high border-outline-variant"
     aria-label="Mobile Navigation"
   >
     <ul class="flex flex-col gap-1.5">
@@ -102,7 +102,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
               href={item.href}
               class:list={[
                 'flex items-center justify-between rounded-xl px-3.5 py-2.5 text-body transition-colors',
-                isActive(item.href) ? 'bg-primary-container font-semibold text-primary' : 'font-medium text-on-surface',
+                isActive(item.href) ? 'bg-primary-container font-semibold text-on-primary-container' : 'font-medium text-on-surface',
               ]}
             >
               {item.label}

@@ -31,20 +31,23 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
         <h1 class="mt-6 max-w-3xl font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
         <p class="mt-4 max-w-2xl text-title-sm leading-relaxed text-on-surface-variant">{blurb}</p>
 
-        <dl class="mt-10 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl border p-4.5 bg-surface-container-low border-outline-variant">
+        <div class="ruled-panel mt-10">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+        <dl class="ruled-grid sm:grid-cols-3">
+          <div class="ruled-cell p-5">
             <dt class="kicker">Type</dt>
             <dd class="mt-2 text-body font-medium text-on-surface">{kind}</dd>
           </div>
-          <div class="rounded-2xl border p-4.5 bg-surface-container-low border-outline-variant">
+          <div class="ruled-cell p-5">
             <dt class="kicker">Year</dt>
             <dd class="mt-2 font-mono text-body font-medium text-on-surface">{year}</dd>
           </div>
-          <div class="rounded-2xl border p-4.5 bg-surface-container-low border-outline-variant">
+          <div class="ruled-cell p-5">
             <dt class="kicker">Built with</dt>
             <dd class="mt-2 text-body-sm font-medium text-on-surface">{stack.join(' · ')}</dd>
           </div>
         </dl>
+        </div>
 
         {
           links.length > 0 && (
@@ -73,7 +76,7 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
             alt={coverAlt}
             widths={[720, 1200, 1600]}
             sizes="(min-width: 1024px) 72rem, 100vw"
-            class="w-full overflow-hidden rounded-xl border shadow-elevation-2 border-outline-variant bg-surface-container-low"
+            class="w-full overflow-hidden border border-outline-variant bg-surface-container-low"
           />
         </div>
       )
@@ -89,7 +92,7 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
           highlight && (
             <aside class="lg:pt-2">
               <div
-                class="glass-panel rounded-xl border-l-4 border-l-primary bg-surface-container-low p-6 shadow-elevation-2"
+                class="glass-panel border-l-4 border-l-primary p-6"
               >
                 <p class="kicker">The key metric</p>
                 <p class="mt-4 font-mono text-title font-bold leading-snug text-primary">{highlight}</p>

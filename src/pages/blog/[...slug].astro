@@ -64,7 +64,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             alt={coverAlt}
             widths={[720, 1200]}
             sizes="(min-width: 768px) 48rem, 100vw"
-            class="mb-12 w-full overflow-hidden rounded-xl border shadow-elevation-2 border-outline-variant bg-surface-container-low"
+            class="mb-12 w-full overflow-hidden border border-outline-variant bg-surface-container-low"
           />
         )
       }
@@ -88,7 +88,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             {newer ? (
               <a
                 href={`/blog/${newer.id}`}
-                class="spotlight-card rounded-xl p-5.5 transition-all duration-200 hover:border-primary bg-surface-container-low border-outline-variant"
+                class="spotlight-card p-5.5"
               >
                 <p class="kicker">Newer</p>
                 <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
@@ -99,7 +99,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             {older && (
               <a
                 href={`/blog/${older.id}`}
-                class="spotlight-card rounded-xl p-5.5 text-right transition-all duration-200 hover:border-primary sm:text-right bg-surface-container-low border-outline-variant"
+                class="spotlight-card p-5.5 text-right"
               >
                 <p class="kicker justify-end">Older</p>
                 <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>

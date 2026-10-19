@@ -8,7 +8,7 @@ import PostCard from '~/components/PostCard.astro';
 import CallToAction from '~/components/CallToAction.astro';
 import Icon from '~/components/Icon.astro';
 import { site, socials } from '~/site.config';
-import { services, stats } from '~/data/resume';
+import { offTheClock, services, stats } from '~/data/resume';
 import avatar from '~/assets/avatar.png';
 
 const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
@@ -33,12 +33,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <div class="grid items-start gap-8 lg:grid-cols-[minmax(19rem,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
         {/* Avatar: Precision Instrument Frame */}
         <div class="relative order-1 w-36 sm:w-48 lg:w-full">
-          <div
-            class="absolute -inset-2 rounded-2xl border opacity-60 sm:-inset-2.5 sm:rounded-[1.25rem] lg:-inset-3 lg:rounded-[1.5rem] border-primary shadow-glow-lg"
-          />
-          <div
-            class="relative overflow-hidden rounded-xl border sm:rounded-[1.1rem] lg:rounded-[1.35rem] border-outline-variant bg-surface-container-low"
-          >
+          <div class="ticked-frame">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="relative overflow-hidden bg-surface-container-low">
             <Image
               src={avatar}
               alt="David Gray"
@@ -56,12 +53,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               </span>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Hero Copy & Controls */}
         <div class="order-2">
           <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container-high border-outline-variant text-primary">
-            <span class="h-1.5 w-1.5 rounded-full bg-primary shadow-glow-sm" />
+            <span class="h-1.5 w-1.5 rounded-full bg-primary" />
             <span>Product Security & Cloud Systems</span>
           </div>
 
@@ -110,20 +108,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
           {site.availableForWork && (
             <p class="mt-3 inline-flex items-center gap-2 text-body-sm text-on-surface-variant">
-              <span class="h-2 w-2 rounded-full bg-primary shadow-glow-sm" />
+              <span class="h-2 w-2 rounded-full bg-primary" />
               {site.availabilityNote}
             </p>
           )}
         </div>
       </div>
 
-      {/* Stats Cards: Precision Blocks */}
-      <div class="mt-16 grid grid-cols-2 gap-4 border-t pt-10 sm:grid-cols-2 md:grid-cols-4 md:gap-5 border-outline-variant">
+      {/* Stats: ruled telemetry strip */}
+      <div class="ruled-panel mt-16">
+        <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid grid-cols-2 md:grid-cols-4">
         {
           stats.map((stat) => (
-            <div
-              class="rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5 bg-surface-container-low border-outline-variant shadow-elevation-1"
-            >
+            <div class="ruled-cell p-5 md:p-6">
               <p class="font-mono text-headline font-bold tracking-tight md:text-headline-lg text-primary">
                 {stat.value}
               </p>
@@ -133,6 +131,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             </div>
           ))
         }
+      </div>
       </div>
     </div>
   </section>
@@ -144,14 +143,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
     alt
   >
-    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {
-        services.map((service, i) => (
-          <div class="spotlight-card flex flex-col justify-between p-7 md:p-8">
-            <div>
-              <span
-                class="inline-flex items-center justify-center rounded-xl border px-3 py-1 font-mono text-label font-semibold border-transparent bg-secondary-container text-on-secondary-container"
-              >
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid md:grid-cols-2 lg:grid-cols-4">
+        {
+          services.map((service, i) => (
+            <div class="ruled-cell is-interactive p-7 md:p-8">
+              <span class="cell-index inline-flex items-center justify-center rounded-md px-2.5 py-1 font-mono text-label font-semibold">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 class="mt-5 text-title font-semibold leading-snug text-on-surface">{service.title}</h3>
@@ -159,9 +157,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                 {service.body}
               </p>
             </div>
-          </div>
-        ))
-      }
+          ))
+        }
+      </div>
     </div>
   </Section>
 
@@ -189,7 +187,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   {
     posts.length > 0 && (
       <Section kicker="Writing" title="Notes from the workbench" alt>
-        <div class="mt-10 flex flex-col gap-3">
+        <div class="ruled-list mt-10">
           {posts.map((entry) => (
             <PostCard entry={entry} />
           ))}
@@ -201,6 +199,34 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </Section>
     )
   }
+
+  {/* ------------------------------------------------------- off the clock */}
+  <Section
+    kicker="Off the clock"
+    title="The parts that aren't on the résumé"
+    lead="Same habits, different problems. Most of what I'm good at at work, I practised somewhere else first."
+  >
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-4">
+        {
+          offTheClock.map((item) => (
+            <div class="ruled-cell is-interactive dot-reveal flex flex-col p-7 md:p-8">
+              <p class="font-mono text-label font-semibold uppercase tracking-[0.12em] text-primary">{item.label}</p>
+              <h3 class="mt-4 text-title font-semibold leading-snug text-on-surface">{item.title}</h3>
+              <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">{item.body}</p>
+              {item.href && (
+                <a href={item.href} class="link-underline relative z-10 mt-auto inline-flex items-center gap-1.5 pt-6 font-mono text-caption text-on-surface">
+                  {item.cta}
+                  <Icon name="arrow" size={14} />
+                </a>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
 
   <CallToAction />
 </Base>

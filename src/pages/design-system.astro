@@ -143,7 +143,7 @@ const radii = [
           }
         </div>
         <p class="mt-6 text-body-sm text-on-surface-variant">
-          Use 1 for resting cards, 2 for hover and floating chrome, 3–5 for overlays only. Glow (<code class="font-mono text-primary">shadow-glow</code>) is reserved for the single most important control in view.
+          Cards are flat: depth comes from hairlines, not shadows. Use 2 for floating chrome and 3–5 for overlays only.
         </p>
       </div>
     </div>
@@ -181,19 +181,68 @@ const radii = [
         <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Spotlight card</p>
         <h3 class="mt-3 text-title font-semibold text-on-surface">Hover me</h3>
         <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">
-          The border follows the pointer. Used for anything clickable that leads somewhere: work, posts, contact methods.
+          Square hairline frame. On hover it fills and a signal bar draws across the top. Used for anything clickable that leads somewhere: work, posts.
         </p>
       </article>
 
       <div class="glass-panel p-6">
         <p class="kicker">Glass panel</p>
         <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
-          Translucent, blurred, elevation 2. For chrome that floats over content: the header, callouts.
+          Static callout frame. For asides and floating menus.
         </p>
         <a href="#main" class="link-underline mt-4 inline-block text-body-sm font-medium text-on-surface">Inline link style</a>
       </div>
     </div>
+
+    <h3 class="kicker mt-16">Ruled panel</h3>
+    <div class="ruled-panel mt-5">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid md:grid-cols-3">
+        <div class="ruled-cell p-6">
+          <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Static cell</p>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">Hairline cells inside a framed panel with corner ticks. No hover on content that isn't clickable.</p>
+        </div>
+        <div class="ruled-cell is-interactive p-6">
+          <span class="cell-index inline-flex rounded-md px-2.5 py-1 font-mono text-label font-semibold">02</span>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant"><code class="font-mono">.is-interactive</code> fills the cell and draws the signal bar.</p>
+        </div>
+        <div class="ruled-cell is-interactive dot-reveal p-6">
+          <p class="font-mono text-label uppercase tracking-[0.12em] text-primary">Dot reveal</p>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant"><code class="font-mono">.dot-reveal</code> fades a dot matrix in from the corner.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-2">
+      <div>
+        <h3 class="kicker">Ruled list</h3>
+        <div class="ruled-list mt-5">
+          <div class="p-5 text-body-sm text-on-surface-variant">Rows split by hairlines. Hover draws a bar down the left.</div>
+          <div class="p-5 text-body-sm text-on-surface-variant">Used for the post list.</div>
+        </div>
+      </div>
+      <div>
+        <h3 class="kicker">Ticked frame</h3>
+        <div class="ticked-frame mt-5 max-w-xs">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="grid aspect-[4/3] place-items-center bg-surface-container font-mono text-label text-on-surface-variant">media</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="kicker mt-16">Signal block</h3>
   </Section>
+
+  <section class="signal-block">
+    <div class="wrap relative py-12">
+      <p class="font-mono text-label font-semibold uppercase tracking-[0.14em]">Signal block</p>
+      <p class="mt-3 max-w-xl text-body-lg">Full-bleed amber band with a dot texture, for the one call to action on a page. Pair with <code class="font-mono">.btn-ink</code> and an optional <code class="font-mono">.ticker</code>.</p>
+      <div class="mt-6 flex gap-3">
+        <button class="btn btn-ink" type="button">Ink button</button>
+        <button class="btn btn-tonal" type="button">Tonal</button>
+      </div>
+    </div>
+  </section>
 
   <Section kicker="05 · Long-form" title="Prose">
     <div class="prose mt-10 max-w-3xl">

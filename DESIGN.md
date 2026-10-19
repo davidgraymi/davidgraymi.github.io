@@ -1,6 +1,6 @@
 # Design system — "Instrument Panel"
 
-Amber signal on slate and obsidian. Precise, technical, quiet until something matters.
+Amber signal on ink and white (light) or obsidian (dark). Ruled hairline panels, square cards, pill buttons. Precise, technical, quiet until something matters.
 
 - **Tokens:** [`src/styles/tokens.css`](src/styles/tokens.css)
 - **Components & prose:** [`src/styles/global.css`](src/styles/global.css)
@@ -48,7 +48,9 @@ Inline `style` is fine for genuinely one-off art (the aurora gradients, the LaCA
 | `primary` / `on-primary` | The one action or signal that matters in view. Links in prose. |
 | `primary-container` | Active nav item, "Playable"-style accent chips, quote tint. |
 | `secondary` | Sparing second accent (the hero shimmer, a single badge). |
-| `surface` → `surface-container-highest` | Page → raised layers. Go up one step for each layer of nesting. |
+| `surface` → `surface-container-highest` | Page → raised layers. In light mode the page is white and containers are amber tints, never grey. |
+| `rule-soft` | Inner dividers between ruled cells; quieter than the `outline-variant` frame. |
+| `signal-block` / `on-signal-block` | The full-bleed amber CTA band. |
 | `on-surface` / `on-surface-variant` | Primary text / secondary text and icons. |
 | `outline` / `outline-variant` | Emphasised border (hover) / default hairline. |
 | `error` | Validation and failure states only. |
@@ -75,8 +77,8 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 
 ## Shape, elevation, motion
 
-- **Radius:** `rounded-xs` 4 · `sm` 6 · `md` 10 (buttons) · `lg` 14 · `xl` 16 · `2xl`/`card` 20 (cards) · `3xl` 24 · `full`.
-- **Elevation:** 1 resting cards · 2 hover and floating chrome · 3–5 overlays (command palette, menus).
+- **Radius:** cards and panels are square (`rounded-card` = 0). Buttons and the header are `full` pills. Small chips and index tags use `rounded-md`.
+- **Elevation:** cards are flat; depth comes from hairlines. 2 for floating chrome, 3–5 for overlays (command palette, menus). No glows.
 - **Motion:** 140ms for state changes, 220ms for reveals, 320ms for page-level movement; `ease-standard` by default. Everything collapses to instant under `prefers-reduced-motion`.
 
 ## Components
@@ -87,8 +89,13 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 | `.kicker` | Mono uppercase eyebrow with amber rule | One per section, above the heading |
 | `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px buttons | One primary per view; `disabled` / `aria-disabled` supported |
 | `.surface` | Static card | `--md-comp-card-*` tokens |
-| `.spotlight-card` | Interactive card with pointer-tracked border | Anything that navigates |
-| `.glass-panel` | Translucent blurred panel | Header, callouts |
+| `.spotlight-card` | Interactive card: fills and draws a signal bar on hover | Anything that navigates |
+| `.glass-panel` | Static callout frame | Asides, mobile menu |
+| `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells with corner ticks | Stats, services, metadata. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
+| `.ruled-list` | Rows split by hairlines, left signal bar on hover | Post lists |
+| `.ticked-frame` | Hairline frame with corner ticks around media | Avatars |
+| `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock) |
+| `.signal-block` + `.btn-ink`, `.ticker` | Full-bleed amber CTA with dot texture and scrolling ticker | `CallToAction`; the footer sits flush after it |
 | `.chip` / `.chip-accent` | Tags and tech stack | Accent for at most one chip per card |
 | `.filter-tab` (+ `.active`) | Segmented filter | Work index |
 | `.link-underline` | Inline link outside prose | |

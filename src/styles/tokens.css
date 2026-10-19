@@ -25,8 +25,11 @@
 --------------------------------------------------------------------------- */
 :root {
   /* Amber — the signal colour */
+  --md-ref-amber-50: #fff4e0;
   --md-ref-amber-100: #fef3c7;
+  --md-ref-amber-150: #ffe9c2;
   --md-ref-amber-200: #fed7aa;
+  --md-ref-amber-250: #fddc9f;
   --md-ref-amber-500: #f59e0b;
   --md-ref-amber-600: #d97706;
   --md-ref-amber-800: #a14a07; /* darkened so white-on-amber clears AA */
@@ -53,6 +56,13 @@
   --md-ref-slate-750: #273449;
   --md-ref-slate-800: #1e293b;
   --md-ref-slate-900: #0f172a;
+
+  /* Ink — light-mode text and rules: near-black, never slate-grey */
+  --md-ref-ink-50: #f4f4f5;
+  --md-ref-ink-700: #3f3f46;
+  --md-ref-ink-800: #27272a;
+  --md-ref-ink-900: #18181b;
+  --md-ref-ink-950: #0a0a0a;
 
   /* Red — errors */
   --md-ref-red-100: #fee2e2;
@@ -89,45 +99,55 @@
   /* Accent roles */
   --md-sys-color-primary: light-dark(var(--md-ref-amber-800), var(--md-ref-amber-500));
   --md-sys-color-on-primary: light-dark(var(--md-ref-paper-0), var(--md-ref-amber-ink));
-  --md-sys-color-primary-container: light-dark(var(--md-ref-amber-100), var(--md-ref-amber-900));
-  --md-sys-color-on-primary-container: light-dark(var(--md-ref-amber-950), var(--md-ref-amber-200));
+  --md-sys-color-primary-container: light-dark(var(--md-ref-amber-500), var(--md-ref-amber-900));
+  --md-sys-color-on-primary-container: light-dark(var(--md-ref-amber-ink), var(--md-ref-amber-200));
 
   --md-sys-color-secondary: light-dark(var(--md-ref-sky-700), var(--md-ref-sky-400));
   --md-sys-color-on-secondary: light-dark(var(--md-ref-paper-0), var(--md-ref-sky-950));
   --md-sys-color-secondary-container: light-dark(var(--md-ref-sky-100), var(--md-ref-sky-900));
   --md-sys-color-on-secondary-container: light-dark(var(--md-ref-sky-950), var(--md-ref-sky-200));
 
-  --md-sys-color-tertiary: light-dark(var(--md-ref-slate-600), var(--md-ref-slate-400));
+  --md-sys-color-tertiary: light-dark(var(--md-ref-ink-800), var(--md-ref-slate-400));
   --md-sys-color-on-tertiary: light-dark(var(--md-ref-paper-0), var(--md-ref-slate-900));
-  --md-sys-color-tertiary-container: light-dark(var(--md-ref-slate-100), var(--md-ref-slate-800));
-  --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-slate-900), var(--md-ref-slate-200));
+  --md-sys-color-tertiary-container: light-dark(var(--md-ref-paper-0), var(--md-ref-slate-800));
+  --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-200));
 
   --md-sys-color-error: light-dark(var(--md-ref-red-600), var(--md-ref-red-500));
   --md-sys-color-on-error: light-dark(var(--md-ref-paper-0), var(--md-ref-red-950));
   --md-sys-color-error-container: light-dark(var(--md-ref-red-100), var(--md-ref-red-900));
   --md-sys-color-on-error-container: light-dark(var(--md-ref-red-950), var(--md-ref-red-200));
 
-  /* Surfaces: page → lowest → … → highest = further "up" toward the reader */
-  --md-sys-color-surface: light-dark(var(--md-ref-paper-50), var(--md-ref-obsidian-100));
-  --md-sys-color-surface-dim: light-dark(var(--md-ref-paper-300), var(--md-ref-obsidian-50));
+  /* Surfaces: page → lowest → … → highest = further "up" toward the reader.
+     Light mode is white ground with amber-tinted containers — no grey fills. */
+  --md-sys-color-surface: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-100));
+  --md-sys-color-surface-dim: light-dark(var(--md-ref-ink-50), var(--md-ref-obsidian-50));
   --md-sys-color-surface-bright: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-600));
   --md-sys-color-surface-container-lowest: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-0));
-  --md-sys-color-surface-container-low: light-dark(var(--md-ref-paper-100), var(--md-ref-obsidian-200));
-  --md-sys-color-surface-container: light-dark(var(--md-ref-paper-150), var(--md-ref-obsidian-300));
-  --md-sys-color-surface-container-high: light-dark(var(--md-ref-paper-200), var(--md-ref-obsidian-400));
-  --md-sys-color-surface-container-highest: light-dark(var(--md-ref-paper-250), var(--md-ref-obsidian-500));
+  --md-sys-color-surface-container-low: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-200));
+  --md-sys-color-surface-container: light-dark(var(--md-ref-amber-50), var(--md-ref-obsidian-300));
+  --md-sys-color-surface-container-high: light-dark(var(--md-ref-amber-150), var(--md-ref-obsidian-400));
+  --md-sys-color-surface-container-highest: light-dark(var(--md-ref-amber-250), var(--md-ref-obsidian-500));
 
   /* Content on surfaces */
-  --md-sys-color-on-surface: light-dark(var(--md-ref-slate-900), var(--md-ref-slate-100));
-  --md-sys-color-on-surface-variant: light-dark(var(--md-ref-slate-600), var(--md-ref-slate-400));
-  --md-sys-color-outline: var(--md-ref-slate-500);
-  --md-sys-color-outline-variant: light-dark(var(--md-ref-slate-300), var(--md-ref-slate-750));
+  --md-sys-color-on-surface: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-100));
+  --md-sys-color-on-surface-variant: light-dark(var(--md-ref-ink-700), var(--md-ref-slate-400));
+  --md-sys-color-outline: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-500));
+  --md-sys-color-outline-variant: light-dark(var(--md-ref-ink-900), var(--md-ref-slate-750));
+  /* Inner dividers between ruled cells: much quieter than the frame */
+  --md-sys-color-rule-soft: light-dark(
+    color-mix(in srgb, var(--md-ref-ink-900) 14%, transparent),
+    color-mix(in srgb, var(--md-ref-slate-750) 80%, transparent)
+  );
 
-  --md-sys-color-inverse-surface: light-dark(var(--md-ref-slate-800), var(--md-ref-slate-100));
+  --md-sys-color-inverse-surface: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-100));
   --md-sys-color-inverse-on-surface: light-dark(var(--md-ref-slate-50), var(--md-ref-slate-900));
   --md-sys-color-inverse-primary: light-dark(var(--md-ref-amber-500), var(--md-ref-amber-600));
 
   --md-sys-color-scrim: #000000;
+
+  /* Signal block: the full-bleed amber band (CTA). Same in both themes. */
+  --md-sys-color-signal-block: var(--md-ref-amber-500);
+  --md-sys-color-on-signal-block: var(--md-ref-amber-ink);
 
   /* Effects derived from the roles above */
   --md-sys-color-glow: light-dark(
@@ -135,7 +155,7 @@
     color-mix(in srgb, var(--md-ref-amber-500) 35%, transparent)
   );
   --md-sys-color-gridline: light-dark(
-    color-mix(in srgb, var(--md-ref-slate-300) 30%, transparent),
+    color-mix(in srgb, var(--md-ref-ink-900) 8%, transparent),
     color-mix(in srgb, var(--md-ref-slate-750) 45%, transparent)
   );
 
@@ -191,18 +211,21 @@
 
   --md-comp-button-height: 2.75rem; /* 44px: minimum touch target */
   --md-comp-button-padding-x: 1.35rem;
-  --md-comp-button-radius: var(--md-sys-shape-corner-medium);
+  --md-comp-button-radius: var(--md-sys-shape-corner-full);
   --md-comp-button-font-size: 0.9375rem;
 
-  --md-comp-card-radius: var(--md-sys-shape-corner-extra-large);
-  --md-comp-card-bg: var(--md-sys-color-surface-container-low);
+  /* Cards are square hairline frames. Hover fills the cell and draws a signal bar. */
+  --md-comp-card-radius: var(--md-sys-shape-corner-none);
+  --md-comp-card-bg: var(--md-sys-color-surface);
+  --md-comp-card-bg-hover: var(--md-sys-color-surface-container);
   --md-comp-card-border: var(--md-sys-color-outline-variant);
-  --md-comp-card-border-hover: color-mix(in srgb, var(--md-sys-color-primary) 65%, var(--md-sys-color-outline));
-  --md-comp-card-shadow: var(--md-sys-elevation-1);
-  --md-comp-card-shadow-hover: var(--md-sys-elevation-2), 0 0 20px -4px var(--md-sys-color-glow);
+  --md-comp-card-shadow: none;
+  --md-comp-card-bar-height: 2px;
+
+  --md-comp-tick-size: 7px;
 
   --md-comp-chip-radius: var(--md-sys-shape-corner-small);
-  --md-comp-chip-bg: var(--md-sys-color-surface-container);
+  --md-comp-chip-bg: var(--md-sys-color-surface);
   --md-comp-chip-border: var(--md-sys-color-outline-variant);
 }
 
@@ -249,6 +272,9 @@
   --color-on-error-container: var(--md-sys-color-on-error-container);
 
   --color-glow: var(--md-sys-color-glow);
+  --color-rule-soft: var(--md-sys-color-rule-soft);
+  --color-signal-block: var(--md-sys-color-signal-block);
+  --color-on-signal-block: var(--md-sys-color-on-signal-block);
 
   /* Shape → rounded-* */
   --radius-xs: var(--md-sys-shape-corner-extra-small);
