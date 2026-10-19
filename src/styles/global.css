@@ -708,3 +708,15 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   .resume .space-y-6 > * + * { margin-top: 0.7rem; }
   a { color: inherit; text-decoration: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   Page transitions: native cross-document view transitions, no JavaScript.
+   Browsers without support just navigate. The header holds still while the
+   page underneath cross-fades.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .site-header { view-transition-name: site-header; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 180ms; }
+}

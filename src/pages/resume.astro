@@ -109,7 +109,7 @@ const contact = [
             {
               publications.map((p) => (
                 <li class="resume-item text-body-sm leading-relaxed text-on-surface-variant">
-                  {p.authors.replace(/\.$/, '')}. “{p.href ? <a href={p.href} class="text-on-surface hover:text-primary">{p.title}</a> : <span class="text-on-surface">{p.title}</span>}.” {p.venue}, {p.year}.
+                  {p.authors.replace(/\.$/, '')}. “{p.href ? <a href={p.href} class="text-on-surface underline decoration-outline underline-offset-2 hover:text-primary">{p.title}</a> : <span class="text-on-surface">{p.title}</span>}.” {p.venue}, {p.year}.
                 </li>
               ))
             }
