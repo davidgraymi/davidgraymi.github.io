@@ -23,7 +23,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <Base jsonLd={[websiteSchema, personSchema]}>
   {/* ---------------------------------------------------------------- hero */}
-  <section class="gridlines relative overflow-hidden border-b border-outline-variant">
+  <section class="dot-field relative overflow-hidden border-b border-outline-variant">
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-px"
       style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent) 50%, transparent 95%); opacity: 0.8"

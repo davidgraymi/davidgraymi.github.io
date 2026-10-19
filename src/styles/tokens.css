@@ -154,9 +154,9 @@
     color-mix(in srgb, var(--md-ref-amber-800) 28%, transparent),
     color-mix(in srgb, var(--md-ref-amber-500) 35%, transparent)
   );
-  --md-sys-color-gridline: light-dark(
-    color-mix(in srgb, var(--md-ref-ink-900) 8%, transparent),
-    color-mix(in srgb, var(--md-ref-slate-750) 45%, transparent)
+  --md-sys-color-dot-field: light-dark(
+    color-mix(in srgb, var(--md-ref-ink-900) 22%, transparent),
+    color-mix(in srgb, var(--md-ref-slate-400) 28%, transparent)
   );
 
   /* Elevation: two shadow colours per theme, levels scale their strength */
