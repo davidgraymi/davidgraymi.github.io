@@ -10,6 +10,7 @@ import Icon from '~/components/Icon.astro';
 import { site, socials } from '~/site.config';
 import { offTheClock, services, stats } from '~/data/resume';
 import avatar from '~/assets/avatar.png';
+import { personSchema, websiteSchema } from '~/lib/schema';
 
 const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => a.data.order - b.data.order)
@@ -20,7 +21,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 3);
 ---
 
-<Base>
+<Base jsonLd={[websiteSchema, personSchema]}>
   {/* ---------------------------------------------------------------- hero */}
   <section class="gridlines relative overflow-hidden border-b border-outline-variant">
     <div

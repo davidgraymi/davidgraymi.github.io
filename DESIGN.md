@@ -95,6 +95,7 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 | `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells with corner ticks | Stats, services, metadata, project and album grids (`WorkCard` is a cell), prev/next links. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
 | `.ruled-list` | Rows split by hairlines, left signal bar on hover | Post lists |
 | `.ticked-frame` | Hairline frame with corner ticks around media | Avatars |
+| `TableOfContents` component | "On this page" map for long posts | Shown when a post has 3+ `h2`s. Collapsible `.glass-panel` below `xl`; sticky rail with a left signal bar on the current section from `xl` |
 | `BackLink` component | Mono label with a square arrow box | Top of every detail page (work, post, album) instead of a pill |
 | `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock), key-metric aside, empty states |
 | `.signal-block` + `.btn-ink`, `.ticker` | Full-bleed amber CTA with dot texture and scrolling ticker | `CallToAction`; the footer sits flush after it |
