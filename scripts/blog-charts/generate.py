@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 from matplotlib.colors import LinearSegmentedColormap, LogNorm, Normalize  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
-from matplotlib.ticker import FixedLocator, FuncFormatter, LogLocator, NullLocator  # noqa: E402
+from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(__file__).resolve().parent / "data"
@@ -311,7 +311,11 @@ def small_multiples(data, frameworks, batches, field, ylabel, name, theme, log=T
         ax.set_xscale("log", base=2)
         if log:
             ax.set_yscale("log")
-            ax.yaxis.set_major_locator(LogLocator(base=10, subs=(1, 3)))
+            # LogLocator labels every integer when a panel spans < 1 decade, so pick the
+            # steps ourselves: 1-2-5 for narrow panels, 1-3-10 for wide ones.
+            lo, hi = ax.get_ylim()
+            steps = (1, 2, 5) if np.log10(hi / lo) < 1.5 else (1, 3)
+            ax.yaxis.set_major_locator(FixedLocator([m * 10.0**e for e in range(-3, 4) for m in steps]))
             ax.yaxis.set_major_formatter(FuncFormatter(plain))
             ax.yaxis.set_minor_locator(NullLocator())
         else:
