@@ -102,7 +102,7 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 | `.chip` / `.chip-accent` | Tags and tech stack | Accent for at most one chip per card |
 | `.filter-tab` (+ `.active`) | Segmented filter | Work index |
 | `.link-underline` | Inline link outside prose | |
-| `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | Page headers |
+| `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | Page headers. `DotField.astro` enhances the first one on idle (pointer repel, hidden Game of Life); keep the CSS as the no-JS rendering |
 | `.prose` | Long-form article styles | Blog posts, case studies. Images, code blocks and quotes are square like everything else |
 
 ## Checklist for new UI
