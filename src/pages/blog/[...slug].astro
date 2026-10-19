@@ -42,6 +42,7 @@ const jsonLd = {
   wordCount: words,
   url: new URL(`/blog/${entry.id}`, Astro.site).href,
   mainEntityOfPage: new URL(`/blog/${entry.id}`, Astro.site).href,
+  image: new URL(`/og/blog/${entry.id}.png`, Astro.site).href,
   author: { '@type': 'Person', name: site.name, url: site.url },
 };
 ---
