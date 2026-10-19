@@ -4,8 +4,8 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '~/layouts/Base.astro';
 import FormattedDate from '~/components/FormattedDate.astro';
-import Icon from '~/components/Icon.astro';
-import { site } from '~/site.config';
+import BackLink from '~/components/BackLink.astro';
+import CallToAction from '~/components/CallToAction.astro';
 
 export const getStaticPaths = (async () => {
   const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -20,38 +20,46 @@ export const getStaticPaths = (async () => {
 const { entry, newer, older } = Astro.props;
 const { Content } = await render(entry);
 const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entry.data;
+
+// ~230 wpm, ignoring code fences so a long listing doesn't inflate it
+const words = (entry.body ?? '').replace(/```[\s\S]*?```/g, '').split(/\s+/).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.round(words / 230));
 ---
 
 <Base title={title} description={description} type="article">
   <article>
-    <header class="border-b border-outline-variant">
-      <div class="wrap max-w-3xl py-14 md:py-18">
-        <a
-          href="/blog"
-          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-label uppercase tracking-[0.12em] transition-all duration-200 hover:border-primary hover:text-primary text-on-surface-variant border-outline-variant bg-surface-container"
-        >
-          <span class="rotate-180 leading-none"><Icon name="arrow" size={13} /></span>
-          Writing
-        </a>
+    <header class="gridlines border-b border-outline-variant">
+      <div class="wrap max-w-4xl py-14 md:py-18">
+        <BackLink href="/blog" label="Writing" />
 
         <h1 class="mt-6 font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
+        <p class="mt-4 max-w-2xl text-title-sm leading-relaxed text-on-surface-variant">{description}</p>
 
-        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-label text-on-surface-variant">
-          <span class="rounded-full px-2.5 py-0.5 font-semibold bg-surface-container-high text-primary">
-            <FormattedDate date={pubDate} />
-          </span>
-          {updatedDate && <span>· updated <FormattedDate date={updatedDate} /></span>}
-          {
-            tags.length > 0 && (
-              <span class="flex flex-wrap gap-1.5 pl-2">
-                {tags.map((t) => (
-                  <span class="rounded-full border px-2 py-0.5 text-label border-outline-variant bg-surface-container">
-                    #{t}
+        <div class="ruled-panel mt-10">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <dl class="ruled-grid sm:grid-cols-[auto_auto_1fr]">
+            <div class="ruled-cell p-5 sm:pr-10">
+              <dt class="kicker">Published</dt>
+              <dd class="mt-2 font-mono text-body font-medium text-on-surface">
+                <FormattedDate date={pubDate} />
+                {updatedDate && (
+                  <span class="block text-label font-normal text-on-surface-variant">
+                    updated <FormattedDate date={updatedDate} />
                   </span>
-                ))}
-              </span>
-            )
-          }
+                )}
+              </dd>
+            </div>
+            <div class="ruled-cell p-5 sm:pr-10">
+              <dt class="kicker">Read</dt>
+              <dd class="mt-2 font-mono text-body font-medium text-on-surface">{readingMinutes} min</dd>
+            </div>
+            <div class="ruled-cell p-5">
+              <dt class="kicker">Tags</dt>
+              <dd class="mt-2.5 flex flex-wrap gap-1.5 font-mono text-label">
+                {tags.length > 0 ? tags.map((t) => <span class="chip">#{t}</span>) : <span class="text-on-surface-variant">—</span>}
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
     </header>
@@ -64,7 +72,7 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
             alt={coverAlt}
             widths={[720, 1200]}
             sizes="(min-width: 768px) 48rem, 100vw"
-            class="mb-12 w-full overflow-hidden border border-outline-variant bg-surface-container-low"
+            class="mb-12 w-full border border-outline-variant bg-surface-container-low"
           />
         )
       }
@@ -73,41 +81,34 @@ const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entr
         <Content />
       </div>
 
-      <div class="mt-16 border-t pt-8 border-outline-variant">
-        <p class="text-body leading-relaxed text-on-surface-variant">
-          Thoughts, corrections, or something I got wrong? I actually want to hear it —
-          <a href={`mailto:${site.email}`} class="link-underline text-primary">
-            {site.email}
-          </a>.
-        </p>
-      </div>
-
       {
         (newer || older) && (
-          <nav class="mt-10 grid gap-4 border-t pt-8 sm:grid-cols-2 border-outline-variant" aria-label="More posts">
-            {newer ? (
-              <a
-                href={`/blog/${newer.id}`}
-                class="spotlight-card p-5.5"
-              >
-                <p class="kicker">Newer</p>
-                <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
-              </a>
-            ) : (
-              <span />
-            )}
-            {older && (
-              <a
-                href={`/blog/${older.id}`}
-                class="spotlight-card p-5.5 text-right"
-              >
-                <p class="kicker justify-end">Older</p>
-                <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>
-              </a>
-            )}
+          <nav class="ruled-panel mt-16" aria-label="More posts">
+            <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+            <div class="ruled-grid sm:grid-cols-2">
+              {newer ? (
+                <a href={`/blog/${newer.id}`} class="ruled-cell is-interactive block p-5.5">
+                  <p class="kicker">Newer</p>
+                  <p class="mt-2.5 text-base font-semibold text-on-surface">{newer.data.title}</p>
+                </a>
+              ) : (
+                <span class="ruled-cell hidden sm:block" />
+              )}
+              {older && (
+                <a href={`/blog/${older.id}`} class="ruled-cell is-interactive block p-5.5 sm:text-right">
+                  <p class="kicker sm:flex-row-reverse">Older</p>
+                  <p class="mt-2.5 text-base font-semibold text-on-surface">{older.data.title}</p>
+                </a>
+              )}
+            </div>
           </nav>
         )
       }
     </div>
   </article>
+
+  <CallToAction
+    title="Spot something I got wrong?"
+    body="Corrections, follow-up questions, or a war story of your own. I read every message and reply to the ones that aren't a template."
+  />
 </Base>

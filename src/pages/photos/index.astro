@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Base from '~/layouts/Base.astro';
 import PageHeader from '~/components/PageHeader.astro';
 import Icon from '~/components/Icon.astro';
+import CallToAction from '~/components/CallToAction.astro';
 
 const albums = (await getCollection('photos', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -26,28 +27,34 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
   <div class="wrap py-14 md:py-20">
     {
       albums.length === 0 ? (
-        <div
-          class="surface flex max-w-xl flex-col items-start p-8"
-        >
-          <span
-            class="grid h-12 w-12 place-items-center rounded-md text-primary bg-surface-container-high"
-          >
-            <Icon name="camera" size={26} />
-          </span>
-          <p class="mt-5 text-title-sm font-semibold text-on-surface">Still sorting through the card.</p>
-          <p class="mt-2 text-body leading-relaxed text-on-surface-variant">
-            The first albums from diving and climbing trips are on their way. In the meantime, the
-            <a href="/work" class="link-underline">work</a> and <a href="/blog" class="link-underline">writing</a> are all here.
-          </p>
+        <div class="ruled-panel dot-reveal max-w-2xl">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="flex flex-col items-start p-8 md:p-10">
+            <span class="grid h-12 w-12 place-items-center border border-outline-variant text-primary">
+              <Icon name="camera" size={24} />
+            </span>
+            <p class="mt-6 font-mono text-label font-semibold uppercase tracking-[0.12em] text-primary">Developing</p>
+            <p class="mt-2 text-title font-semibold text-on-surface">Still sorting through the card.</p>
+            <p class="mt-2 text-body leading-relaxed text-on-surface-variant">
+              The first albums from diving and climbing trips are on their way. Until then, there's plenty
+              of the other kind of work to look at.
+            </p>
+            <div class="mt-7 flex flex-wrap gap-3">
+              <a href="/work" class="btn btn-primary">See the work <Icon name="arrow" size={16} /></a>
+              <a href="/blog" class="btn btn-ghost">Read the writing</a>
+            </div>
+          </div>
         </div>
       ) : (
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="ruled-panel">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-3">
           {albums.map((album) => {
             const cover = coverOf(album);
             return (
               <a
                 href={`/photos/${album.id}`}
-                class="spotlight-card group relative overflow-hidden"
+                class="ruled-cell is-interactive group block"
               >
                 {cover && (
                   <div class="aspect-[4/3] overflow-hidden bg-surface-container">
@@ -61,7 +68,7 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
                     />
                   </div>
                 )}
-                <div class="border-t p-5.5 border-outline-variant">
+                <div class="border-t border-rule-soft p-5.5">
                   <h2 class="text-title-sm font-semibold transition-colors group-hover:text-primary text-on-surface">{album.data.title}</h2>
                   <p class="mt-1.5 font-mono text-label text-on-surface-variant">
                     {album.data.location && `${album.data.location} · `}
@@ -72,8 +79,14 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
               </a>
             );
           })}
+          </div>
         </div>
       )
     }
   </div>
+
+  <CallToAction
+    title="Know a good dive site?"
+    body="Or a crag, a trail, or a game I should be playing. Recommendations are as welcome as work."
+  />
 </Base>

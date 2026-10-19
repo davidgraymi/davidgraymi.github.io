@@ -169,8 +169,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     title="A few things worth showing"
     lead="Some of it shipped to production on hardware I'll never see again. Some of it is a side project my wife asked for. Both taught me something."
   >
-    <div class="mt-12 grid gap-6 md:grid-cols-3">
-      {featured.map((entry) => <WorkCard entry={entry} />)}
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid md:grid-cols-3">
+        {featured.map((entry) => <WorkCard entry={entry} />)}
+      </div>
     </div>
     <div class="mt-10 flex flex-wrap items-center gap-4">
       <a href="/work" class="btn btn-ghost">

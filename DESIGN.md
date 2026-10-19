@@ -91,16 +91,17 @@ Roboto Flex (sans) for reading, JetBrains Mono for labels, data, and metadata. *
 | `.surface` | Static card | `--md-comp-card-*` tokens |
 | `.spotlight-card` | Interactive card: fills and draws a signal bar on hover | Anything that navigates |
 | `.glass-panel` | Static callout frame | Asides, mobile menu |
-| `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells with corner ticks | Stats, services, metadata. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
+| `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells with corner ticks | Stats, services, metadata, project and album grids (`WorkCard` is a cell), prev/next links. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
 | `.ruled-list` | Rows split by hairlines, left signal bar on hover | Post lists |
 | `.ticked-frame` | Hairline frame with corner ticks around media | Avatars |
-| `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock) |
+| `BackLink` component | Mono label with a square arrow box | Top of every detail page (work, post, album) instead of a pill |
+| `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock), key-metric aside, empty states |
 | `.signal-block` + `.btn-ink`, `.ticker` | Full-bleed amber CTA with dot texture and scrolling ticker | `CallToAction`; the footer sits flush after it |
 | `.chip` / `.chip-accent` | Tags and tech stack | Accent for at most one chip per card |
 | `.filter-tab` (+ `.active`) | Segmented filter | Work index |
 | `.link-underline` | Inline link outside prose | |
 | `.gridlines` | Faint 4rem grid background | Page headers |
-| `.prose` | Long-form article styles | Blog posts, case studies |
+| `.prose` | Long-form article styles | Blog posts, case studies. Images, code blocks and quotes are square like everything else |
 
 ## Checklist for new UI
 

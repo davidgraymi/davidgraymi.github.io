@@ -560,12 +560,11 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   padding-left: 1.25em;
   color: var(--md-sys-color-on-surface-variant);
   font-style: italic;
-  border-radius: 0 var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0;
-  background: color-mix(in srgb, var(--md-sys-color-primary-container) 15%, transparent);
+  background: var(--md-sys-color-surface-container);
   padding-block: 0.6em;
 }
+/* Figures sit in the same square hairline frame as everything else */
 .prose img, .prose video {
-  border-radius: var(--md-sys-shape-corner-extra-large);
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 .prose hr {
@@ -585,7 +584,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   font-size: 0.875rem;
   line-height: 1.65;
   padding: 1.2rem 1.4rem;
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: var(--md-sys-shape-corner-none);
   border: 1px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container-low) !important;
   overflow-x: auto;
@@ -601,8 +600,11 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   font-size: 0.9375rem;
   border-collapse: collapse;
 }
-.prose th, .prose td {
+.prose table {
   border: 1px solid var(--md-sys-color-outline-variant);
+}
+.prose th, .prose td {
+  border: 1px solid var(--md-sys-color-rule-soft);
   padding: 0.6rem 0.85rem;
   text-align: left;
 }
