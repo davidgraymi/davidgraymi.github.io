@@ -470,12 +470,12 @@
     color: var(--md-sys-color-on-primary-container);
   }
 
-  /* Subtle Gridlines */
-  .gridlines {
+  /* Dot field: the signal-block texture in ink, fading up into the surface */
+  .dot-field {
     background-image:
-      linear-gradient(to right, var(--md-sys-color-gridline) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--md-sys-color-gridline) 1px, transparent 1px);
-    background-size: 4rem 4rem;
+      linear-gradient(to bottom, var(--md-sys-color-surface), transparent 75%),
+      radial-gradient(var(--md-sys-color-dot-field) 1px, transparent 1.5px);
+    background-size: 100% 100%, 12px 12px;
   }
 
   .link-underline {
