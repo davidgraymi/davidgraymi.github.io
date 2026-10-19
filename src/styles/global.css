@@ -106,18 +106,18 @@
      Light-mode amber is darkened so text and white-on-amber buttons clear WCAG AA (≥4.5:1). */
   --md-sys-color-primary: #a14a07;
   --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #fef3c7;
-  --md-sys-color-on-primary-container: #451a03;
+  --md-sys-color-primary-container: #f59e0b;
+  --md-sys-color-on-primary-container: #1a1200;
 
   --md-sys-color-secondary: #0284c7;
   --md-sys-color-on-secondary: #ffffff;
   --md-sys-color-secondary-container: #e0f2fe;
   --md-sys-color-on-secondary-container: #082f49;
 
-  --md-sys-color-tertiary: #475569;
+  --md-sys-color-tertiary: #27272a;
   --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #f1f5f9;
-  --md-sys-color-on-tertiary-container: #0f172a;
+  --md-sys-color-tertiary-container: #ffffff;
+  --md-sys-color-on-tertiary-container: #0a0a0a;
 
   --md-sys-color-error: #dc2626;
   --md-sys-color-on-error: #ffffff;
@@ -125,21 +125,21 @@
   --md-sys-color-on-error-container: #450a0a;
 
   /* Surface Container Hierarchy */
-  --md-sys-color-surface: #f8f9fb;
-  --md-sys-color-surface-dim: #d8dde6;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-surface-dim: #f4f4f5;
   --md-sys-color-surface-bright: #ffffff;
   --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #f1f3f7;
-  --md-sys-color-surface-container: #eaedf2;
-  --md-sys-color-surface-container-high: #e2e6ed;
-  --md-sys-color-surface-container-highest: #dadfe7;
+  --md-sys-color-surface-container-low: #ffffff;
+  --md-sys-color-surface-container: #fff4e0;
+  --md-sys-color-surface-container-high: #ffe9c2;
+  --md-sys-color-surface-container-highest: #fddc9f;
 
-  --md-sys-color-on-surface: #0f172a;
-  --md-sys-color-on-surface-variant: #475569;
-  --md-sys-color-outline: #64748b;
-  --md-sys-color-outline-variant: #cbd5e1;
+  --md-sys-color-on-surface: #0a0a0a;
+  --md-sys-color-on-surface-variant: #3f3f46;
+  --md-sys-color-outline: #0a0a0a;
+  --md-sys-color-outline-variant: #18181b;
 
-  --md-sys-color-inverse-surface: #1e293b;
+  --md-sys-color-inverse-surface: #0a0a0a;
   --md-sys-color-inverse-on-surface: #f8fafc;
   --md-sys-color-inverse-primary: #f59e0b;
 
@@ -169,7 +169,7 @@
 
   /* Elevation Shadows */
   --md-sys-elevation-0: none;
-  --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --md-sys-elevation-1: none;
   --md-sys-elevation-2: 0 3px 8px 2px rgba(0, 0, 0, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
   --md-sys-elevation-3: 0 6px 14px 3px rgba(0, 0, 0, 0.08), 0 2px 5px 0 rgba(0, 0, 0, 0.06);
   --md-sys-elevation-4: 0 10px 22px 4px rgba(0, 0, 0, 0.1), 0 3px 8px 0 rgba(0, 0, 0, 0.06);
@@ -187,8 +187,11 @@
   --signal-glow: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
   --signal-soft: var(--md-sys-color-primary-container);
   --signal-contrast: var(--md-sys-color-on-primary);
-  --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 30%, transparent);
+  --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 8%, transparent);
   --shadow-card: var(--md-sys-elevation-1);
+  --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 14%, transparent);
+  --signal-block-bg: #f59e0b;
+  --signal-block-fg: #1a1200;
 }
 
 /* ---------------------------------------------------------------------------
@@ -261,6 +264,9 @@
   --signal-contrast: var(--md-sys-color-on-primary);
   --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 45%, transparent);
   --shadow-card: var(--md-sys-elevation-1);
+  --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 80%, transparent);
+  --signal-block-bg: #f59e0b;
+  --signal-block-fg: #1a1200;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -325,6 +331,9 @@
     --signal-contrast: var(--md-sys-color-on-primary);
     --grid: color-mix(in srgb, var(--md-sys-color-outline-variant) 45%, transparent);
     --shadow-card: var(--md-sys-elevation-1);
+    --rule-soft: color-mix(in srgb, var(--md-sys-color-outline-variant) 80%, transparent);
+    --signal-block-bg: #f59e0b;
+    --signal-block-fg: #1a1200;
   }
 }
 
@@ -663,6 +672,140 @@
     box-shadow: var(--md-sys-elevation-1), 0 0 16px -2px var(--signal-glow);
   }
 
+  /* -------------------------------------------------------------------------
+     Ruled Panel: hairline cells with corner ticks (instrument-panel layout).
+     Wrap cells in .ruled-panel > .ruled-grid; add four .tick spans for corners.
+  ------------------------------------------------------------------------- */
+  .ruled-panel {
+    position: relative;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface);
+  }
+  .ruled-panel > .tick {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    z-index: 1;
+  }
+  .ruled-panel > .tick-tl { top: -4px; left: -4px; }
+  .ruled-panel > .tick-tr { top: -4px; right: -4px; }
+  .ruled-panel > .tick-bl { bottom: -4px; left: -4px; }
+  .ruled-panel > .tick-br { bottom: -4px; right: -4px; }
+
+  .ruled-grid {
+    display: grid;
+    overflow: hidden;
+  }
+  .ruled-cell {
+    position: relative;
+    box-shadow: 1px 0 0 var(--rule-soft), 0 1px 0 var(--rule-soft);
+    transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  /* Signal bar that draws across the top of a cell on hover */
+  .ruled-cell.is-interactive::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: var(--md-sys-color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-emphasized);
+  }
+  .ruled-cell.is-interactive:hover,
+  .ruled-cell.is-interactive:focus-within {
+    background: var(--md-sys-color-surface-container);
+  }
+  .ruled-cell.is-interactive:hover::before,
+  .ruled-cell.is-interactive:focus-within::before {
+    transform: scaleX(1);
+  }
+  .ruled-cell .cell-index {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+                color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .ruled-cell.is-interactive:hover .cell-index {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+
+  /* Dot-matrix field that fades in from one corner of a cell on hover */
+  .dot-reveal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(var(--md-sys-color-primary) 1px, transparent 1.4px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
+    mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard);
+  }
+  .dot-reveal:hover::after,
+  .dot-reveal:focus-within::after {
+    opacity: 0.45;
+  }
+
+  /* Signal Block: full-bleed amber band with a dot texture */
+  .signal-block {
+    position: relative;
+    background-color: var(--signal-block-bg);
+    color: var(--signal-block-fg);
+    overflow: hidden;
+  }
+  .signal-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(color-mix(in srgb, var(--signal-block-fg) 22%, transparent) 1px, transparent 1.5px);
+    background-size: 12px 12px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 70%);
+    mask-image: linear-gradient(to bottom, transparent, #000 70%);
+  }
+  .signal-block .btn-ink {
+    background: var(--signal-block-fg);
+    color: var(--signal-block-bg);
+    border-radius: var(--md-sys-shape-corner-full);
+  }
+  .signal-block .btn-ink:hover { transform: translateY(-1px); }
+  .signal-block .btn-tonal {
+    background: transparent;
+    color: var(--signal-block-fg);
+    border-color: color-mix(in srgb, var(--signal-block-fg) 45%, transparent);
+    border-radius: var(--md-sys-shape-corner-full);
+  }
+  .signal-block .btn-tonal:hover {
+    background: color-mix(in srgb, var(--signal-block-fg) 10%, transparent);
+    border-color: var(--signal-block-fg);
+  }
+  .signal-block .btn-tonal .copy-done { color: inherit !important; }
+
+  /* Ticker: endless horizontal strip under the signal block */
+  .ticker {
+    display: flex;
+    overflow: hidden;
+    border-top: 1px solid color-mix(in srgb, var(--signal-block-fg) 25%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .ticker-track {
+    display: flex;
+    flex: none;
+    gap: 2.5rem;
+    padding: 0.9rem 1.25rem;
+    animation: ticker 40s linear infinite;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes ticker {
+    to { transform: translateX(-100%); }
+  }
+
   /* Subtle Gridlines */
   .gridlines {
     background-image:
@@ -684,6 +827,10 @@
     color: var(--md-sys-color-primary);
   }
 }
+
+/* When a page ends on the signal block, the footer sits flush against it.
+   Unlayered so it wins over the footer's mt-24 utility. */
+main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {

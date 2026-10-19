@@ -8,7 +8,7 @@ import PostCard from '~/components/PostCard.astro';
 import CallToAction from '~/components/CallToAction.astro';
 import Icon from '~/components/Icon.astro';
 import { site, socials } from '~/site.config';
-import { services, stats } from '~/data/resume';
+import { offTheClock, services, stats } from '~/data/resume';
 import avatar from '~/assets/avatar.png';
 
 const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
@@ -121,23 +121,23 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         </div>
       </div>
 
-      {/* Stats Cards: Precision Blocks */}
-      <div class="mt-16 grid grid-cols-2 gap-4 border-t pt-10 sm:grid-cols-2 md:grid-cols-4 md:gap-5" style="border-color: var(--md-sys-color-outline-variant);">
-        {
-          stats.map((stat) => (
-            <div
-              class="rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5"
-              style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); box-shadow: var(--md-sys-elevation-1);"
-            >
-              <p class="font-mono text-[28px] font-bold tracking-tight md:text-[32px]" style="color: var(--md-sys-color-primary)">
-                {stat.value}
-              </p>
-              <p class="mt-1 text-[13.5px] leading-snug font-medium" style="color: var(--md-sys-color-on-surface-variant)">
-                {stat.label}
-              </p>
-            </div>
-          ))
-        }
+      {/* Stats: ruled telemetry strip */}
+      <div class="ruled-panel mt-16">
+        <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+        <div class="ruled-grid grid-cols-2 md:grid-cols-4">
+          {
+            stats.map((stat) => (
+              <div class="ruled-cell p-5 md:p-6">
+                <p class="font-mono text-[28px] font-bold tracking-tight md:text-[32px]" style="color: var(--md-sys-color-primary)">
+                  {stat.value}
+                </p>
+                <p class="mt-1 text-[13.5px] leading-snug font-medium" style="color: var(--md-sys-color-on-surface-variant)">
+                  {stat.label}
+                </p>
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
   </section>
@@ -149,14 +149,14 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
     alt
   >
-    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {
-        services.map((service, i) => (
-          <div class="spotlight-card flex flex-col justify-between p-7 md:p-8">
-            <div>
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid md:grid-cols-2 lg:grid-cols-4">
+        {
+          services.map((service, i) => (
+            <div class="ruled-cell is-interactive p-7 md:p-8">
               <span
-                class="inline-flex items-center justify-center rounded-xl border px-3 py-1 font-mono text-[12.5px] font-semibold"
-                style="background: var(--md-sys-color-secondary-container); border-color: transparent; color: var(--md-sys-color-on-secondary-container);"
+                class="cell-index inline-flex items-center justify-center rounded-md px-2.5 py-1 font-mono text-[12.5px] font-semibold"
               >
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -165,9 +165,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                 {service.body}
               </p>
             </div>
-          </div>
-        ))
-      }
+          ))
+        }
+      </div>
     </div>
   </Section>
 
@@ -207,6 +207,36 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </Section>
     )
   }
+
+  {/* ------------------------------------------------------- off the clock */}
+  <Section
+    kicker="Off the clock"
+    title="The parts that aren't on the résumé"
+    lead="Same habits, different problems. Most of what I'm good at at work, I practised somewhere else first."
+  >
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-4">
+        {
+          offTheClock.map((item) => (
+            <div class="ruled-cell is-interactive dot-reveal flex flex-col p-7 md:p-8">
+              <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.12em]" style="color: var(--md-sys-color-primary)">
+                {item.label}
+              </p>
+              <h3 class="mt-4 text-[20px] font-semibold leading-snug" style="color: var(--md-sys-color-on-surface);">{item.title}</h3>
+              <p class="mt-3 text-[14.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">{item.body}</p>
+              {item.href && (
+                <a href={item.href} class="link-underline relative z-10 mt-auto inline-flex items-center gap-1.5 pt-6 font-mono text-[13px]" style="color: var(--md-sys-color-on-surface)">
+                  {item.cta}
+                  <Icon name="arrow" size={14} />
+                </a>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
 
   <CallToAction />
 </Base>

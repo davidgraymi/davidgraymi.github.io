@@ -11,37 +11,53 @@ const {
   title = 'Have something hard that has to work?',
   body = "Contract work, a full-time role, or a problem you want a second opinion on — I read every message and reply to the ones that aren't a template.",
 } = Astro.props;
+
+/** Ticker under the block: the work and the rest of it, on one strip. */
+const ticker = [
+  'Threat models',
+  'Scuba diving',
+  'Kubernetes',
+  'Video games',
+  'Applied ML',
+  'Rock climbing',
+  'Making art',
+  'Hiking',
+];
 ---
 
-<section class="border-t py-20 md:py-28" style="border-color: var(--md-sys-color-outline-variant);">
-  <div class="wrap">
-    <div
-      class="glass-panel relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-8 text-center sm:p-14"
-      style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
-    >
-      {/* Background glow accent: M3 Primary & Tertiary Glow */}
-      <div
-        class="pointer-events-none absolute -top-24 left-1/2 -z-10 h-52 w-96 -translate-x-1/2 rounded-full opacity-35 blur-3xl"
-        style="background: radial-gradient(circle, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 70%, transparent 100%);"
-      />
+<section class="signal-block mt-20 md:mt-28">
+  <div class="wrap relative py-16 text-center md:py-24">
+    <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.14em]">Let's connect</p>
+    <h2 class="mx-auto mt-5 max-w-3xl font-semibold leading-tight" style="font-size: var(--text-h2);">{title}</h2>
+    <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: color-mix(in srgb, var(--signal-block-fg) 82%, transparent);">
+      {body}
+    </p>
 
-      <p class="kicker justify-center">Let's connect</p>
-      <h2 class="mt-5 font-semibold leading-tight" style="font-size: var(--text-h2); color: var(--md-sys-color-on-surface);">{title}</h2>
-      <p class="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
-        {body}
-      </p>
-
-      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a href={`mailto:${site.email}`} class="btn btn-primary w-full sm:w-auto">
-          <Icon name="mail" size={17} />
-          Email me
-        </a>
-        <CopyEmail class="w-full sm:w-auto" />
-      </div>
-
-      <p class="mt-6 font-mono text-[12.5px]" style="color: var(--md-sys-color-on-surface-variant)">
-        Usually replies within a day or two · {site.location}
-      </p>
+    <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href={`mailto:${site.email}`} class="btn btn-ink w-full sm:w-auto">
+        <Icon name="mail" size={17} />
+        Email me
+      </a>
+      <CopyEmail class="w-full sm:w-auto" />
     </div>
+
+    <p class="mt-6 font-mono text-[12.5px]" style="color: color-mix(in srgb, var(--signal-block-fg) 75%, transparent);">
+      Usually replies within a day or two · {site.location}
+    </p>
+  </div>
+
+  <div class="ticker relative font-mono text-[13px]" aria-hidden="true">
+    {
+      [0, 1].map(() => (
+        <div class="ticker-track">
+          {ticker.map((item) => (
+            <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
+              <span class="h-1.5 w-1.5 rotate-45" style="background: var(--signal-block-fg);" />
+              {item}
+            </span>
+          ))}
+        </div>
+      ))
+    }
   </div>
 </section>
