@@ -71,13 +71,9 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     {
       highlight && (
         <div
-          class="mt-4 flex items-start gap-2.5 rounded-xl border px-3.5 py-2 font-mono text-[12.5px] leading-snug"
-          style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface);"
+          class="mt-4 flex items-start gap-2.5 border-l-2 px-3.5 py-2 font-mono text-[12.5px] leading-snug"
+          style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-surface);"
         >
-          <span
-            class="mt-1.5 h-2 w-2 shrink-0 rounded-full"
-            style="background: var(--md-sys-color-primary); box-shadow: 0 0 8px var(--md-sys-color-primary);"
-          />
           <span class="line-clamp-3 font-medium">{highlight}</span>
         </div>
       )
@@ -89,7 +85,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
         stack.slice(0, 4).map((tech) => (
           <span
             class="rounded-sm border px-2.5 py-1 font-mono text-[12px] transition-colors group-hover:border-[var(--md-sys-color-outline)]"
-            style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant)"
+            style="background: var(--md-sys-color-surface); border-color: var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface-variant)"
           >
             {tech}
           </span>

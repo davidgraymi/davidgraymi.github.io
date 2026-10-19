@@ -53,10 +53,9 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
       <div class="w-full">
         {/* Avatar: M3 Expressive Card Shape */}
-        <div
-          class="overflow-hidden rounded-[32px] border shadow-[var(--md-sys-elevation-2)]"
-          style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
-        >
+        <div class="ticked-frame">
+          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+          <div class="overflow-hidden" style="background: var(--md-sys-color-surface-container-low);">
           <Image
             src={avatar}
             alt="David Gray"
@@ -65,11 +64,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
             loading="eager"
             class="aspect-square w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
           />
+          </div>
         </div>
 
         {/* Info DL Block */}
         <dl
-          class="mt-6 space-y-3.5 rounded-xl border p-6 font-mono text-[13px] shadow-[var(--md-sys-elevation-1)]"
+          class="mt-6 space-y-3.5 border p-6 font-mono text-[13px]"
           style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
         >
           <div class="flex justify-between gap-4 border-b pb-3" style="border-color: var(--md-sys-color-outline-variant);">
@@ -110,10 +110,12 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
 
   {/* ------------------------------------------------------------ experience */}
   <Section kicker="Experience" title="Where I've worked" alt>
-    <div class="mt-12 flex flex-col gap-5">
+    <div class="ruled-panel mt-12">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+    <div class="ruled-grid">
       {
         roles.map((role) => (
-          <div class="spotlight-card grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
+          <div class="ruled-cell grid gap-6 p-7 md:grid-cols-[1fr_2fr] md:gap-10 md:p-8">
             <div>
               <h3 class="text-[19px] font-semibold leading-snug" style="color: var(--md-sys-color-on-surface);">{role.title}</h3>
               <p class="mt-1.5 font-medium text-[15px]" style="color: var(--md-sys-color-primary)">
@@ -128,7 +130,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
               <ul class="mt-4 space-y-2.5">
                 {role.points.map((point) => (
                   <li class="flex gap-3 text-[14.5px] leading-relaxed" style="color: var(--md-sys-color-on-surface-variant)">
-                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--md-sys-color-primary); box-shadow: 0 0 6px var(--md-sys-color-primary);" />
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--md-sys-color-primary);" />
                     {point}
                   </li>
                 ))}
@@ -137,6 +139,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           </div>
         ))
       }
+    </div>
     </div>
   </Section>
 
@@ -149,7 +152,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
           {
             education.map((item) => (
               <div
-                class="rounded-xl border p-6 shadow-[var(--md-sys-elevation-1)] transition-all duration-200 hover:border-[var(--md-sys-color-primary)]"
+                class="border p-6"
                 style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant); border-left: 4px solid var(--md-sys-color-primary);"
               >
                 <p class="text-[17px] font-semibold" style="color: var(--md-sys-color-on-surface);">{item.degree}</p>

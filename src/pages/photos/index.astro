@@ -27,11 +27,11 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
     {
       albums.length === 0 ? (
         <div
-          class="surface flex max-w-xl flex-col items-start p-8 shadow-[var(--md-sys-elevation-1)]"
+          class="surface flex max-w-xl flex-col items-start p-8"
           style="background: var(--md-sys-color-surface-container-low); border-color: var(--md-sys-color-outline-variant);"
         >
           <span
-            class="grid h-12 w-12 place-items-center rounded-2xl"
+            class="grid h-12 w-12 place-items-center rounded-md"
             style="color: var(--md-sys-color-primary); background: var(--md-sys-color-surface-container-high);"
           >
             <Icon name="camera" size={26} />

@@ -58,8 +58,11 @@ const badFits = [
   </section>
 
   <section class="border-b" style="border-color: var(--md-sys-color-outline-variant);">
-    <div class="wrap grid gap-8 py-16 md:grid-cols-2 md:gap-10 md:py-20">
-      <div class="spotlight-card p-8">
+    <div class="wrap py-16 md:py-20">
+     <div class="ruled-panel">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+     <div class="ruled-grid md:grid-cols-2">
+      <div class="ruled-cell p-8">
         <h2 class="text-[20px] font-semibold" style="color: var(--md-sys-color-on-surface);">Good reasons to write</h2>
         <ul class="mt-6 space-y-4">
           {
@@ -78,7 +81,7 @@ const badFits = [
         </ul>
       </div>
 
-      <div class="spotlight-card p-8">
+      <div class="ruled-cell p-8">
         <h2 class="text-[20px] font-semibold" style="color: var(--md-sys-color-on-surface);">Honestly, probably not</h2>
         <ul class="mt-6 space-y-4">
           {
@@ -100,22 +103,26 @@ const badFits = [
           turns out to be a no than miss the one that wasn't.
         </p>
       </div>
+     </div>
+     </div>
     </div>
   </section>
 
   <section>
     <div class="wrap py-16 md:py-20">
       <p class="kicker">Elsewhere on the internet</p>
-      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <div class="ruled-panel mt-8">
+        <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid sm:grid-cols-2">
         {
           socials.map((s) => (
             <a
               href={s.href}
-              class="spotlight-card group flex items-center gap-4 p-5 transition-all"
+              class="ruled-cell is-interactive group flex items-center gap-4 p-5"
               rel={s.href.startsWith('http') ? 'me noopener' : undefined}
             >
               <div
-                class="rounded-xl border p-2.5 transition-colors group-hover:border-[var(--md-sys-color-primary)] group-hover:text-[var(--md-sys-color-primary)]"
+                class="rounded-md border p-2.5 transition-colors group-hover:border-[var(--md-sys-color-primary)] group-hover:text-[var(--md-sys-color-primary)]"
                 style="background: var(--md-sys-color-surface-container); border-color: var(--md-sys-color-outline-variant);"
               >
                 <Icon name={s.icon} size={20} />
@@ -132,6 +139,7 @@ const badFits = [
             </a>
           ))
         }
+      </div>
       </div>
     </div>
   </section>

@@ -32,7 +32,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
           Nothing published yet. The first post is always the hardest.
         </p>
       ) : (
-        <div class="max-w-3xl flex flex-col gap-3">
+        <div class="ruled-list max-w-3xl">
           {posts.map((entry) => (
             <PostCard entry={entry} />
           ))}
