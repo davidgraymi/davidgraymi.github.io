@@ -2,7 +2,8 @@
 title: "Connecting the Dots: How a Sign Language Capstone Got Me Hooked on AI"
 description: "Looking back at my senior capstone project at Missouri State — building a real-time American Sign Language smart home controller with MediaPipe, custom CNNs, and networking — and how it sparked my path in machine learning."
 pubDate: 2026-10-01
-tags: ['ai', 'machine-learning', 'computer-vision', 'tensorflow', 'mediapipe', 'capstone']
+tags: ['machine-learning', 'computer-vision', 'tensorflow', 'mediapipe', 'capstone']
+series: sign-language-capstone
 ---
 
 During undergrad, machine learning often felt like an academic abstraction. You learn

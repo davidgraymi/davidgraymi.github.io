@@ -53,6 +53,8 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       tags: z.array(z.string()).default([]),
+      /** Posts sharing a series id get a "Part n of m" nav, ordered by pubDate. */
+      series: z.string().optional(),
       cover: image().optional(),
       coverAlt: z.string().default(''),
       draft: z.boolean().default(false),

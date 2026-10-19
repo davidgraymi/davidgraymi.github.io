@@ -2,7 +2,8 @@
 title: "neural-cost: Roofline Analysis Across PyTorch, JAX, and TensorFlow"
 description: A framework-neutral Python library that estimates a neural network's FLOPs and tensor traffic, measures its runtime, and uses a roofline model to tell you exactly where performance is being left on the table.
 pubDate: 2026-09-28
-tags: ['ml', 'performance', 'python', 'pytorch', 'jax', 'tensorflow']
+tags: ['machine-learning', 'performance', 'python', 'pytorch', 'jax', 'tensorflow']
+series: neural-cost
 ---
 
 When you're tuning a neural network's inference or training loop, there are two
