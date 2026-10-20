@@ -5,6 +5,7 @@ pubDate: 2026-09-29
 updatedDate: 2026-10-19
 tags: ['machine-learning', 'performance', 'benchmarks', 'pytorch', 'jax', 'tensorflow']
 series: neural-cost
+project: neural-cost
 ---
 
 When evaluating machine learning frameworks, standard benchmarks often reduce the comparison to a single toy workload—a giant matrix multiplication or a standard ResNet-50 training pass—and declare a universal winner. But runtime performance is rarely that simple. A framework's actual execution speed depends on its memory allocator, how its compiler handles kernel fusion, whether it can eliminate Python dispatch overhead, and the arithmetic intensity of the model architecture itself.

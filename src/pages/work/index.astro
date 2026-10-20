@@ -14,16 +14,16 @@ const entries = all.filter((e) => !e.data.archived);
 const archive = all.filter((e) => e.data.archived).sort((a, b) => b.data.year.localeCompare(a.data.year));
 
 const filters = [
+  { key: 'ai', label: 'Applied AI / ML' },
   { key: 'security', label: 'Security & Cloud' },
   { key: 'embedded', label: 'Embedded & Real-Time' },
-  { key: 'ai', label: 'Applied AI / ML' },
   { key: 'tools', label: 'Tools & Apps' },
 ].filter((f) => entries.some((e) => e.data.category === f.key));
 ---
 
 <Base
   title="Work"
-  description="Cloud and product security, real-time embedded systems, applied machine learning, and side projects that got out of hand."
+  description="Applied machine learning, cloud and product security, real-time embedded systems, and side projects that got out of hand."
 >
   <PageHeader
     kicker="Portfolio"
