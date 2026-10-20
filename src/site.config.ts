@@ -16,6 +16,8 @@ export const site = {
   /** Set to false to hide the "available for work" pill site-wide. */
   availableForWork: true,
   availabilityNote: 'Open to consulting and interesting problems',
+  /** Google Analytics 4 measurement ID. Empty string turns analytics off. */
+  analyticsId: 'G-YZG66591CH',
 } as const;
 
 export type SocialLink = {

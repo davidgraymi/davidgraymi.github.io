@@ -13,14 +13,18 @@ import { fileURLToPath } from 'node:url';
  * style attributes on every token and glyph; style injection is a far smaller
  * risk than script injection, and Astro's built-in CSP can't relax styles alone.
  */
+// Google Analytics (src/components/Analytics.astro), per Google's GA4 CSP guide.
+const GTAG = 'https://*.googletagmanager.com';
+const GA_BEACONS = 'https://*.google-analytics.com https://*.analytics.google.com';
+
 const policy = (scriptHashes) =>
   [
     "default-src 'self'",
-    `script-src 'self' ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`.trim(),
+    `script-src 'self' ${GTAG} ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`.trim(),
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    `img-src 'self' data: ${GTAG} https://*.google-analytics.com`,
     "font-src 'self' data:",
-    "connect-src 'self'",
+    `connect-src 'self' ${GTAG} ${GA_BEACONS}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
