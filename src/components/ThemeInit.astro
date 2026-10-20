@@ -1,0 +1,23 @@
+---
+/** Applies the saved theme before first paint. Every layout puts this in <head>. */
+---
+
+<script is:inline>
+  // Runs before first paint so the chosen theme never flashes.
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.dataset.theme = saved;
+    }
+  } catch (e) {}
+  // Keep the browser chrome in step with a pinned theme (the toggle sets data-theme).
+  const syncThemeColor = () => {
+    const pinned = document.documentElement.dataset.theme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+      m.dataset.media ??= m.media;
+      m.media = pinned ? (m.dataset.media.includes(pinned) ? 'all' : 'not all') : m.dataset.media;
+    });
+  };
+  new MutationObserver(syncThemeColor).observe(document.documentElement, { attributeFilter: ['data-theme'] });
+  syncThemeColor();
+</script>

@@ -1,0 +1,167 @@
+---
+/**
+ * The full-screen game player. Nothing on screen but a slim bar and the game:
+ * no site header, footer, command palette, terminal or Konami listener (their
+ * shortcuts would fight the game's). The page itself never scrolls. A game
+ * taller than the screen scrolls inside the stage, and the keys a game uses
+ * (arrows, Space, Page Up/Down) are kept from scrolling it.
+ */
+import BaseHead from '~/components/BaseHead.astro';
+import ThemeInit from '~/components/ThemeInit.astro';
+import ThemeToggle from '~/components/ThemeToggle.astro';
+import Icon from '~/components/Icon.astro';
+import type { Game } from '~/data/games';
+import '~/styles/global.css';
+
+interface Props {
+  game: Game;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+const { game, jsonLd } = Astro.props;
+
+const widths: Record<Game['width'], string> = {
+  sm: 'max-w-lg',
+  md: 'max-w-3xl',
+  lg: 'max-w-4xl',
+  xl: 'max-w-6xl',
+};
+const iconBtn =
+  'grid h-11 w-11 shrink-0 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface md:h-9 md:w-9';
+---
+
+<!doctype html>
+<html lang="en" class="play-shell">
+  <head>
+    <BaseHead title={game.title} description={game.blurb} image={`/og/play/${game.slug}.png`} jsonLd={jsonLd} />
+    <ThemeInit />
+  </head>
+  <body class="flex h-dvh flex-col overflow-hidden">
+    <header class="flex h-14 shrink-0 items-center gap-2 border-b border-outline-variant bg-surface px-3 md:h-12 md:px-4">
+      <a href="/play" class={iconBtn} aria-label="All games" title="All games">
+        <Icon name="arrowLeft" size={16} />
+      </a>
+      <div class="ml-1 min-w-0 flex-1 truncate">
+        <h1 class="inline text-body font-semibold text-on-surface">{game.title}</h1>
+        <span class="ml-2 hidden font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant sm:inline">
+          vs. {game.opponent}
+        </span>
+      </div>
+      <button type="button" class={iconBtn} data-howto-open aria-label="How to play" title="How to play">
+        <Icon name="info" size={16} />
+      </button>
+      <button type="button" class={iconBtn} data-fullscreen hidden aria-label="Full screen" title="Full screen">
+        <span data-fs-enter><Icon name="expand" size={16} /></span>
+        <span data-fs-exit hidden><Icon name="shrink" size={16} /></span>
+      </button>
+      <ThemeToggle />
+    </header>
+
+    <main id="main" class="play-stage flex-1 overflow-y-auto overscroll-contain">
+      <div class="grid min-h-full place-items-center p-3 sm:p-6">
+        <div class:list={['play-game w-full', widths[game.width]]}>
+          <slot />
+        </div>
+      </div>
+    </main>
+
+    <dialog
+      data-howto
+      aria-labelledby="howto-title"
+      class="m-auto w-[92vw] max-w-lg border border-outline-variant bg-surface-container-high p-0 text-on-surface shadow-elevation-4 backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+    >
+      <div class="flex items-center justify-between gap-4 border-b border-outline-variant px-5 py-3">
+        <p id="howto-title" class="kicker">How to play</p>
+        <form method="dialog">
+          <button class={iconBtn} aria-label="Close">
+            <Icon name="close" size={16} />
+          </button>
+        </form>
+      </div>
+      <div class="space-y-3 px-5 py-5 text-body leading-relaxed text-on-surface-variant">
+        {game.howTo.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="flex flex-wrap items-center gap-3 border-t border-outline-variant px-5 py-4">
+        <form method="dialog">
+          <button class="btn btn-primary" autofocus>
+            <Icon name="play" size={14} />
+            Play
+          </button>
+        </form>
+        {
+          game.story && (
+            <a href={game.story.href} class="btn btn-ghost">
+              How it works
+              <Icon name="arrow" size={14} />
+            </a>
+          )
+        }
+      </div>
+    </dialog>
+  </body>
+</html>
+
+<style is:global>
+  /* No rubber-banding or pull-to-refresh while playing. */
+  .play-shell,
+  .play-shell body {
+    overscroll-behavior: none;
+  }
+  /* Double-tap shouldn't zoom mid-game; pinch still works. */
+  .play-stage {
+    touch-action: manipulation;
+  }
+  /* Embedded games carry vertical margins for prose; the stage does its own spacing. */
+  .play-game > * {
+    margin-block: 0;
+  }
+</style>
+
+<script>
+  // ---- How to play: shown on the first visit to each game, then on demand ----
+  const howto = document.querySelector<HTMLDialogElement>('[data-howto]')!;
+  document.querySelector('[data-howto-open]')!.addEventListener('click', () => howto.showModal());
+  const seenKey = `play-seen:${location.pathname.replace(/\/$/, '')}`;
+  try {
+    if (!localStorage.getItem(seenKey)) {
+      howto.showModal();
+      localStorage.setItem(seenKey, '1');
+    }
+  } catch {
+    /* storage blocked: skip the auto-open rather than show it every time */
+  }
+
+  // ---- Full screen, where the browser allows it (not iPhone Safari) ----
+  const fsBtn = document.querySelector<HTMLButtonElement>('[data-fullscreen]')!;
+  if (document.fullscreenEnabled) {
+    fsBtn.hidden = false;
+    const sync = () => {
+      const on = !!document.fullscreenElement;
+      fsBtn.querySelector<HTMLElement>('[data-fs-enter]')!.hidden = on;
+      fsBtn.querySelector<HTMLElement>('[data-fs-exit]')!.hidden = !on;
+      fsBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+      fsBtn.title = fsBtn.getAttribute('aria-label')!;
+    };
+    fsBtn.addEventListener('click', () => {
+      if (document.fullscreenElement) void document.exitFullscreen();
+      else void document.documentElement.requestFullscreen().catch(() => {});
+    });
+    document.addEventListener('fullscreenchange', sync);
+  }
+
+  // ---- Keep game keys from scrolling the stage ----
+  // Registered after `load` so it runs after every game's own window listener
+  // (the games check `defaultPrevented` and would otherwise ignore the key).
+  const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'PageUp', 'PageDown', 'Home', 'End']);
+  const guard = (e: KeyboardEvent) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || !SCROLL_KEYS.has(e.key)) return;
+    const t = e.target as HTMLElement | null;
+    // Form fields (the k slider, text inputs) and open dialogs keep their keys.
+    if (t?.closest('input, textarea, select, [contenteditable], dialog')) return;
+    // Space activates a focused button or link; leave that alone.
+    if (e.key === ' ' && t?.closest('button, a, summary, [role="button"]')) return;
+    e.preventDefault();
+  };
+  const arm = () => window.addEventListener('keydown', guard);
+  if (document.readyState === 'complete') setTimeout(arm);
+  else window.addEventListener('load', arm, { once: true });
+</script>

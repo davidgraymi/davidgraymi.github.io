@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "resume:pdf": "node scripts/resume-pdf.mjs",
-    "check:site": "node scripts/check-site.mjs"
+    "check:site": "node scripts/check-site.mjs",
+    "games:thumbnails": "node scripts/game-thumbnails.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.3",

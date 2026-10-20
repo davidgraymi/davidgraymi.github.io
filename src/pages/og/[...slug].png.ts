@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { renderCard, type Card } from '~/lib/og';
 import { pageCards } from '~/lib/og-pages';
 import { readingStats } from '~/lib/reading';
+import { games } from '~/data/games';
 
 const date = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
@@ -30,6 +31,16 @@ export const getStaticPaths = (async () => {
         description: w.data.blurb,
         path: `/work/${w.id}`,
         meta: w.data.stack.slice(0, 3).join(' · '),
+      },
+    })),
+    ...games.map((g) => ({
+      slug: `play/${g.slug}`,
+      card: {
+        kicker: `Play · vs. ${g.opponent}`,
+        title: g.title,
+        description: g.blurb,
+        path: `/play/${g.slug}`,
+        meta: `${g.length} · ${g.controls}`,
       },
     })),
   ];

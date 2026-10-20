@@ -26,6 +26,12 @@ export const pageCards: Record<string, Card> = {
     description: 'Security, performance measurements, and what I learned building things.',
     path: '/blog',
   },
+  play: {
+    kicker: 'Games',
+    title: 'Play against the models',
+    description: 'Tetris against a value network, digits against KNN, mushrooms against a decision tree, and a few quick ones.',
+    path: '/play',
+  },
   about: {
     kicker: 'About',
     title: "Hi, I'm David. I got into this to find out how the magic worked.",

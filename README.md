@@ -21,6 +21,7 @@ npm run dev      # http://localhost:4321
 | `npm run check` | Type-check content collections, props and links |
 | `npm run check:site` | After a build: internal links, `#anchors` and `security.txt` expiry |
 | `npm run resume:pdf` | After a build: print `/resume` to `public/files/David-Gray-Resume.pdf` |
+| `npm run games:thumbnails` | After a build: capture the `/play` card previews into `src/assets/games/` |
 
 ## Adding content
 
@@ -33,6 +34,7 @@ album is one markdown file.
 src/
   site.config.ts        name, email, socials, nav — edit this first
   data/resume.ts        jobs, education, skills, homepage stats
+  data/games.ts         the /play game catalog
   content/
     blog/               posts        -> /blog/<slug>
     work/               projects     -> /work/<slug>
@@ -40,6 +42,7 @@ src/
   assets/               images that get optimised at build time
   components/           Astro components, no framework
   layouts/Base.astro    <html> shell, head, header, footer
+  layouts/Play.astro    full-screen game player (no header or footer)
   pages/                one file per route
   styles/global.css     design tokens + light/dark themes
 public/                 copied to the site root as-is
@@ -57,7 +60,7 @@ Build and deployment → Source** to be set to **GitHub Actions**.
 
 The `CNAME` file lives in `public/`, so the custom domain survives every deploy.
 
-Pull requests also run Lighthouse CI (`lighthouserc.json`) over five pages:
+Pull requests also run Lighthouse CI (`lighthouserc.json`) over seven pages:
 accessibility must stay at 95+, best practices and SEO at 90+.
 
 ### Security headers
