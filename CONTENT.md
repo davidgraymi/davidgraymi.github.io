@@ -35,9 +35,7 @@ Your post here. Standard markdown: headings, **bold**, `code`, lists,
 | `cover` | no | Relative path to an image in `src/assets/` |
 | `coverAlt` | no | Alt text — write one if you use a cover |
 | `draft` | no | `true` hides it from the site and the RSS feed |
-
-`src/content/blog/starter-post.md` is a draft with every field filled in. Copy
-it when you forget the shape.
+| `project` | no | Slug of a `/work` project, e.g. `sign-language-interpreter`. The post links to the project and the project lists the post |
 
 ### Figures and charts
 

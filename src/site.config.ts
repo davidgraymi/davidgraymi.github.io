@@ -7,12 +7,12 @@ export const site = {
   shortName: 'David',
   url: 'https://davidmgray.com',
   /** Shown under the name in the header and in metadata. */
-  role: 'Product Security Engineer — Kubernetes, Azure & secure cloud systems',
+  role: 'Software Engineer — machine learning, ML performance & secure cloud systems',
   location: 'St. Louis, Missouri',
   email: 'davidgraymi@gmail.com',
   /** The one-line pitch used for <meta description> and social cards. */
   tagline:
-    'I secure and scale Kubernetes and cloud-native systems, with a focus on reliable delivery, infrastructure-as-code, and security embedded in the platform.',
+    'I build machine learning systems and measure how fast they really run, backed by five years of secure cloud and real-time embedded engineering and a data science master\'s at Illinois.',
   /** Set to false to hide the "available for work" pill site-wide. */
   availableForWork: true,
   availabilityNote: 'Open to consulting and interesting problems',

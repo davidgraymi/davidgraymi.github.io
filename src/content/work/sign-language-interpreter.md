@@ -7,7 +7,7 @@ year: '2021'
 stack: ['Python', 'TensorFlow', 'MediaPipe', 'C++', 'Computer vision', 'CNN']
 highlight: 98.8% accuracy across 14 hand gestures
 featured: true
-order: 2
+order: -2
 links:
   - label: Research paper (PDF)
     href: /files/sign-language-paper.pdf

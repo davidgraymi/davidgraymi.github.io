@@ -8,22 +8,22 @@ import type { Card } from './og';
  */
 export const pageCards: Record<string, Card> = {
   index: {
-    kicker: 'Product security',
+    kicker: 'Machine learning',
     title: 'Engineer. Scientist. Occasionally underwater.',
-    description: 'Securing Kubernetes and Azure delivery, from threat model to release. Machine learning and side projects after hours.',
+    description: 'Machine learning systems and how fast they really run, built on years of secure cloud and embedded engineering.',
     path: '/',
     meta: site.location,
   },
   work: {
     kicker: 'Work',
     title: "Things I've built, and what each one taught me",
-    description: 'Cloud security, real-time embedded systems, applied machine learning, and side projects that got out of hand.',
+    description: 'Applied machine learning, cloud security, real-time embedded systems, and side projects that got out of hand.',
     path: '/work',
   },
   blog: {
     kicker: 'Writing',
     title: 'Notes from the workbench',
-    description: 'Security, performance measurements, and what I learned building things.',
+    description: 'ML performance measurements, security, and what I learned building things.',
     path: '/blog',
   },
   play: {

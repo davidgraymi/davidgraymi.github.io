@@ -194,16 +194,16 @@ export const stats: { value: string; label: string }[] = [
 /** What I want to be hired for. Drives the "How I can help" section. */
 export const services: { title: string; body: string }[] = [
   {
+    title: 'Applied machine learning',
+    body: 'Classifiers and NLP pipelines that ship — data preparation through evaluation through deployment — and the performance work to know what they cost to run across PyTorch, JAX and TensorFlow. I care more about the failure modes than the leaderboard.',
+  },
+  {
     title: 'Product & cloud security',
     body: 'Threat modeling, zero-trust delivery pipelines, service-mesh networking, and security review built into the release process instead of bolted on at the end. This is my day job.',
   },
   {
     title: 'Kubernetes & cloud',
     body: 'Platform engineering, Kubernetes operations, cloud-native systems, and the boring-but-critical details of reliability, automation, and production support. If it has to run at scale without surprise failures, this is the work I do daily.',
-  },
-  {
-    title: 'Applied machine learning',
-    body: 'Classifiers and NLP pipelines that ship — data preparation through evaluation through deployment. I care more about the failure modes than the leaderboard.',
   },
   {
     title: 'Developer experience',

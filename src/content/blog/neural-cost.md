@@ -4,6 +4,7 @@ description: A framework-neutral Python library that estimates a neural network'
 pubDate: 2026-09-28
 tags: ['machine-learning', 'performance', 'python', 'pytorch', 'jax', 'tensorflow']
 series: neural-cost
+project: neural-cost
 ---
 
 When you're tuning a neural network's inference or training loop, there are two

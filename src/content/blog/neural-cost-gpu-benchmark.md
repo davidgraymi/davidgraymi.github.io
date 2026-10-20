@@ -5,6 +5,7 @@ pubDate: 2026-09-30
 updatedDate: 2026-10-19
 tags: ['machine-learning', 'performance', 'benchmarks', 'pytorch', 'jax', 'gpu', 'apple-silicon']
 series: neural-cost
+project: neural-cost
 ---
 
 The [CPU benchmark series](/blog/ml-framework-comparison) established a clear picture of
