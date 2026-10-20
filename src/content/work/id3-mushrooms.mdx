@@ -14,6 +14,8 @@ links:
     href: /files/id3.zip
 ---
 
+import IsItPoisonous from '~/components/games/IsItPoisonous.astro';
+
 A colleague and I implemented the ID3 algorithm from scratch, then trained it on
 mushroom attributes to classify each specimen as edible or poisonous.
 
@@ -21,5 +23,13 @@ Building a decision tree by hand — computing entropy and information gain at
 each split rather than calling a library — is the fastest way I know to
 understand why trees overfit, and why the split that looks most informative on
 training data is so often the one that betrays you.
+
+The tree below was retrained with the same algorithm on the full
+[UCI Mushroom dataset](https://archive.ics.uci.edu/dataset/73/mushroom) — 8,124
+specimens, 22 attributes each. It asks about smell first, and for most
+mushrooms that's the only question it needs. The odourless ones are where it
+has to work.
+
+<IsItPoisonous />
 
 Details and results are in the research report.

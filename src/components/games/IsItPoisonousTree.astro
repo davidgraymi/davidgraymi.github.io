@@ -1,0 +1,122 @@
+---
+// One node of the ID3 mushroom tree, rendered at build time as a nested list.
+// Recurses via Astro.self. Each <li> carries data-path ("" for the root,
+// "n/w/d" for odor=none → spore-print-color=white → habitat=woods) so the game
+// script can light up the decision path without re-rendering anything.
+import { isLeaf, labelName, pathId, type Attribute, type TreeNode } from '~/lib/games/is-it-poisonous/id3';
+
+interface Props {
+  node: TreeNode;
+  attributes: Attribute[];
+  /** Value codes from the root to this node. */
+  codes?: string[];
+  /** Attribute tested by the parent (absent for the root). */
+  parentAttr?: number;
+}
+
+const { node, attributes, codes = [], parentAttr } = Astro.props;
+const edge = parentAttr === undefined ? null : attributes[parentAttr].values[codes[codes.length - 1]];
+const count = node.n.toLocaleString('en-US');
+---
+
+<li class="node" data-path={pathId(codes)}>
+  <span class="row">
+    {edge && <span class="edge">{edge}</span>}
+    {edge && <span class="arrow" aria-hidden="true">→</span>}
+    {
+      isLeaf(node) ? (
+        <span class:list={['verdict', node.l === 'p' ? 'is-poisonous' : 'is-edible']}>{labelName(node.l)}</span>
+      ) : (
+        <span class="test">{attributes[node.a].name}?</span>
+      )
+    }
+    <span class="count">
+      {count}<span class="sr-only"> specimens</span>
+    </span>
+  </span>
+  {
+    !isLeaf(node) && (
+      <ul class="children">
+        {Object.entries(node.b).map(([code, child]) => (
+          <Astro.self node={child} attributes={attributes} codes={[...codes, code]} parentAttr={node.a} />
+        ))}
+      </ul>
+    )
+  }
+</li>
+
+<style>
+  .node {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .node::marker {
+    content: none;
+  }
+  .children {
+    margin: 0;
+    padding: 0 0 0 1.1rem;
+    list-style: none;
+    border-left: 1px solid var(--md-sys-color-rule-soft);
+    margin-left: 0.45rem;
+  }
+  .row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.2rem 0.5rem;
+    border-left: 2px solid transparent;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.6;
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+      background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .edge {
+    color: var(--md-sys-color-on-surface);
+  }
+  .arrow {
+    color: var(--md-sys-color-outline);
+  }
+  .test {
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+  }
+  .count {
+    margin-left: auto;
+    color: var(--md-sys-color-on-surface-variant);
+    font-variant-numeric: tabular-nums;
+  }
+  .verdict {
+    padding: 0 0.45rem;
+    border-radius: var(--md-comp-chip-radius);
+    font-weight: 600;
+  }
+  .verdict.is-edible {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+  .verdict.is-poisonous {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+
+  /* Once a specimen is revealed, dim everything off its path. */
+  :global([data-revealed]) .row {
+    opacity: 0.45;
+  }
+  :global([data-revealed]) .node[data-on] > .row {
+    opacity: 1;
+    border-left-color: var(--md-sys-color-primary);
+    background: var(--md-sys-color-surface-container);
+  }
+  :global([data-revealed]) .node[data-on] > .row .edge,
+  :global([data-revealed]) .node[data-on] > .row .test {
+    color: var(--md-sys-color-primary);
+  }
+</style>
