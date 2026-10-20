@@ -37,9 +37,6 @@ Your post here. Standard markdown: headings, **bold**, `code`, lists,
 | `draft` | no | `true` hides it from the site and the RSS feed |
 | `project` | no | Slug of a `/work` project, e.g. `sign-language-interpreter`. The post links to the project and the project lists the post |
 
-`src/content/blog/starter-post.md` is a draft with every field filled in. Copy
-it when you forget the shape.
-
 ### Figures and charts
 
 Put the image in `public/images/` and give it a title. A lone image with a title
