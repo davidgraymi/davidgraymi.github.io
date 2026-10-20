@@ -1,0 +1,197 @@
+---
+/**
+ * "Beat the bot" — Tetris against the trained agent from the Tetris RL project.
+ * Static markup only; the game code (and the network's weights) load with a
+ * dynamic import when the panel scrolls into view.
+ */
+const boards = [
+  { side: 'human', name: 'You', label: 'Your board' },
+  { side: 'bot', name: 'Agent', label: "The agent's board" },
+] as const;
+
+const pad = [
+  { action: 'left', label: 'Move left', glyph: '←' },
+  { action: 'ccw', label: 'Rotate anticlockwise', glyph: '↺' },
+  { action: 'cw', label: 'Rotate clockwise', glyph: '↻' },
+  { action: 'right', label: 'Move right', glyph: '→' },
+  { action: 'soft', label: 'Soft drop', glyph: '↓' },
+  { action: 'drop', label: 'Hard drop', glyph: '⤓' },
+] as const;
+
+const speeds = [
+  { id: 'relaxed', label: 'Relaxed' },
+  { id: 'even', label: 'Even' },
+  { id: 'flat', label: 'Flat out' },
+];
+---
+
+<section class="not-prose my-10" data-tvb aria-labelledby="tvb-title">
+  <div class="ruled-panel">
+    <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span
+      class="tick tick-br"></span>
+
+    <div class="flex flex-wrap items-end justify-between gap-4 border-b border-rule-soft p-5">
+      <div>
+        <p class="kicker">Playable</p>
+        <h2 id="tvb-title" class="mt-2 text-title font-semibold text-on-surface">Beat the bot</h2>
+        <p class="mt-1 text-body-sm text-on-surface-variant">
+          Same pieces, two minutes, most lines wins.
+        </p>
+      </div>
+      <div class="flex flex-col items-start gap-3">
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Agent speed">
+          {
+            speeds.map((s) => (
+              <button
+                type="button"
+                class:list={['filter-tab', s.id === 'even' && 'active']}
+                data-tvb-speed={s.id}
+                aria-pressed={s.id === 'even' ? 'true' : 'false'}
+              >
+                {s.label}
+              </button>
+            ))
+          }
+        </div>
+        <label class="flex cursor-pointer items-center gap-2 text-caption text-on-surface-variant">
+          <input type="checkbox" class="size-4 accent-secondary" data-tvb-plan checked />
+          Show the agent's chosen placement
+        </label>
+      </div>
+    </div>
+
+    <dl class="ruled-grid grid-cols-3 border-b border-rule-soft text-center">
+      <div class="ruled-cell p-3">
+        <dt class="font-mono text-label uppercase text-on-surface-variant">You</dt>
+        <dd class="mt-1 font-mono text-headline-sm font-semibold text-primary" data-tvb-stat="human-lines">0</dd>
+        <dd class="font-mono text-label text-on-surface-variant">
+          <span class="max-sm:sr-only">lines · </span><span data-tvb-stat="human-score">0</span> pts
+        </dd>
+      </div>
+      <div class="ruled-cell p-3">
+        <dt class="font-mono text-label uppercase text-on-surface-variant">Clock</dt>
+        <dd class="mt-1 font-mono text-headline-sm font-semibold text-on-surface" data-tvb-stat="clock">2:00</dd>
+        <dd class="font-mono text-label text-on-surface-variant" data-tvb-stat="lead">Level</dd>
+      </div>
+      <div class="ruled-cell p-3">
+        <dt class="font-mono text-label uppercase text-on-surface-variant">Agent</dt>
+        <dd class="mt-1 font-mono text-headline-sm font-semibold text-secondary" data-tvb-stat="bot-lines">0</dd>
+        <dd class="font-mono text-label text-on-surface-variant">
+          <span class="max-sm:sr-only">lines · </span><span data-tvb-stat="bot-score">0</span> pts
+        </dd>
+      </div>
+    </dl>
+
+    <div
+      class="relative grid grid-cols-1 gap-5 p-5 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:grid-cols-2"
+      tabindex="0"
+      role="application"
+      aria-roledescription="game"
+      aria-label="Tetris against the agent. Arrow keys move and rotate, Space hard-drops, P pauses."
+      aria-describedby="tvb-keys"
+      data-tvb-field
+    >
+      {
+        boards.map((b) => (
+          <div class:list={['mx-auto w-full max-w-56', b.side === 'bot' ? 'order-3 sm:order-2' : 'order-1']}>
+            <div class="mb-2 flex items-center justify-between">
+              <span
+                class:list={[
+                  'font-mono text-label font-semibold uppercase tracking-wider',
+                  b.side === 'human' ? 'text-primary' : 'text-secondary',
+                ]}
+              >
+                {b.name}
+              </span>
+              {b.side === 'bot' && (
+                <span class="font-mono text-label text-on-surface-variant" title="The network's value estimate for the placement it chose">
+                  V̂ <span data-tvb-stat="bot-value">—</span>
+                </span>
+              )}
+              <span class="flex items-center gap-2 font-mono text-label text-on-surface-variant">
+                next
+                <canvas class="block h-5 w-10" data-tvb-next={b.side} aria-hidden="true" />
+              </span>
+            </div>
+            <div class="relative">
+              <canvas
+                class="block aspect-1/2 w-full border border-outline-variant bg-surface-container-lowest"
+                data-tvb-canvas={b.side}
+                role="img"
+                aria-label={b.label}
+              />
+              <p
+                class="chip absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-high text-on-surface"
+                data-tvb-state={b.side}
+                hidden
+              >
+                Topped out
+              </p>
+            </div>
+          </div>
+        ))
+      }
+
+      <div class="order-2 grid grid-cols-6 gap-1.5 sm:order-3 sm:col-span-2 pointer-fine:hidden" aria-label="Touch controls" role="group">
+        {
+          pad.map((p) => (
+            <button
+              type="button"
+              class="flex h-12 touch-none items-center justify-center border border-outline-variant bg-surface-container text-title text-on-surface select-none active:bg-surface-container-highest"
+              data-tvb-pad={p.action}
+              aria-label={p.label}
+            >
+              <span aria-hidden="true">{p.glyph}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div
+        class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-surface/85 p-6 text-center backdrop-blur-sm"
+        data-tvb-overlay
+      >
+        <p class="max-w-xs font-mono text-headline-sm font-semibold text-on-surface" data-tvb-message>
+          Loading the agent…
+        </p>
+        <button type="button" class="btn btn-primary" data-tvb-start disabled>Start match</button>
+        <noscript><p class="text-body-sm text-on-surface-variant">The game needs JavaScript.</p></noscript>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-rule-soft p-5">
+      <p id="tvb-keys" class="font-mono text-label text-on-surface-variant">
+        ← → move · ↑ / X rotate · Z rotate back · ↓ soft drop · Space drop · P pause
+      </p>
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-label text-on-surface-variant">seed <span data-tvb-seed>-----</span></span>
+        <button type="button" class="btn btn-ghost" data-tvb-action="pause" aria-pressed="false" disabled>Pause</button>
+        <button type="button" class="btn btn-tonal" data-tvb-action="restart">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="sr-only" aria-live="polite" data-tvb-live></p>
+
+  <!-- Colour probes: the canvas reads its palette from token-backed utilities. -->
+  <span class="hidden text-surface-container-lowest" data-tvb-probe="bg"></span>
+  <span class="hidden text-rule-soft" data-tvb-probe="grid"></span>
+  <span class="hidden text-primary" data-tvb-probe="human"></span>
+  <span class="hidden text-secondary" data-tvb-probe="bot"></span>
+  <span class="hidden text-on-surface-variant" data-tvb-probe="text"></span>
+</section>
+
+<script>
+  // Load the game (and the network's weights) only when it's about to be seen.
+  document.querySelectorAll<HTMLElement>('[data-tvb]').forEach((root) => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        import('~/lib/games/tetris/game').then(({ mount }) => mount(root));
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(root);
+  });
+</script>
