@@ -3,6 +3,7 @@ title: I rebuilt this site so that publishing costs one file
 description: The old site was a single 41,000-character index.html. Every change was archaeology. Here is what I replaced it with and why the constraint was maintenance, not design.
 pubDate: 2026-08-20
 tags: ['astro', 'web', 'tooling']
+project: this-website
 ---
 
 The previous version of this site was one `index.html` file, 41,000 characters

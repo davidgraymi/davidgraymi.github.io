@@ -4,6 +4,7 @@ description: "Looking back at my senior capstone project at Missouri State — b
 pubDate: 2026-10-01
 tags: ['machine-learning', 'computer-vision', 'tensorflow', 'mediapipe', 'capstone']
 series: sign-language-capstone
+project: sign-language-interpreter
 ---
 
 During undergrad, machine learning often felt like an academic abstraction. You learn

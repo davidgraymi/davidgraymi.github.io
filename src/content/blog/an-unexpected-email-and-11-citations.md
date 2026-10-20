@@ -4,11 +4,12 @@ description: "Years after our college capstone, an out-of-the-blue email from Eu
 pubDate: 2026-10-12
 tags: ['machine-learning', 'research', 'reproducibility', 'capstone', 'google-scholar']
 series: sign-language-capstone
+project: sign-language-interpreter
 ---
 
 Most undergraduate capstone projects have a predictable lifecycle. You spend months fixing bugs, putting together a demo, presenting your slides to faculty, and submitting a final paper. Then graduation happens. Everyone scatters to their respective jobs, the code sits quietly in a GitHub repository, and the project becomes a pleasant memory you occasionally bring up over drinks or in an interview.
 
-That was exactly how I viewed our senior capstone at Missouri State. Back in 2021, my teammates—Braden Bagby, Riley Hughes, Zachary Langford, Robert Stonner—and I built an American Sign Language smart home controller powered by Google MediaPipe and custom CNNs, culminating in our paper, [*Simplifying Sign Language Detection for Smart Home Devices using Google MediaPipe*](/files/sign-language-paper.pdf).
+That was exactly how I viewed our senior capstone at Missouri State. Back in 2021, my teammates—Braden Bagby, Riley Hughes, Zachary Langford, Robert Stonner—and I built [an American Sign Language smart home controller](/work/sign-language-interpreter) powered by Google MediaPipe and custom CNNs, culminating in our paper, [*Simplifying Sign Language Detection for Smart Home Devices using Google MediaPipe*](/files/sign-language-paper.pdf).
 
 I hadn’t actively thought about that project in years.
 
