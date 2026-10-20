@@ -1,0 +1,108 @@
+---
+// Reaction-time test: wait for the panel to light up, then respond as fast as possible.
+const stats = [
+  ['last', 'Last'],
+  ['best', 'Best'],
+  ['avg', 'Avg of 5'],
+] as const;
+---
+
+<div class="ruled-panel" data-reaction>
+  <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+  <div
+    role="button"
+    tabindex="0"
+    data-panel
+    data-state="idle"
+    class="grid min-h-72 cursor-pointer border-b border-outline-variant touch-manipulation select-none place-items-center p-8 text-center bg-surface-container-low text-on-surface motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-standard data-[state=lit]:bg-primary data-[state=lit]:text-on-primary data-[state=lit]:shadow-glow-lg data-[state=early]:bg-error-container data-[state=early]:text-on-error-container"
+  >
+    <div>
+      <p data-heading class="font-mono text-headline-lg font-semibold tracking-tight">Click to start</p>
+      <p data-hint class="mt-3 min-h-6 text-body-sm opacity-80">
+        Wait for amber, then click, tap or press Space.
+      </p>
+    </div>
+  </div>
+  <dl class="ruled-grid grid-cols-3">
+    {
+      stats.map(([key, label]) => (
+        <div class="ruled-cell p-5">
+          <dt class="font-mono text-label uppercase tracking-wider text-on-surface-variant">{label}</dt>
+          <dd data-stat={key} class="mt-1 font-mono text-headline-sm font-semibold text-on-surface">
+            –
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p role="status" class="sr-only" data-status></p>
+</div>
+
+<script>
+  type State = 'idle' | 'waiting' | 'lit' | 'result' | 'early';
+  const BEST_KEY = 'reaction-best-ms';
+
+  document.querySelectorAll<HTMLElement>('[data-reaction]').forEach((root) => {
+    const $ = (sel: string) => root.querySelector<HTMLElement>(sel)!;
+    const panel = $('[data-panel]');
+    const title = $('[data-heading]');
+    const hint = $('[data-hint]');
+    const status = $('[data-status]');
+
+    let state: State = 'idle';
+    let timer = 0;
+    let litAt = 0;
+    const recent: number[] = [];
+    let best = Number(localStorage.getItem(BEST_KEY)) || 0;
+    if (best) $('[data-stat="best"]').textContent = `${best} ms`;
+
+    const show = (next: State, heading: string, sub: string, announce = heading) => {
+      state = next;
+      panel.dataset.state = next;
+      title.textContent = heading;
+      hint.textContent = sub;
+      status.textContent = announce;
+    };
+
+    const respond = () => {
+      if (state === 'waiting') {
+        clearTimeout(timer);
+        show('early', 'Too soon', 'Wait for amber. Click to try again.');
+      } else if (state === 'lit') {
+        const ms = Math.round(performance.now() - litAt);
+        recent.push(ms);
+        if (recent.length > 5) recent.shift();
+        if (!best || ms < best) {
+          best = ms;
+          try {
+            localStorage.setItem(BEST_KEY, String(ms));
+          } catch {
+            // Storage unavailable (private mode); best still holds for this visit.
+          }
+        }
+        const avg = Math.round(recent.reduce((a, b) => a + b, 0) / recent.length);
+        $('[data-stat="last"]').textContent = `${ms} ms`;
+        $('[data-stat="best"]').textContent = `${best} ms`;
+        $('[data-stat="avg"]').textContent = `${avg} ms`;
+        show('result', `${ms} ms`, 'Click to go again.', `${ms} milliseconds. Best ${best}, average ${avg}.`);
+      } else {
+        show('waiting', 'Wait for amber…', 'Don’t jump the gun.');
+        timer = window.setTimeout(() => {
+          show('lit', 'Now!', '');
+          litAt = performance.now();
+        }, 1500 + Math.random() * 3500);
+      }
+    };
+
+    // pointerdown, not click: the press is the reaction, not the release.
+    panel.addEventListener('pointerdown', (e) => {
+      if (e.button === 0) respond();
+    });
+    panel.addEventListener('keydown', (e) => {
+      if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {
+        e.preventDefault();
+        respond();
+      }
+    });
+  });
+</script>
