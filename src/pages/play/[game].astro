@@ -1,0 +1,50 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Play from '~/layouts/Play.astro';
+import { games, type Game } from '~/data/games';
+import { site } from '~/site.config';
+import BotOrHuman from '~/components/games/BotOrHuman.astro';
+import DrawADigit from '~/components/games/DrawADigit.astro';
+import IsItPoisonous from '~/components/games/IsItPoisonous.astro';
+import LostSignal from '~/components/games/LostSignal.astro';
+import ReactionTest from '~/components/games/ReactionTest.astro';
+import RouteTheRobots from '~/components/games/RouteTheRobots.astro';
+import TetrisVsBot from '~/components/games/TetrisVsBot.astro';
+import Wordlet from '~/components/games/Wordlet.astro';
+
+/** Slug -> component. Every entry in src/data/games.ts needs one, or the build fails. */
+const components = {
+  'beat-the-bot': TetrisVsBot,
+  'draw-a-digit': DrawADigit,
+  'is-it-poisonous': IsItPoisonous,
+  'route-the-robots': RouteTheRobots,
+  wordlet: Wordlet,
+  'bot-or-human': BotOrHuman,
+  reaction: ReactionTest,
+  'lost-signal': LostSignal,
+};
+
+export const getStaticPaths = (() => {
+  return games.map((game) => ({ params: { game: game.slug }, props: { game } }));
+}) satisfies GetStaticPaths;
+
+const { game } = Astro.props as { game: Game };
+const Component = components[game.slug as keyof typeof components];
+if (!Component) throw new Error(`No component mapped for game "${game.slug}" in play/[game].astro`);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: game.title,
+  description: game.blurb,
+  url: new URL(`/play/${game.slug}`, site.url).href,
+  author: { '@type': 'Person', name: site.name, url: site.url },
+  gamePlatform: 'Web browser',
+  playMode: 'SinglePlayer',
+  isAccessibleForFree: true,
+};
+---
+
+<Play game={game} jsonLd={jsonLd}>
+  <Component />
+</Play>

@@ -115,6 +115,24 @@ image; set `cover:` to override.
 
 ---
 
+## Add a game
+
+Games live on `/play` and each one opens full screen at `/play/<slug>`, with
+only a slim bar (back, how to play, full screen, theme) and the game. The page
+never scrolls, and arrow keys / Space are kept from scrolling a tall game.
+
+1. Write the game as a self-contained component in `src/components/games/`.
+2. Add an entry to `src/data/games.ts`: title, blurb, how-to-play text, who
+   you're playing against, and the write-up it came from.
+3. Map its slug to the component in `src/pages/play/[game].astro`.
+4. `npm run build && npm run games:thumbnails` captures its card preview in
+   both themes into `src/assets/games/`. Commit those too.
+
+The same component can also sit inside a post or project write-up; link to the
+full-screen version under it with `[Play it full screen →](/play/<slug>)`.
+
+---
+
 ## Change your details, links or nav
 
 `src/site.config.ts` — name, role, email, location, availability pill, social

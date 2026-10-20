@@ -1,0 +1,117 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Base from '~/layouts/Base.astro';
+import PageHeader from '~/components/PageHeader.astro';
+import Icon from '~/components/Icon.astro';
+import { games, groups } from '~/data/games';
+
+/**
+ * Card previews: src/assets/games/<slug>-dark.webp and <slug>-light.webp,
+ * captured by `npm run games:thumbnails`. A game without one gets a plain card.
+ */
+const shots = import.meta.glob<{ default: ImageMetadata }>('/src/assets/games/*.webp', { eager: true });
+const shot = (slug: string, theme: 'dark' | 'light') => shots[`/src/assets/games/${slug}-${theme}.webp`]?.default;
+
+const sections = (Object.keys(groups) as (keyof typeof groups)[]).map((key) => ({
+  key,
+  ...groups[key],
+  games: games.filter((g) => g.group === key),
+}));
+---
+
+<Base
+  title="Games"
+  description="Small games you can play in the browser, several of them against the real models and solvers from my projects."
+>
+  <PageHeader
+    kicker="Play"
+    title="Games"
+    lead="Every game opens full screen with nothing else in the way. Several of them pit you against a model or solver from one of my projects, running in your browser."
+  />
+
+  {
+    sections.map((section, s) => (
+      <section aria-labelledby={`group-${section.key}`} class:list={['border-b border-outline-variant', s % 2 === 1 && 'bg-surface-container-lowest']}>
+        <div class="wrap py-14 md:py-18">
+          <p class="kicker">{String(s + 1).padStart(2, '0')}</p>
+          <h2 id={`group-${section.key}`} class="mt-4 text-h2 font-semibold tracking-tight text-on-surface">
+            {section.title}
+          </h2>
+          <p class="mt-3 max-w-2xl text-body-lg text-on-surface-variant">{section.lead}</p>
+
+          <div class="ruled-panel mt-10">
+            <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+            <ul class="ruled-grid sm:grid-cols-2 lg:grid-cols-4" role="list">
+              {section.games.map((game) => {
+                const dark = shot(game.slug, 'dark');
+                const light = shot(game.slug, 'light');
+                return (
+                  <li class="ruled-cell is-interactive group relative flex flex-col">
+                    <div class="game-thumb relative aspect-[4/3] overflow-hidden border-b border-rule-soft bg-surface-container-lowest">
+                      {dark && light ? (
+                        <>
+                          <Image src={dark} alt="" widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-dark size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
+                          <Image src={light} alt="" widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-light size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
+                        </>
+                      ) : (
+                        <div class="dot-field size-full" />
+                      )}
+                      <span class="absolute right-3 bottom-3 grid size-11 place-items-center rounded-full bg-primary text-on-primary opacity-0 shadow-elevation-2 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100" aria-hidden="true">
+                        <Icon name="play" size={16} />
+                      </span>
+                    </div>
+
+                    <div class="flex flex-1 flex-col p-5">
+                      <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">vs. {game.opponent}</p>
+                      <h3 class="mt-2.5 text-title font-semibold leading-snug transition-colors duration-200 group-hover:text-primary">
+                        <a href={`/play/${game.slug}`} class="after:absolute after:inset-0 after:content-['']">
+                          {game.title}
+                        </a>
+                      </h3>
+                      <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{game.blurb}</p>
+                      <dl class="mt-auto flex flex-wrap gap-1.5 pt-5">
+                        <dt class="sr-only">Length</dt>
+                        <dd class="chip py-1">{game.length}</dd>
+                        <dt class="sr-only">Controls</dt>
+                        <dd class="chip py-1">{game.controls}</dd>
+                      </dl>
+                      {game.story && (
+                        <a
+                          href={game.story.href}
+                          class="link-underline relative z-10 mt-4 self-start font-mono text-label text-on-surface-variant hover:text-primary"
+                        >
+                          How it works →<span class="sr-only">: {game.story.label}</span>
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section>
+    <div class="wrap py-12">
+      <p class="max-w-2xl text-body text-on-surface-variant">
+        Looking for endless Wordlet? The <a href="/wordlet" class="link-underline text-primary">original Flutter build</a> picks
+        a new word every round.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Show the preview that matches the theme; mirrors ThemeToggle's rules. */
+  .thumb-dark { display: none; }
+  :global(:root[data-theme='dark']) .thumb-dark { display: block; }
+  :global(:root[data-theme='dark']) .thumb-light { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .thumb-dark { display: block; }
+    :global(:root:not([data-theme='light'])) .thumb-light { display: none; }
+  }
+</style>

@@ -83,7 +83,7 @@ const speeds = [
     </dl>
 
     <div
-      class="relative grid grid-cols-1 gap-5 p-5 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:grid-cols-2"
+      class="relative grid grid-cols-2 gap-3 p-3 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:gap-5 sm:p-5"
       tabindex="0"
       role="application"
       aria-roledescription="game"
@@ -93,7 +93,7 @@ const speeds = [
     >
       {
         boards.map((b) => (
-          <div class:list={['mx-auto w-full max-w-56', b.side === 'bot' ? 'order-3 sm:order-2' : 'order-1']}>
+          <div class="mx-auto w-full max-w-56">
             <div class="mb-2 flex items-center justify-between">
               <span
                 class:list={[
@@ -104,7 +104,7 @@ const speeds = [
                 {b.name}
               </span>
               {b.side === 'bot' && (
-                <span class="font-mono text-label text-on-surface-variant" title="The network's value estimate for the placement it chose">
+                <span class="font-mono text-label text-on-surface-variant max-sm:hidden" title="The network's value estimate for the placement it chose">
                   V̂ <span data-tvb-stat="bot-value">—</span>
                 </span>
               )}
@@ -132,7 +132,7 @@ const speeds = [
         ))
       }
 
-      <div class="order-2 grid grid-cols-6 gap-1.5 sm:order-3 sm:col-span-2 pointer-fine:hidden" aria-label="Touch controls" role="group">
+      <div class="col-span-2 grid grid-cols-6 gap-1.5 pointer-fine:hidden" aria-label="Touch controls" role="group">
         {
           pad.map((p) => (
             <button

@@ -3,47 +3,16 @@ import path from 'node:path';
 import { getCollection } from 'astro:content';
 import { site, socials } from '~/site.config';
 import { hasPhotos, visibleNav } from '~/lib/nav';
+import { games } from '~/data/games';
 import type { TerminalData, TerminalEntry } from './types';
 
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-const titleFromSlug = (s: string) => s.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-
-/**
- * Games the `play` command can launch: any page under src/pages/{play,games,arcade}/,
- * plus Wordlet (a Flutter build in public/). Only things that actually exist are listed.
- */
+/** Games the `play` command can launch: the /play catalog, plus Wordlet's Flutter build in public/. */
 function findGames(): TerminalData['games'] {
-  const sources = import.meta.glob<string>('/src/pages/{play,games,arcade}/**/*.{astro,md,mdx}', {
-    query: '?raw',
-    import: 'default',
-    eager: true,
-  });
-  const games = Object.entries(sources)
-    .filter(([file]) => !file.includes('['))
-    .map(([file, source]) => {
-      const href = file
-        .replace(/^\/src\/pages/, '')
-        .replace(/\.(astro|mdx?)$/, '')
-        .replace(/\/index$/, '');
-      const name = href.split('/').filter(Boolean).pop() ?? href;
-      // Use the page's own title (`<Base title="…">` or frontmatter) when it has one.
-      const title = source.match(/\btitle[=:]\s*["']([^"']+)["']/)?.[1];
-      return { name: slugify(name), href, summary: title ?? titleFromSlug(name) };
-    })
-    // Skip the section index itself (/play), keep /play/<game>.
-    .filter((g) => g.href.split('/').filter(Boolean).length > 1);
-
+  const list = games.map((g) => ({ name: g.slug, href: `/play/${g.slug}`, summary: g.title }));
   if (existsSync(path.join(process.cwd(), 'public/wordlet/index.html'))) {
-    games.push({ name: 'wordlet', href: '/wordlet', summary: 'Word guessing game, built in Flutter' });
+    list.push({ name: 'wordlet-endless', href: '/wordlet', summary: 'Endless Wordlet, the original Flutter build' });
   }
-  const seen = new Set<string>();
-  return games
-    .filter((g) => (seen.has(g.name) ? false : (seen.add(g.name), true)))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  return list.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 let cached: Promise<TerminalData> | undefined;

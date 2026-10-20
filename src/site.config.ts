@@ -37,6 +37,7 @@ export const socials: SocialLink[] = [
 export const nav = [
   { label: 'Work', href: '/work' },
   { label: 'Writing', href: '/blog' },
+  { label: 'Games', href: '/play' },
   { label: 'Photos', href: '/photos' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },

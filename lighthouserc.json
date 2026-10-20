@@ -7,7 +7,9 @@
         "http://localhost/work/",
         "http://localhost/work/zero-trust-delivery/",
         "http://localhost/blog/ml-framework-comparison/",
-        "http://localhost/resume/"
+        "http://localhost/resume/",
+        "http://localhost/play/",
+        "http://localhost/play/beat-the-bot/"
       ],
       "numberOfRuns": 1,
       "settings": {
