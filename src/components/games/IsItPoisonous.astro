@@ -1,0 +1,343 @@
+---
+// "Is it poisonous?" — guess edible vs poisonous for a real specimen from the
+// UCI Mushroom dataset, then watch the ID3 tree make its call.
+//
+// The tree is rendered here at build time; the script only loads (and fetches
+// the model chunk) once the game scrolls into view, so the rest of the page
+// stays static.
+import model from '~/lib/games/is-it-poisonous/model.json';
+import type { Model } from '~/lib/games/is-it-poisonous/id3';
+import Tree from './IsItPoisonousTree.astro';
+
+const { attributes, tree, trainedOn, trainingErrors } = model as unknown as Model;
+---
+
+<section class="iip not-prose ruled-panel" data-iip aria-labelledby="iip-title">
+  <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+  <div class="flex flex-wrap items-start justify-between gap-4 border-b border-outline-variant p-5">
+    <div>
+      <p class="kicker">Mini game</p>
+      <p id="iip-title" class="mt-2 text-title font-semibold text-on-surface">Is it poisonous?</p>
+      <p class="mt-1 text-body-sm text-on-surface-variant">
+        A real specimen from the dataset. Make your call, then see what the tree says.
+      </p>
+    </div>
+    <dl class="flex gap-5 font-mono text-caption" aria-label="Score">
+      <div>
+        <dt class="text-label uppercase tracking-widest text-on-surface-variant">Score</dt>
+        <dd class="mt-1 text-body font-semibold text-on-surface" data-iip-score>0 / 0</dd>
+      </div>
+      <div>
+        <dt class="text-label uppercase tracking-widest text-on-surface-variant">Streak</dt>
+        <dd class="mt-1 text-body font-semibold text-primary" data-iip-streak>0</dd>
+      </div>
+      <div>
+        <dt class="text-label uppercase tracking-widest text-on-surface-variant">Best</dt>
+        <dd class="mt-1 text-body font-semibold text-on-surface" data-iip-best>0</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="p-5">
+    <p class="font-mono text-label uppercase tracking-widest text-on-surface-variant" data-iip-specimen-label>
+      Specimen
+    </p>
+    <dl class="iip-traits mt-3 grid grid-cols-2 border border-outline-variant sm:grid-cols-3" data-iip-traits>
+      {
+        attributes.map((attr, i) => (
+          <div class="iip-trait px-3 py-2" data-attr={i}>
+            <dt class="font-mono text-label text-on-surface-variant">{attr.name}</dt>
+            <dd class="text-body-sm font-medium text-on-surface" data-iip-value>—</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="mt-5 flex flex-wrap items-center gap-3" data-iip-guess>
+      <button type="button" class="btn btn-tonal" data-iip-choice="e" aria-keyshortcuts="e" disabled>
+        Edible
+      </button>
+      <button type="button" class="btn btn-tonal" data-iip-choice="p" aria-keyshortcuts="p" disabled>
+        Poisonous
+      </button>
+      <button type="button" class="btn btn-primary" data-iip-next aria-keyshortcuts="n" hidden>
+        Next mushroom
+      </button>
+      <span class="font-mono text-label text-on-surface-variant max-sm:hidden">Keys: E · P · N</span>
+    </div>
+
+    <div class="mt-5 min-h-12" aria-live="polite" data-iip-result>
+      <noscript>
+        <p class="text-body-sm text-on-surface-variant">The game needs JavaScript; the tree below works without it.</p>
+      </noscript>
+    </div>
+
+    <ol class="iip-path mt-3 flex flex-wrap gap-2" data-iip-path aria-label="Decision path" hidden></ol>
+  </div>
+
+  <details class="iip-tree border-t border-outline-variant" data-iip-tree>
+    <summary class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-5 py-3 font-mono text-caption text-on-surface hover:text-primary">
+      <span>The whole tree · {trainedOn.toLocaleString('en-US')} training specimens, {trainingErrors} misclassified</span>
+      <span class="iip-caret text-on-surface-variant" aria-hidden="true">+</span>
+    </summary>
+    <div class="overflow-x-auto px-3 pb-5">
+      <ul class="iip-tree-root" aria-label="ID3 decision tree">
+        <Tree node={tree} attributes={attributes} />
+      </ul>
+    </div>
+  </details>
+
+  <p class="border-t border-outline-variant px-5 py-3 text-caption text-on-surface-variant">
+    A toy trained on 23 species of <em>Agaricus</em> and <em>Lepiota</em> from a 1981 field guide. It cannot tell you
+    whether the mushroom in your hand is safe — please don't use it for real foraging.
+  </p>
+</section>
+
+<script>
+  import { classify, labelName, type Label, type Model } from '~/lib/games/is-it-poisonous/id3';
+
+  const BEST_KEY = 'iip-best-streak';
+
+  function readBest(): number {
+    try {
+      return Number(localStorage.getItem(BEST_KEY)) || 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  function writeBest(n: number) {
+    try {
+      localStorage.setItem(BEST_KEY, String(n));
+    } catch {
+      /* storage blocked: best streak just won't persist */
+    }
+  }
+
+  function shuffled<T>(items: T[]): T[] {
+    const a = items.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  async function start(root: HTMLElement) {
+    const model = (await import('~/lib/games/is-it-poisonous/model.json')).default as unknown as Model;
+    const { attributes, tree, specimens } = model;
+
+    const q = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+    const traitCells = [...root.querySelectorAll<HTMLElement>('[data-attr]')];
+    const choices = [...root.querySelectorAll<HTMLButtonElement>('[data-iip-choice]')];
+    const nextBtn = q<HTMLButtonElement>('[data-iip-next]');
+    const result = q<HTMLElement>('[data-iip-result]');
+    const pathList = q<HTMLOListElement>('[data-iip-path]');
+    const specimenLabel = q<HTMLElement>('[data-iip-specimen-label]');
+    const scoreEl = q<HTMLElement>('[data-iip-score]');
+    const streakEl = q<HTMLElement>('[data-iip-streak]');
+    const bestEl = q<HTMLElement>('[data-iip-best]');
+    const treeNodes = [...root.querySelectorAll<HTMLElement>('[data-path]')];
+
+    let bag: number[] = [];
+    let current = -1;
+    let answered = false;
+    let played = 0;
+    let correct = 0;
+    let streak = 0;
+    let best = readBest();
+
+    const renderScore = () => {
+      scoreEl.textContent = `${correct} / ${played}`;
+      streakEl.textContent = String(streak);
+      bestEl.textContent = String(best);
+    };
+
+    const traitsOf = (i: number) => specimens[i].slice(1).split('');
+
+    function deal() {
+      if (bag.length === 0) {
+        bag = shuffled(specimens.map((_, i) => i));
+        if (bag[bag.length - 1] === current && bag.length > 1) bag.unshift(bag.pop()!);
+      }
+      current = bag.pop()!;
+      answered = false;
+      const x = traitsOf(current);
+      traitCells.forEach((cell, i) => {
+        cell.removeAttribute('data-tested');
+        cell.querySelector('[data-iip-value]')!.textContent = attributes[i].values[x[i]] ?? x[i];
+      });
+      specimenLabel.textContent = `Specimen #${String(current + 1).padStart(3, '0')}`;
+      root.removeAttribute('data-revealed');
+      treeNodes.forEach((n) => n.removeAttribute('data-on'));
+      result.replaceChildren();
+      pathList.replaceChildren();
+      pathList.hidden = true;
+      choices.forEach((b) => (b.disabled = false));
+      nextBtn.hidden = true;
+    }
+
+    function guess(choice: Label) {
+      if (answered || current < 0) return;
+      answered = true;
+      const x = traitsOf(current);
+      const { steps, verdict } = classify(tree, x);
+      const right = choice === verdict;
+
+      played += 1;
+      if (right) {
+        correct += 1;
+        streak += 1;
+        if (streak > best) {
+          best = streak;
+          writeBest(best);
+        }
+      } else {
+        streak = 0;
+      }
+      renderScore();
+
+      // Highlight the path in the full tree and the traits the tree looked at.
+      const onPath = new Set(['', ...steps.map((s) => s.id)]);
+      treeNodes.forEach((n) => n.toggleAttribute('data-on', onPath.has(n.dataset.path ?? '')));
+      const tested = new Set(steps.map((s) => s.attr));
+      traitCells.forEach((cell, i) => cell.toggleAttribute('data-tested', tested.has(i)));
+      root.setAttribute('data-revealed', '');
+
+      const headline = document.createElement('p');
+      headline.className = 'text-body font-semibold ' + (right ? 'text-on-surface' : 'text-error');
+      headline.textContent = right
+        ? `Correct — the tree says ${labelName(verdict)}.`
+        : `Not quite — the tree says ${labelName(verdict)}.`;
+      const detail = document.createElement('p');
+      detail.className = 'mt-1 text-body-sm text-on-surface-variant';
+      detail.textContent =
+        steps.length === 1
+          ? `It only needed one question: the ${attributes[steps[0].attr].name}.`
+          : `It asked ${steps.length} questions, ${steps.map((s) => attributes[s.attr].name).join(', then ')}.`;
+      result.replaceChildren(headline, detail);
+
+      const chip = (text: string, extra = '') => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = `chip ${extra}`.trim();
+        span.textContent = text;
+        li.append(span);
+        return li;
+      };
+      const items = steps.map((s) => chip(`${attributes[s.attr].name} = ${attributes[s.attr].values[s.value]}`));
+      const leaf = chip(labelName(verdict), `iip-verdict ${verdict === 'p' ? 'is-poisonous' : 'is-edible'}`);
+      pathList.replaceChildren(...items, leaf);
+      pathList.hidden = false;
+
+      const hadFocus = root.contains(document.activeElement);
+      choices.forEach((b) => (b.disabled = true));
+      nextBtn.hidden = false;
+      if (hadFocus) nextBtn.focus();
+    }
+
+    choices.forEach((b) => b.addEventListener('click', () => guess(b.dataset.iipChoice as Label)));
+    nextBtn.addEventListener('click', () => {
+      deal();
+      choices[0].focus();
+    });
+
+    // Shortcuts only while focus is inside the game, so the page keeps its own keys.
+    root.addEventListener('keydown', (ev) => {
+      if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      const k = ev.key.toLowerCase();
+      if (!answered && (k === 'e' || k === 'p')) {
+        ev.preventDefault();
+        guess(k);
+      } else if (answered && k === 'n') {
+        ev.preventDefault();
+        nextBtn.click();
+      }
+    });
+
+    renderScore();
+    deal();
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-iip]')) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          start(root).catch((err) => console.error('Is it poisonous? failed to start', err));
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(root);
+  }
+</script>
+
+<style>
+  .iip {
+    margin-block: 2.5rem;
+  }
+  .iip-trait {
+    box-shadow:
+      1px 0 0 var(--md-sys-color-rule-soft),
+      0 1px 0 var(--md-sys-color-rule-soft);
+    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .iip-trait[data-tested] {
+    background: var(--md-sys-color-primary-container);
+  }
+  .iip-trait[data-tested] dt,
+  .iip-trait[data-tested] dd {
+    color: var(--md-sys-color-on-primary-container);
+  }
+  .iip-traits {
+    overflow: hidden;
+  }
+
+  .iip-path,
+  .iip-tree-root {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .iip-path :global(li) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .iip-path :global(li + li)::before {
+    content: '→' / '';
+    color: var(--md-sys-color-outline);
+  }
+  .iip-path :global(.iip-verdict) {
+    font-weight: 600;
+    border-color: transparent;
+  }
+  .iip-path :global(.iip-verdict.is-edible) {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+  .iip-path :global(.iip-verdict.is-poisonous) {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+
+  .iip-tree summary {
+    list-style: none;
+  }
+  .iip-tree summary::-webkit-details-marker {
+    display: none;
+  }
+  .iip-tree[open] .iip-caret {
+    transform: rotate(45deg);
+  }
+  .iip-caret {
+    display: inline-block;
+    transition: transform var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .iip-tree-root {
+    min-width: 22rem;
+  }
+</style>
