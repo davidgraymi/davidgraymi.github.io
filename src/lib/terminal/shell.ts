@@ -55,6 +55,31 @@ function destinations(data: TerminalData) {
   return map;
 }
 
+/**
+ * Parent of a page path. Repeated slashes are collapsed first: on a URL like
+ * `//evil.com/x` a naive split would yield `//evil.com`, a protocol-relative
+ * (off-site) URL. The result always starts with exactly one slash.
+ */
+export function parentPath(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean);
+  return `/${segments.slice(0, -1).join('/')}`;
+}
+
+/**
+ * Resolve a navigation target and return it only if it stays on this origin.
+ * Rejects protocol-relative hrefs (`//host`) outright.
+ */
+export function safeInternalHref(href: string, origin: string): string | undefined {
+  if (/^\/\//.test(href) || /^[\\/][\\/]/.test(href)) return undefined;
+  try {
+    const url = new URL(href, origin);
+    if (url.origin !== origin) return undefined;
+    return url.pathname.replace(/\/{2,}/g, '/') + url.search + url.hash;
+  } catch {
+    return undefined;
+  }
+}
+
 const normalise = (arg: string) => arg.replace(/^~?\/+/, '').replace(/\/+$/, '');
 
 function findEntry(data: TerminalData, arg: string): TerminalEntry | undefined {
@@ -136,8 +161,7 @@ export const commands: Record<string, Command> = {
       const arg = args[0] ?? '~';
       if (arg === '~' || arg === '/' || arg === 'home') return { lines: [], effect: { type: 'navigate', href: '/' } };
       if (arg === '..') {
-        const parent = ctx.pathname.replace(/\/+$/, '').split('/').slice(0, -1).join('/') || '/';
-        return { lines: [], effect: { type: 'navigate', href: parent } };
+        return { lines: [], effect: { type: 'navigate', href: parentPath(ctx.pathname) } };
       }
       const dest = destinations(ctx.data).get(normalise(arg));
       if (!dest || dest.external) return err(`cd: no such file or directory: ${arg}`);

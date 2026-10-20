@@ -1,7 +1,7 @@
 /**
  * DOM side of the terminal. Loaded on first open by the listener in Terminal.astro.
  */
-import { complete, run, type Effect, type Line, type Theme, type Tone } from './shell';
+import { complete, run, safeInternalHref, type Effect, type Line, type Theme, type Tone } from './shell';
 import type { TerminalData } from './types';
 
 const HISTORY_KEY = 'terminal:history';
@@ -139,15 +139,39 @@ function perform(effect: Effect | undefined) {
       setTheme(effect.value);
       break;
     case 'navigate':
-      if (effect.external) {
-        window.open(effect.href, '_blank', 'noopener,noreferrer');
-      } else {
-        print([[{ text: `→ ${effect.href}`, tone: 'muted' }]]);
-        els.dialog.close();
-        location.assign(effect.href);
-      }
+      navigate(effect.href, effect.external);
       break;
   }
+}
+
+/**
+ * The only place the terminal leaves the page. Internal targets must resolve to
+ * this origin; external ones (social profiles from build-time data) must be https.
+ */
+function navigate(href: string, external = false) {
+  if (!els) return;
+  if (external) {
+    let url: URL | undefined;
+    try {
+      url = new URL(href);
+    } catch {
+      url = undefined;
+    }
+    if (url?.protocol !== 'https:') {
+      print([[{ text: `refusing to open ${href}`, tone: 'error' }]]);
+      return;
+    }
+    window.open(url.href, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  const target = safeInternalHref(href, location.origin);
+  if (!target) {
+    print([[{ text: `refusing to leave ${location.host}: ${href}`, tone: 'error' }]]);
+    return;
+  }
+  print([[{ text: `→ ${target}`, tone: 'muted' }]]);
+  els.dialog.close();
+  location.assign(target);
 }
 
 function submit(value: string) {
