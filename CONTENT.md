@@ -165,3 +165,12 @@ npm run build && npm run resume:pdf   # writes public/files/David-Gray-Resume.pd
 
 It prints `/resume` with your local Chrome (set `CHROME_PATH` to use another
 Chromium). Commit the PDF along with the data change.
+
+## Analytics
+
+Google Analytics 4 runs on every page. The measurement ID is `analyticsId` in
+`src/site.config.ts`; set it to `''` to turn analytics off. It only loads in built
+pages and only reports from `davidmgray.com`, so `npm run dev`, previews and
+Lighthouse CI don't count as visits. Clicking an email link or "Copy address"
+sends a `contact_email` event; outbound links and file downloads come from GA's
+own enhanced measurement.

@@ -1,0 +1,37 @@
+---
+import { site } from '~/site.config';
+
+/**
+ * Google Analytics 4. Built pages only, so `npm run dev` never loads it, and it
+ * only reports from the real domain: previews and Lighthouse CI stay out of the
+ * numbers. The CSP in src/lib/csp-integration.mjs allows Google's hosts.
+ *
+ * GA's enhanced measurement already records outbound links (GitHub, LinkedIn)
+ * and file downloads (resume PDF, project zips). The one thing it can't see is
+ * someone reaching for the email address, so that's tracked here.
+ */
+const id = site.analyticsId;
+const host = new URL(site.url).hostname;
+---
+
+{
+  import.meta.env.PROD && id && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
+      <script is:inline define:vars={{ id, host }}>
+        if (location.hostname !== host) window[`ga-disable-${id}`] = true;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          dataLayer.push(arguments);
+        };
+        gtag('js', new Date());
+        gtag('config', id);
+
+        document.addEventListener('click', (e) => {
+          const el = e.target instanceof Element && e.target.closest('a[href^="mailto:"], [data-copy-email]');
+          if (el) gtag('event', 'contact_email', { method: el.matches('a') ? 'mailto' : 'copy' });
+        });
+      </script>
+    </>
+  )
+}
