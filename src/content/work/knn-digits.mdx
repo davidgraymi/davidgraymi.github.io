@@ -15,6 +15,8 @@ links:
     href: /files/knn.zip
 ---
 
+import DrawADigit from '~/components/games/DrawADigit.astro';
+
 Classify a handwritten digit from a 28×28 grid of pixels, each an integer
 between 0 and 255. The KNN part is textbook. The part I actually cared about was
 the cost of choosing `k`.
@@ -23,6 +25,22 @@ The naive approach re-runs the whole distance calculation for every candidate
 value of `k`. I wrote an optimizer that reduces this to one instance of the
 distance computation per unclassified object, then evaluates every candidate `k`
 against those already-computed neighbours.
+
+## Try it
+
+Draw a digit below and a weighted KNN guesses it as you go. It votes with the
+`k` training digits closest to yours, each weighted by how close it is, and
+shows you which ones they were. Slide `k` to see the same tradeoff the
+optimizer was built to search: a small `k` trusts one lookalike, a large `k`
+lets more distant digits outvote it.
+
+<DrawADigit />
+
+The training set here is a balanced 750-digit slice of MNIST (75 of each
+digit), stored at 4 bits per pixel so the whole thing is about 300 KB. On
+held-out MNIST test digits it scores around 86% at `k = 1` to 5. Your own
+handwriting will do a little worse: a mouse stroke isn't a pen on paper, and
+750 examples is a small fraction of MNIST's 60,000 training digits.
 
 The full write-up, including the accuracy comparison across `k` values, is in the
 research report.
