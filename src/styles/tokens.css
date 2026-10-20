@@ -230,6 +230,50 @@
 }
 
 /* ---------------------------------------------------------------------------
+   CRT mode (Konami code easter egg, `<html class="crt">`).
+   A mode, not a third theme: it remaps the system roles onto an amber
+   phosphor ramp and pins the dark side of every light-dark() pair, whatever
+   data-theme says. Overlay styles live in KonamiCode.astro.
+--------------------------------------------------------------------------- */
+:root.crt,
+:root.crt[data-theme] {
+  color-scheme: dark;
+
+  --md-sys-color-primary: var(--md-ref-amber-500);
+  --md-sys-color-on-primary: var(--md-ref-amber-ink);
+  --md-sys-color-primary-container: var(--md-ref-amber-900);
+  --md-sys-color-on-primary-container: var(--md-ref-amber-200);
+  --md-sys-color-secondary: var(--md-ref-amber-250);
+  --md-sys-color-on-secondary: var(--md-ref-amber-ink);
+  --md-sys-color-secondary-container: var(--md-ref-amber-950);
+  --md-sys-color-on-secondary-container: var(--md-ref-amber-200);
+  --md-sys-color-tertiary: var(--md-ref-amber-600);
+
+  --md-sys-color-surface: var(--md-ref-amber-ink);
+  --md-sys-color-surface-dim: var(--md-ref-amber-ink);
+  --md-sys-color-surface-bright: color-mix(in srgb, var(--md-ref-amber-500) 20%, var(--md-ref-amber-ink));
+  --md-sys-color-surface-container-lowest: var(--md-ref-amber-ink);
+  --md-sys-color-surface-container-low: color-mix(in srgb, var(--md-ref-amber-500) 4%, var(--md-ref-amber-ink));
+  --md-sys-color-surface-container: color-mix(in srgb, var(--md-ref-amber-500) 8%, var(--md-ref-amber-ink));
+  --md-sys-color-surface-container-high: color-mix(in srgb, var(--md-ref-amber-500) 12%, var(--md-ref-amber-ink));
+  --md-sys-color-surface-container-highest: color-mix(in srgb, var(--md-ref-amber-500) 16%, var(--md-ref-amber-ink));
+
+  --md-sys-color-on-surface: var(--md-ref-amber-250);
+  --md-sys-color-on-surface-variant: var(--md-ref-amber-600);
+  --md-sys-color-outline: var(--md-ref-amber-600);
+  --md-sys-color-outline-variant: color-mix(in srgb, var(--md-ref-amber-500) 38%, var(--md-ref-amber-ink));
+  --md-sys-color-rule-soft: color-mix(in srgb, var(--md-ref-amber-500) 18%, transparent);
+  --md-sys-color-dot-field: color-mix(in srgb, var(--md-ref-amber-500) 30%, transparent);
+  --md-sys-color-glow: color-mix(in srgb, var(--md-ref-amber-500) 45%, transparent);
+
+  --md-comp-crt-tint: var(--md-sys-color-primary);
+  --md-comp-crt-scanline: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  --md-comp-crt-vignette: color-mix(in srgb, var(--md-sys-color-scrim) 55%, transparent);
+  --md-comp-crt-text-glow: 0 0 6px var(--md-sys-color-glow);
+  --md-comp-crt-scanline-pitch: 3px;
+}
+
+/* ---------------------------------------------------------------------------
    Tailwind bridge: every utility the site uses resolves to a sys token.
 --------------------------------------------------------------------------- */
 @theme {

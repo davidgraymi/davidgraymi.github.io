@@ -1,0 +1,153 @@
+---
+/**
+ * Konami code easter egg: ↑ ↑ ↓ ↓ ← → ← → B A toggles CRT mode; Escape
+ * turns it off. On touch screens: swipe ↑ ↑ ↓ ↓ ← → ← →, then tap twice.
+ *
+ * Render inside <head>: the inline script restores a saved CRT mode before
+ * first paint. The listener below plus the toggle and toast in
+ * ~/lib/games/konami ship as one inline module, about 0.8 kB gzipped. CRT colour roles
+ * are remapped in tokens.css (`:root.crt`); the overlay is styled here.
+ */
+---
+
+<script is:inline>
+  try {
+    if (localStorage.getItem('crt') === '1') document.documentElement.classList.add('crt');
+  } catch (e) {}
+</script>
+
+<script>
+  // Imported statically on purpose: the toggle is smaller than the ~0.8 kB
+  // preload helper Vite adds to any module that uses a dynamic import().
+  import { setCrt as run } from '~/lib/games/konami';
+
+  const root = document.documentElement;
+  const MAP: Record<string, string> = { ArrowUp: 'U', ArrowDown: 'D', ArrowLeft: 'L', ArrowRight: 'R', b: 'B', a: 'A' };
+  let buf = '';
+  let x = 0;
+  let y = 0;
+
+  const push = (t: string) => {
+    buf = (buf + t).slice(-10);
+    if (buf === 'UUDDLRLRBA' || buf === 'UUDDLRLRTT') {
+      buf = '';
+      run();
+    }
+  };
+
+  // Ignore anything typed into a field.
+  const typing = (t: EventTarget | null) =>
+    t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+
+  addEventListener('keydown', (e) => {
+    // Modified keys belong to other shortcuts (the command palette's Cmd/Ctrl+K).
+    if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || typing(e.target)) return;
+    if (e.key === 'Escape') {
+      // An open dialog owns Escape.
+      if (root.classList.contains('crt') && !document.querySelector('dialog[open]')) run(false);
+      return;
+    }
+    push(MAP[e.key.length === 1 ? e.key.toLowerCase() : e.key] ?? '-');
+  });
+
+  addEventListener(
+    'touchstart',
+    (e) => {
+      x = e.touches[0].clientX;
+      y = e.touches[0].clientY;
+    },
+    { passive: true },
+  );
+  addEventListener(
+    'touchend',
+    (e) => {
+      if (typing(e.target)) return;
+      const dx = e.changedTouches[0].clientX - x;
+      const dy = e.changedTouches[0].clientY - y;
+      const ax = Math.abs(dx);
+      const ay = Math.abs(dy);
+      push(ax < 12 && ay < 12 ? 'T' : ax > ay ? (dx > 0 ? 'R' : 'L') : dy > 0 ? 'D' : 'U');
+    },
+    { passive: true },
+  );
+</script>
+
+<style is:global>
+  /* Phosphor glow and a terminal face. */
+  :root.crt body {
+    font-family: var(--font-mono);
+    text-shadow: var(--md-comp-crt-text-glow);
+  }
+
+  /* Two fixed overlays: an amber colour blend (monochrome everything, images
+     included), then scanlines and a vignette. Neither takes pointer events. */
+  :root.crt body::before,
+  :root.crt body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    pointer-events: none;
+  }
+
+  :root.crt body::before {
+    background: var(--md-comp-crt-tint);
+    mix-blend-mode: color;
+  }
+
+  :root.crt body::after {
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(var(--md-comp-crt-scanline-pitch) - 1px),
+        var(--md-comp-crt-scanline) calc(var(--md-comp-crt-scanline-pitch) - 1px),
+        var(--md-comp-crt-scanline) var(--md-comp-crt-scanline-pitch)
+      ),
+      radial-gradient(ellipse at center, transparent 60%, var(--md-comp-crt-vignette) 100%);
+  }
+
+  /* Flicker only for visitors who are fine with motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    :root.crt body::after {
+      animation: crt-flicker 4s steps(1) infinite;
+    }
+  }
+
+  @keyframes crt-flicker {
+    0%, 100% { opacity: 1; }
+    47% { opacity: 0.86; }
+    48% { opacity: 1; }
+    83% { opacity: 0.92; }
+    84% { opacity: 1; }
+  }
+
+  /* Created by konami.ts, so styled here rather than with utilities (keeps
+     the class list out of the JS). Sits above the overlay so it stays crisp. */
+  .crt-toast {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 1.5rem;
+    width: fit-content;
+    margin-inline: auto;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-sys-elevation-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 2147483647;
+    transition:
+      opacity var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard),
+      translate var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+
+  .crt-toast[data-hidden] {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+</style>
