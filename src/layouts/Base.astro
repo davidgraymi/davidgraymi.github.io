@@ -5,6 +5,7 @@ import Footer from '~/components/Footer.astro';
 import AuroraBackground from '~/components/AuroraBackground.astro';
 import CommandPalette from '~/components/CommandPalette.astro';
 import DotField from '~/components/DotField.astro';
+import KonamiCode from '~/components/KonamiCode.astro';
 import '~/styles/global.css';
 
 interface Props {
@@ -41,6 +42,7 @@ const props = Astro.props;
       new MutationObserver(syncThemeColor).observe(document.documentElement, { attributeFilter: ['data-theme'] });
       syncThemeColor();
     </script>
+    <KonamiCode />
   </head>
   <body class="relative flex min-h-dvh flex-col">
     <AuroraBackground />

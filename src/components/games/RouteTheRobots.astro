@@ -1,0 +1,410 @@
+---
+/**
+ * Route the robots: an editable MAPF grid with a LaCAM solver and a
+ * "beat the solver" mode. Static markup only; the game itself is a separate
+ * chunk imported when the panel nears the viewport.
+ */
+import { MAX_ROBOTS, PRESETS } from '~/lib/games/route-the-robots/presets';
+
+interface Props {
+  id?: string;
+}
+const { id = 'route-the-robots' } = Astro.props;
+const robots = Array.from({ length: MAX_ROBOTS }, (_, i) => i);
+const tools = [
+  { id: 'wall', label: 'Wall', key: 'W' },
+  { id: 'start', label: 'Start', key: 'S' },
+  { id: 'goal', label: 'Goal', key: 'G' },
+  { id: 'erase', label: 'Erase', key: 'X' },
+];
+const moves = [
+  { id: 'ArrowUp', label: 'Move up', glyph: '↑', area: 'up' },
+  { id: 'ArrowLeft', label: 'Move left', glyph: '←', area: 'left' },
+  { id: 'wait', label: 'Wait', glyph: '·', area: 'wait' },
+  { id: 'ArrowRight', label: 'Move right', glyph: '→', area: 'right' },
+  { id: 'ArrowDown', label: 'Move down', glyph: '↓', area: 'down' },
+];
+---
+
+<section id={id} class="rtr not-prose ruled-panel my-10" data-rtr aria-labelledby={`${id}-title`}>
+  <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+  <header class="border-b border-outline-variant p-5">
+    <p class="kicker" id={`${id}-title`}>Try it · Route the robots</p>
+    <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
+      Draw walls, drop up to six robots and their goals, then let a JavaScript LaCAM solver route them — or try to beat it by
+      hand.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-2 border-b border-rule-soft px-5 py-4" data-ui hidden>
+    <span class="mr-1 font-mono text-label uppercase tracking-widest text-on-surface-variant">Puzzle</span>
+    {
+      PRESETS.map((p) => (
+        <button type="button" class="filter-tab" data-preset={p.id} aria-pressed="false">
+          {p.name}
+        </button>
+      ))
+    }
+    <p class="w-full text-caption text-on-surface-variant" data-preset-blurb></p>
+  </div>
+
+  <div class="p-3 sm:p-5">
+    <div class="rtr-stage relative">
+      <div
+        class="rtr-board"
+        data-board
+        role="grid"
+        tabindex="0"
+        aria-label="Puzzle grid, 10 columns by 7 rows. Arrow keys move the cursor."
+        aria-describedby={`${id}-keys`}
+      >
+        <p class="col-span-full row-span-full grid place-items-center text-caption text-on-surface-variant" data-loading>
+          Loading puzzle…
+        </p>
+      </div>
+    </div>
+    <noscript><p class="mt-3 text-caption text-on-surface-variant">This puzzle needs JavaScript.</p></noscript>
+  </div>
+
+  <div data-ui hidden>
+    <!-- Edit controls -->
+    <div class="grid gap-4 border-t border-rule-soft px-5 py-4" data-panel="edit">
+      <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Tool">
+        <span class="mr-1 w-14 font-mono text-label uppercase tracking-widest text-on-surface-variant">Tool</span>
+        {
+          tools.map((t) => (
+            <button type="button" class="filter-tab" data-tool={t.id} aria-pressed="false" aria-keyshortcuts={t.key}>
+              {t.label}
+            </button>
+          ))
+        }
+      </div>
+      <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Robot">
+        <span class="mr-1 w-14 font-mono text-label uppercase tracking-widest text-on-surface-variant">Robot</span>
+        {
+          robots.map((i) => (
+            <button type="button" class="rtr-swatch" data-robot={i} aria-pressed="false" aria-keyshortcuts={String(i + 1)}>
+              <span class="rtr-dot" data-slot={i} aria-hidden="true">
+                {i + 1}
+              </span>
+            </button>
+          ))
+        }
+        <button type="button" class="btn btn-ghost ml-auto h-9 px-4 text-caption" data-action="remove">Remove robot 1</button>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button type="button" class="btn btn-primary" data-action="solve">Solve with LaCAM</button>
+        <button type="button" class="btn btn-tonal" data-action="play">Beat the solver</button>
+        <button type="button" class="btn btn-ghost" data-action="clear">Clear board</button>
+      </div>
+    </div>
+
+    <!-- Watch controls -->
+    <div class="grid gap-4 border-t border-rule-soft px-5 py-4" data-panel="watch" hidden>
+      <div class="flex items-center gap-4">
+        <button type="button" class="btn btn-tonal w-28" data-action="toggle-play">Play</button>
+        <label class="flex flex-1 items-center gap-3">
+          <span class="sr-only">Timestep</span>
+          <input type="range" min="0" max="1" step="1" value="0" class="rtr-scrub w-full" data-scrub />
+        </label>
+        <span class="w-20 text-right font-mono text-label text-on-surface-variant" data-scrub-label>t = 0</span>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button type="button" class="btn btn-primary" data-action="play">Beat the solver</button>
+        <button type="button" class="btn btn-ghost" data-action="edit">Back to editing</button>
+      </div>
+    </div>
+
+    <!-- Manual play controls -->
+    <div class="grid gap-4 border-t border-rule-soft px-5 py-4 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-6" data-panel="play" hidden>
+      <div class="rtr-pad" role="group" aria-label="Move the selected robot">
+        {
+          moves.map((m) => (
+            <button type="button" class={`rtr-pad-btn rtr-pad-${m.area}`} data-move={m.id} aria-label={m.label}>
+              <span aria-hidden="true">{m.glyph}</span>
+            </button>
+          ))
+        }
+      </div>
+      <div class="grid gap-4">
+        <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Selected robot">
+          <span class="mr-1 font-mono text-label uppercase tracking-widest text-on-surface-variant">Robot</span>
+          {
+            robots.map((i) => (
+              <button type="button" class="rtr-swatch" data-robot={i} aria-pressed="false">
+                <span class="rtr-dot" data-slot={i} aria-hidden="true">
+                  {i + 1}
+                </span>
+              </button>
+            ))
+          }
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button type="button" class="btn btn-primary" data-action="step" aria-keyshortcuts="Enter">Step</button>
+          <button type="button" class="btn btn-tonal" data-action="undo" aria-keyshortcuts="U">Undo</button>
+          <button type="button" class="btn btn-ghost" data-action="restart">Restart</button>
+          <button type="button" class="btn btn-ghost" data-action="edit">Edit board</button>
+        </div>
+      </div>
+    </div>
+
+    <dl class="ruled-grid grid-cols-3 border-t border-outline-variant">
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Solver makespan</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-makespan">—</dd>
+      </div>
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Solver sum of costs</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-soc">—</dd>
+      </div>
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Configs explored</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-configs">—</dd>
+      </div>
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your steps</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-steps">—</dd>
+      </div>
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your sum of costs</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-soc">—</dd>
+      </div>
+      <div class="ruled-cell px-4 py-3">
+        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your moves</dt>
+        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-moves">—</dd>
+      </div>
+    </dl>
+
+    <p class="min-h-12 border-t border-outline-variant px-5 py-3 text-body-sm text-on-surface" role="status" aria-live="polite" data-status></p>
+
+    <details class="border-t border-rule-soft px-5 py-3 text-caption text-on-surface-variant" id={`${id}-keys`}>
+      <summary class="cursor-pointer font-mono text-label uppercase tracking-widest">Keyboard and rules</summary>
+      <ul class="mt-2 grid gap-1">
+        <li>Editing: arrow keys move the cursor, Enter or Space applies the tool, W / S / G / X pick a tool, 1–6 pick a robot.</li>
+        <li>Playing: 1–6 pick a robot, arrow keys plan its move (. to wait), Enter steps everyone at once, U undoes.</li>
+        <li>Watching: Space plays or pauses, left and right arrows step through time.</li>
+        <li>
+          Every robot moves at the same time each step. Two robots can't end up on the same cell, and two neighbours can't swap
+          places. Makespan is when the last robot arrives; sum of costs adds up each robot's arrival time.
+        </li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<script>
+  // Load the game only when a board is about to be seen; most visitors to
+  // this page never scroll this far, so they never download it.
+  const roots = document.querySelectorAll<HTMLElement>('[data-rtr]');
+  const boot = (el: HTMLElement) => import('~/lib/games/route-the-robots/game').then((m) => m.mount(el));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          io.unobserve(e.target);
+          boot(e.target as HTMLElement);
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
+    roots.forEach((r) => io.observe(r));
+  } else {
+    roots.forEach(boot);
+  }
+</script>
+
+<style is:global>
+  /* Robot palette: amber signal first, then five hues that stay distinct and
+     carry label text (surface colour) at AA in both themes. Numbers are
+     always drawn on robots and goals, so colour is never the only cue. */
+  .rtr {
+    --rtr-0: var(--md-sys-color-primary);
+    --rtr-1: light-dark(#0369a1, #38bdf8);
+    --rtr-2: light-dark(#6d28d9, #a78bfa);
+    --rtr-3: light-dark(#047857, #34d399);
+    --rtr-4: light-dark(#be123c, #fb7185);
+    --rtr-5: light-dark(#4d7c0f, #a3e635);
+  }
+
+  .rtr-board {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(7, minmax(0, 1fr));
+    gap: 1px;
+    aspect-ratio: 10 / 7;
+    background: var(--md-sys-color-rule-soft);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .rtr[data-mode='edit'] .rtr-board {
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .rtr[data-mode='play'] .rtr-board {
+    cursor: pointer;
+  }
+  .rtr-board:focus-visible {
+    border-color: var(--md-sys-color-primary);
+  }
+
+  .rtr-cell {
+    background: var(--md-sys-color-surface);
+    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .rtr-cell.is-wall {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 42%, var(--md-sys-color-surface));
+  }
+  .rtr[data-mode='edit'] .rtr-cell:not(.is-wall):hover {
+    background: var(--md-sys-color-surface-container);
+  }
+  .rtr-board:focus-visible .rtr-cell.is-cursor {
+    box-shadow: inset 0 0 0 2px var(--md-sys-color-primary);
+  }
+
+  .rtr-overlay {
+    position: absolute;
+    inset: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    pointer-events: none;
+    overflow: visible;
+  }
+  .rtr-goal {
+    fill: none;
+    stroke-width: 0.06;
+    stroke-dasharray: 0.12 0.1;
+  }
+  .rtr-goal-label {
+    font-family: var(--font-mono);
+    font-size: 0.34px;
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  .rtr-trail {
+    fill: none;
+    stroke-width: 0.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.4;
+  }
+  .rtr-intent {
+    stroke-width: 0.08;
+    stroke-linecap: round;
+  }
+  .rtr-ghost {
+    fill: none;
+    stroke-width: 0.06;
+    stroke-dasharray: 0.1 0.08;
+  }
+  .rtr-robot {
+    stroke: var(--md-sys-color-surface);
+    stroke-width: 0.05;
+  }
+  .rtr-robot-label {
+    font-family: var(--font-mono);
+    font-size: 0.36px;
+    font-weight: 700;
+    fill: var(--md-sys-color-surface);
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  .rtr-selected {
+    fill: none;
+    stroke: var(--md-sys-color-on-surface);
+    stroke-width: 0.05;
+  }
+
+  /* Robot swatches: square 44px targets with a numbered colour dot */
+  .rtr-swatch {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-medium);
+    background: var(--md-sys-color-surface-container);
+    cursor: pointer;
+    transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .rtr-swatch:hover {
+    border-color: var(--md-sys-color-outline);
+  }
+  .rtr-swatch.active {
+    border-color: var(--md-sys-color-on-surface);
+    box-shadow: inset 0 0 0 1px var(--md-sys-color-on-surface);
+  }
+  .rtr-swatch.is-empty .rtr-dot {
+    opacity: 0.45;
+  }
+  .rtr-dot {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 700;
+    color: var(--md-sys-color-surface);
+  }
+  .rtr-dot[data-slot='0'] { background: var(--rtr-0); }
+  .rtr-dot[data-slot='1'] { background: var(--rtr-1); }
+  .rtr-dot[data-slot='2'] { background: var(--rtr-2); }
+  .rtr-dot[data-slot='3'] { background: var(--rtr-3); }
+  .rtr-dot[data-slot='4'] { background: var(--rtr-4); }
+  .rtr-dot[data-slot='5'] { background: var(--rtr-5); }
+
+  /* D-pad for touch play */
+  .rtr-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 2.75rem);
+    grid-template-rows: repeat(3, 2.75rem);
+    grid-template-areas: '. up .' 'left wait right' '. down .';
+    gap: 0.25rem;
+    justify-content: start;
+  }
+  .rtr-pad-btn {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--font-mono);
+    font-size: var(--text-body-lg);
+    cursor: pointer;
+    transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+      color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  .rtr-pad-btn:hover {
+    border-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-primary);
+  }
+  .rtr-pad-up { grid-area: up; }
+  .rtr-pad-left { grid-area: left; }
+  .rtr-pad-wait { grid-area: wait; }
+  .rtr-pad-right { grid-area: right; }
+  .rtr-pad-down { grid-area: down; }
+
+  .rtr-scrub {
+    accent-color: var(--md-sys-color-primary);
+    height: 2.75rem;
+  }
+
+  .rtr :is(button, input):focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rtr-cell,
+    .rtr-swatch,
+    .rtr-pad-btn {
+      transition: none;
+    }
+  }
+</style>
