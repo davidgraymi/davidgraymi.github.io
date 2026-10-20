@@ -1,0 +1,102 @@
+---
+/**
+ * Easter egg: press ~ (or `) anywhere outside a text field for a fake shell.
+ * The page only ships a tiny key listener; the shell itself is imported on first open.
+ * Its data (sections, projects, posts, games) is generated here at build time.
+ */
+import { buildTerminalData } from '~/lib/terminal/data';
+
+const data = await buildTerminalData();
+// Escape `<` so a title can never close the script element early.
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<script is:inline type="application/json" id="terminal-data" set:html={json} />
+
+<dialog
+  id="terminal"
+  aria-labelledby="terminal-title"
+  aria-describedby="terminal-hint"
+  class="terminal-dialog fixed inset-0 m-auto h-fit max-h-[85dvh] w-[min(94vw,48rem)] overflow-visible border-0 bg-transparent p-1 text-on-surface backdrop:bg-black/60"
+>
+  <div class="ruled-panel flex max-h-[calc(85dvh-0.5rem)] flex-col bg-surface-container-lowest font-mono shadow-elevation-4">
+    <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+    <div class="flex items-center justify-between gap-3 border-b border-outline-variant bg-surface-container px-4 py-2">
+      <h2 id="terminal-title" class="flex items-center gap-2 text-label font-semibold uppercase tracking-[0.12em] text-on-surface-variant">
+        <span class="inline-block h-2 w-2 bg-primary" aria-hidden="true"></span>
+        Terminal
+        <span class="font-normal normal-case tracking-normal" data-terminal-host></span>
+      </h2>
+      <div class="flex items-center gap-2 text-label text-on-surface-variant">
+        <span id="terminal-hint" class="hidden sm:inline">Type <kbd class="text-primary">help</kbd> · Esc to close</span>
+        <button
+          type="button"
+          data-terminal-close
+          aria-label="Close terminal"
+          class="grid h-11 w-11 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface md:h-8 md:w-8"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <div
+      data-terminal-scroll
+      class="min-h-48 flex-1 overflow-y-auto px-4 pt-3 text-body-sm leading-relaxed"
+    >
+      <div data-terminal-log role="log" aria-live="polite" aria-label="Terminal output" class="whitespace-pre-wrap break-words"></div>
+      <form data-terminal-form class="flex items-baseline gap-2 pb-3" autocomplete="off">
+        <label for="terminal-input" class="shrink-0 whitespace-pre text-primary" data-terminal-prompt>$</label>
+        <input
+          id="terminal-input"
+          type="text"
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="off"
+          enterkeyhint="send"
+          class="terminal-input min-w-0 flex-1 border-0 bg-transparent p-0 text-body-sm text-on-surface outline-none"
+        />
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .terminal-input {
+    caret-color: var(--md-sys-color-primary);
+  }
+  .terminal-input:focus-visible {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .terminal-dialog[open] {
+      animation: terminal-in var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+    }
+    @keyframes terminal-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+    }
+  }
+</style>
+
+<script>
+  type UI = typeof import('~/lib/terminal/ui');
+  let ui: Promise<UI> | undefined;
+
+  const isTyping = (target: EventTarget | null) =>
+    target instanceof HTMLElement &&
+    (target.isContentEditable || !!target.closest('input, textarea, select, [contenteditable]'));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== '~' && e.key !== '`') return;
+    if (e.defaultPrevented || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (isTyping(e.target) || document.querySelector('dialog[open]')) return;
+    e.preventDefault();
+    ui ??= import('~/lib/terminal/ui');
+    ui.then((m) => m.openTerminal());
+  });
+</script>
