@@ -138,7 +138,7 @@ build time from its title and description (`src/lib/og.ts`). Nothing to do when
 you add content. To change the wording on a top-level page's card, edit
 `src/lib/og-pages.ts`.
 
-## Update the résumé
+## Update the resume
 
 Edit `src/data/resume.ts`. `/about` and `/resume` both read from it. Then
 regenerate the PDF so the download matches the page:

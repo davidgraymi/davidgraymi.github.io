@@ -33,7 +33,7 @@ export const pageCards: Record<string, Card> = {
     meta: site.location,
   },
   resume: {
-    kicker: 'Résumé',
+    kicker: 'Resume',
     title: 'David Gray',
     description: site.role,
     path: '/resume',
