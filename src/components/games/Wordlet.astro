@@ -1,0 +1,505 @@
+---
+import Icon from '~/components/Icon.astro';
+import { MAX_GUESSES, WORD_LENGTH } from '~/lib/games/wordlet/engine';
+
+const rows = Array.from({ length: MAX_GUESSES }, (_, i) => i);
+const cols = Array.from({ length: WORD_LENGTH }, (_, i) => i);
+const keyRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+---
+
+<section class="wordlet not-prose mx-auto w-full max-w-lg" data-wordlet aria-labelledby="wordlet-title">
+  <div class="flex items-baseline justify-between gap-4">
+    <h2 id="wordlet-title" class="text-title font-semibold text-on-surface">
+      Wordlet <span class="font-mono text-body text-on-surface-variant" data-wordlet-number></span>
+    </h2>
+    <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant" data-wordlet-date></p>
+  </div>
+
+  <noscript>
+    <p class="mt-6 border border-outline-variant p-5 text-body text-on-surface-variant">
+      The daily puzzle needs JavaScript. The <a class="link-underline text-primary" href="/wordlet">original Flutter build</a>
+      needs it too, sorry.
+    </p>
+  </noscript>
+
+  <div
+    class="mt-6 grid gap-1.5"
+    role="group"
+    aria-label={`Board: ${MAX_GUESSES} guesses of ${WORD_LENGTH} letters`}
+    data-wordlet-board
+  >
+    {
+      rows.map((r) => (
+        <div class="wordlet-row grid grid-cols-5 gap-1.5" role="group" aria-label={`Guess ${r + 1}, empty`} data-row={r}>
+          {cols.map(() => (
+            <div
+              class="wordlet-tile grid aspect-square place-items-center border border-outline-variant bg-surface font-mono text-headline font-semibold uppercase text-on-surface"
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="mt-4 min-h-6 text-center text-body-sm font-medium text-on-surface" role="status" data-wordlet-message></p>
+  <p class="sr-only" aria-live="polite" data-wordlet-announce></p>
+
+  <div class="mt-3 grid gap-1.5" role="group" aria-label="Keyboard" data-wordlet-keyboard>
+    {
+      keyRows.map((row, i) => (
+        <div class="flex justify-center gap-1.5">
+          {i === 2 && (
+            <button
+              type="button"
+              class="wordlet-key min-h-12 shrink-0 rounded-xs border border-outline-variant bg-surface-container px-2 font-mono text-label font-semibold uppercase text-on-surface sm:px-3"
+              data-key="Enter"
+              disabled
+            >
+              Enter
+            </button>
+          )}
+          {[...row].map((letter) => (
+            <button
+              type="button"
+              class="wordlet-key min-h-12 min-w-0 flex-1 rounded-xs border border-outline-variant bg-surface-container font-mono text-body font-semibold text-on-surface sm:max-w-11"
+              data-key={letter}
+              aria-label={letter}
+              disabled
+            >
+              {letter}
+            </button>
+          ))}
+          {i === 2 && (
+            <button
+              type="button"
+              class="wordlet-key grid min-h-12 shrink-0 place-items-center rounded-xs border border-outline-variant bg-surface-container px-3 text-on-surface"
+              data-key="Backspace"
+              aria-label="Delete letter"
+              disabled
+            >
+              <span class="rotate-180">
+                <Icon name="arrow" size={16} />
+              </span>
+            </button>
+          )}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="ruled-panel mt-8" data-wordlet-result hidden>
+    <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+    <div class="ruled-grid">
+      <div class="ruled-cell p-5">
+        <p class="kicker">Today</p>
+        <p class="mt-3 text-title font-semibold text-on-surface" data-wordlet-verdict></p>
+        <p class="mt-1 font-mono text-label text-on-surface-variant" data-wordlet-next></p>
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <button type="button" class="btn btn-primary" data-wordlet-share>
+            <span class="share-idle inline-flex items-center gap-2"><Icon name="copy" size={16} /> Copy result</span>
+            <span class="share-done inline-flex items-center gap-2" hidden><Icon name="check" size={16} /> Copied</span>
+          </button>
+        </div>
+        <pre
+          class="mt-4 whitespace-pre-wrap border border-outline-variant bg-surface-container-low p-4 font-mono text-body-sm text-on-surface"
+          data-wordlet-share-text
+          hidden></pre>
+      </div>
+      <div class="ruled-cell p-5">
+        <p class="kicker">Your record</p>
+        <dl class="mt-4 grid grid-cols-4 gap-3 text-center">
+          <div class="flex flex-col-reverse">
+            <dt class="mt-1 font-mono text-label text-on-surface-variant">Played</dt>
+            <dd class="font-mono text-headline-sm font-semibold text-on-surface" data-stat="played">0</dd>
+          </div>
+          <div class="flex flex-col-reverse">
+            <dt class="mt-1 font-mono text-label text-on-surface-variant">Win %</dt>
+            <dd class="font-mono text-headline-sm font-semibold text-on-surface" data-stat="winRate">0</dd>
+          </div>
+          <div class="flex flex-col-reverse">
+            <dt class="mt-1 font-mono text-label text-on-surface-variant">Streak</dt>
+            <dd class="font-mono text-headline-sm font-semibold text-on-surface" data-stat="streak">0</dd>
+          </div>
+          <div class="flex flex-col-reverse">
+            <dt class="mt-1 font-mono text-label text-on-surface-variant">Best</dt>
+            <dd class="font-mono text-headline-sm font-semibold text-on-surface" data-stat="maxStreak">0</dd>
+          </div>
+        </dl>
+        <p class="kicker mt-6">Guesses to solve</p>
+        <ol class="mt-3 grid gap-1.5" data-wordlet-distribution>
+          {
+            rows.map((r) => (
+              <li class="flex items-center gap-2 font-mono text-label text-on-surface-variant">
+                <span class="w-3 shrink-0 text-right">{r + 1}</span>
+                <span class="flex h-6 min-w-6 items-center justify-end bg-surface-container-highest px-2 text-on-surface" data-bar={r}>
+                  0
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .wordlet-tile.is-flipping {
+      animation: wordlet-flip var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard) both;
+    }
+    .wordlet-tile.is-typed {
+      animation: wordlet-pop var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    }
+    .wordlet-row.is-shaking {
+      animation: wordlet-shake var(--md-sys-motion-duration-long) var(--md-sys-motion-easing-standard);
+    }
+    .wordlet-key {
+      transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    }
+  }
+  @keyframes wordlet-flip {
+    0% { transform: rotateX(0); }
+    50% { transform: rotateX(90deg); }
+    100% { transform: rotateX(0); }
+  }
+  @keyframes wordlet-pop {
+    50% { transform: scale(1.08); }
+  }
+  @keyframes wordlet-shake {
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+  }
+</style>
+
+<script>
+  import {
+    MAX_GUESSES,
+    STORAGE_KEY,
+    WORD_LENGTH,
+    answerFor,
+    dayNumber,
+    keyHints,
+    liveStreak,
+    parseSaved,
+    record,
+    score,
+    shareText,
+    statusOf,
+    type Hint,
+    type Saved,
+  } from '~/lib/games/wordlet/engine';
+
+  // Full class strings so Tailwind sees every one of them.
+  const TILE_BASE = 'border-outline-variant bg-surface text-on-surface';
+  const TILE_TYPED = 'border-outline bg-surface text-on-surface';
+  const TILE: Record<Hint, string> = {
+    correct: 'border-primary bg-primary text-on-primary',
+    present: 'border-secondary bg-secondary text-on-secondary',
+    absent: 'border-on-surface-variant bg-on-surface-variant text-surface',
+  };
+  const KEY_BASE = 'border-outline-variant bg-surface-container text-on-surface';
+  const KEY: Record<Hint, string> = {
+    correct: 'border-primary bg-primary text-on-primary',
+    present: 'border-secondary bg-secondary text-on-secondary',
+    absent: 'border-surface-dim bg-surface-dim text-on-surface-variant opacity-60',
+  };
+  const SPOKEN: Record<Hint, string> = {
+    correct: 'in the right spot',
+    present: 'in the word, wrong spot',
+    absent: 'not in the word',
+  };
+  const ALL_STATE_CLASSES = [TILE_BASE, TILE_TYPED, KEY_BASE, ...Object.values(TILE), ...Object.values(KEY)]
+    .join(' ')
+    .split(' ');
+
+  const setClasses = (el: Element, classes: string) => {
+    el.classList.remove(...ALL_STATE_CLASSES);
+    el.classList.add(...classes.split(' '));
+  };
+
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FLIP_STAGGER_MS = 110;
+  const FLIP_MS = 320;
+
+  async function init(root: HTMLElement) {
+    // The word pool is the only sizeable piece; fetch it once the board is on screen.
+    const { ANSWERS } = await import('~/lib/games/wordlet/words');
+
+    const $ = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-row]')];
+    const keys = new Map(
+      [...root.querySelectorAll<HTMLButtonElement>('[data-key]')].map((b) => [b.dataset.key!, b]),
+    );
+    const message = $<HTMLElement>('[data-wordlet-message]');
+    const announce = $<HTMLElement>('[data-wordlet-announce]');
+    const result = $<HTMLElement>('[data-wordlet-result]');
+    const shareBtn = $<HTMLButtonElement>('[data-wordlet-share]');
+    const sharePre = $<HTMLElement>('[data-wordlet-share-text]');
+
+    const today = dayNumber();
+    const answer = answerFor(today, ANSWERS);
+
+    let saved: Saved;
+    try {
+      saved = parseSaved(localStorage.getItem(STORAGE_KEY), today);
+    } catch {
+      saved = parseSaved(null, today);
+    }
+    const persist = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      } catch {
+        // Private mode or storage full: the game still works, it just won't remember.
+      }
+    };
+
+    let current = '';
+    let busy = false;
+
+    $<HTMLElement>('[data-wordlet-number]').textContent = `#${today + 1}`;
+    $<HTMLElement>('[data-wordlet-date]').textContent = new Date().toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+
+    const say = (text: string) => {
+      message.textContent = text;
+    };
+
+    function paintKeys() {
+      const hints = keyHints(saved.guesses, answer);
+      for (const [k, btn] of keys) {
+        if (k.length !== 1) continue;
+        const hint = hints.get(k);
+        setClasses(btn, hint ? KEY[hint] : KEY_BASE);
+        btn.setAttribute('aria-label', hint ? `${k}, ${SPOKEN[hint]}` : k);
+      }
+    }
+
+    function describeRow(guess: string, hints: Hint[]) {
+      return [...guess].map((ch, i) => `${ch} ${SPOKEN[hints[i]]}`).join(', ');
+    }
+
+    function paintRow(r: number, guess: string, hints: Hint[] | null) {
+      const tiles = rows[r].children;
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        const tile = tiles[i] as HTMLElement;
+        tile.textContent = guess[i] ?? '';
+        setClasses(tile, hints ? TILE[hints[i]] : guess[i] ? TILE_TYPED : TILE_BASE);
+      }
+      rows[r].setAttribute(
+        'aria-label',
+        hints
+          ? `Guess ${r + 1}: ${guess}. ${describeRow(guess, hints)}`
+          : guess
+            ? `Guess ${r + 1}, typing: ${guess.split('').join(' ')}`
+            : `Guess ${r + 1}, empty`,
+      );
+    }
+
+    /** Flip the tiles in one at a time, colouring each at the midpoint of its flip. */
+    function revealRow(r: number, guess: string, hints: Hint[]): Promise<void> {
+      if (prefersReducedMotion()) {
+        paintRow(r, guess, hints);
+        return Promise.resolve();
+      }
+      const tiles = [...rows[r].children] as HTMLElement[];
+      tiles.forEach((tile, i) => {
+        tile.style.animationDelay = `${i * FLIP_STAGGER_MS}ms`;
+        tile.classList.add('is-flipping');
+        setTimeout(() => setClasses(tile, TILE[hints[i]]), i * FLIP_STAGGER_MS + FLIP_MS / 2);
+      });
+      return new Promise((done) =>
+        setTimeout(() => {
+          tiles.forEach((t) => {
+            t.classList.remove('is-flipping');
+            t.style.animationDelay = '';
+          });
+          paintRow(r, guess, hints);
+          done();
+        }, (WORD_LENGTH - 1) * FLIP_STAGGER_MS + FLIP_MS),
+      );
+    }
+
+    function shake(r: number) {
+      const row = rows[r];
+      row.classList.remove('is-shaking');
+      void row.offsetWidth; // restart the animation
+      row.classList.add('is-shaking');
+    }
+
+    let countdown: number | undefined;
+    function showResult() {
+      const status = statusOf(saved.guesses, answer);
+      if (status === 'playing') {
+        result.hidden = true;
+        return;
+      }
+      const { stats } = saved;
+      $<HTMLElement>('[data-wordlet-verdict]').textContent =
+        status === 'won'
+          ? `Solved in ${saved.guesses.length} of ${MAX_GUESSES}.`
+          : `Out of guesses. The word was ${answer}.`;
+      const values: Record<string, number> = {
+        played: stats.played,
+        winRate: stats.played ? Math.round((stats.wins / stats.played) * 100) : 0,
+        streak: liveStreak(stats, today),
+        maxStreak: stats.maxStreak,
+      };
+      root.querySelectorAll<HTMLElement>('[data-stat]').forEach((el) => {
+        el.textContent = String(values[el.dataset.stat!] ?? 0);
+      });
+      const most = Math.max(1, ...stats.distribution);
+      root.querySelectorAll<HTMLElement>('[data-bar]').forEach((bar) => {
+        const i = Number(bar.dataset.bar);
+        const n = stats.distribution[i];
+        bar.textContent = String(n);
+        bar.style.width = `${Math.max(8, (n / most) * 100)}%`;
+        const mine = status === 'won' && i === saved.guesses.length - 1;
+        setClasses(bar, mine ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface');
+      });
+      const tick = () => {
+        const now = new Date();
+        const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const mins = Math.max(0, Math.ceil((midnight.getTime() - now.getTime()) / 60_000));
+        $<HTMLElement>('[data-wordlet-next]').textContent =
+          `Next word in ${Math.floor(mins / 60)}h ${mins % 60}m`;
+        if (dayNumber() !== today) window.location.reload();
+      };
+      tick();
+      clearInterval(countdown);
+      countdown = window.setInterval(tick, 30_000);
+      result.hidden = false;
+    }
+
+    function setKeyboardEnabled(on: boolean) {
+      for (const btn of keys.values()) btn.disabled = !on;
+    }
+
+    async function submit() {
+      const r = saved.guesses.length;
+      if (current.length < WORD_LENGTH) {
+        say('Five letters, please.');
+        announce.textContent = 'Not enough letters.';
+        shake(r);
+        return;
+      }
+      busy = true;
+      const guess = current;
+      const hints = score(guess, answer);
+      current = '';
+      saved.guesses.push(guess);
+      persist();
+      await revealRow(r, guess, hints);
+      paintKeys();
+
+      const status = statusOf(saved.guesses, answer);
+      let outcome = '';
+      if (status !== 'playing' && saved.recordedDay !== today) {
+        saved.stats = record(saved.stats, today, status, saved.guesses.length);
+        saved.recordedDay = today;
+        persist();
+      }
+      if (status === 'won') {
+        outcome = ['Lucky.', 'Brilliant.', 'Sharp.', 'Nicely done.', 'Solid.', 'Phew.'][saved.guesses.length - 1];
+        setKeyboardEnabled(false);
+      } else if (status === 'lost') {
+        outcome = `The word was ${answer}.`;
+        setKeyboardEnabled(false);
+      }
+      say(outcome);
+      announce.textContent = `${guess}: ${describeRow(guess, hints)}. ${outcome}`.trim();
+      showResult();
+      if (status !== 'playing') shareBtn.focus({ preventScroll: true });
+      busy = false;
+    }
+
+    function press(key: string) {
+      if (busy || statusOf(saved.guesses, answer) !== 'playing') return;
+      const r = saved.guesses.length;
+      if (key === 'Enter') {
+        void submit();
+        return;
+      }
+      if (key === 'Backspace') {
+        if (!current) return;
+        current = current.slice(0, -1);
+      } else if (/^[A-Z]$/.test(key) && current.length < WORD_LENGTH) {
+        current += key;
+        const tile = rows[r].children[current.length - 1] as HTMLElement;
+        tile.classList.remove('is-typed');
+        void tile.offsetWidth;
+        tile.classList.add('is-typed');
+      } else {
+        return;
+      }
+      say('');
+      paintRow(r, current, null);
+    }
+
+    // Restore today's board.
+    saved.guesses.forEach((g, r) => paintRow(r, g, score(g, answer)));
+    paintKeys();
+    const status = statusOf(saved.guesses, answer);
+    setKeyboardEnabled(status === 'playing');
+    if (status !== 'playing') {
+      say(status === 'won' ? 'Already solved today. Come back tomorrow.' : `The word was ${answer}.`);
+      showResult();
+    }
+    persist();
+
+    root.querySelector('[data-wordlet-keyboard]')!.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest<HTMLButtonElement>('[data-key]');
+      if (btn) press(btn.dataset.key!);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable], dialog')) return;
+      if (document.querySelector('dialog[open]')) return;
+      // Enter or Space on a focused button already clicks it.
+      if ((e.key === 'Enter' || e.key === ' ') && target?.closest('button, a')) return;
+      const key = e.key === 'Enter' || e.key === 'Backspace' ? e.key : e.key.length === 1 ? e.key.toUpperCase() : '';
+      if (!key || (key.length === 1 && !/^[A-Z]$/.test(key))) return;
+      e.preventDefault();
+      press(key);
+    });
+
+    shareBtn.addEventListener('click', async () => {
+      const text = shareText(today, saved.guesses, answer);
+      try {
+        await navigator.clipboard.writeText(text);
+        const idle = shareBtn.querySelector<HTMLElement>('.share-idle')!;
+        const done = shareBtn.querySelector<HTMLElement>('.share-done')!;
+        idle.hidden = true;
+        done.hidden = false;
+        announce.textContent = 'Result copied to the clipboard.';
+        setTimeout(() => {
+          idle.hidden = false;
+          done.hidden = true;
+        }, 1800);
+      } catch {
+        // No clipboard access: show the text so it can be copied by hand.
+        sharePre.textContent = text;
+        sharePre.hidden = false;
+        announce.textContent = 'Could not reach the clipboard. The result is shown below to copy by hand.';
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-wordlet]').forEach((root) => {
+    const start = () => void init(root);
+    if (!('IntersectionObserver' in window)) return start();
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        io.disconnect();
+        start();
+      }
+    });
+    io.observe(root);
+  });
+</script>
