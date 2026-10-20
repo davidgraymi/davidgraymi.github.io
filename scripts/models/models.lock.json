@@ -1,0 +1,23 @@
+{
+  "tetris-value-net": {
+    "repo": "davidgraymi/tetris-value-net",
+    "revision": null,
+    "files": {
+      "weights.json": "0c51ecacbe927fc4be70a5ec7f40f864a0cc5cb5eea9fa6cd8dc7f6ec2c1aa14"
+    }
+  },
+  "id3-mushrooms": {
+    "repo": "davidgraymi/id3-mushrooms",
+    "revision": null,
+    "files": {
+      "model.json": "1b3457e6c333e619e4abdb38b6642bbe5df95e2e12fabc3121e96415cc785db8"
+    }
+  },
+  "knn-mnist-subset": {
+    "repo": "davidgraymi/knn-mnist-subset",
+    "revision": null,
+    "files": {
+      "mnist-subset.bin": "4f182151a2bcb2d432cc6584536aef4296078cf0a9482a9ae3566328a146a125"
+    }
+  }
+}

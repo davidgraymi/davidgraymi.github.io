@@ -32,6 +32,9 @@ jobs:
       - name: Check site
         run: npm run check
 
+      - name: Model artifacts match models.lock.json
+        run: npm run models -- verify
+
       - name: Build site
         run: npm run build
 
