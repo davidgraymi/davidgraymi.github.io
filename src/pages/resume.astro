@@ -1,0 +1,145 @@
+---
+import Base from '~/layouts/Base.astro';
+import Icon from '~/components/Icon.astro';
+import { site } from '~/site.config';
+import { education, leadership, publications, roles, skills } from '~/data/resume';
+import { personSchema } from '~/lib/schema';
+
+const contact = [
+  { label: site.location, href: undefined },
+  { label: site.email, href: `mailto:${site.email}` },
+  { label: 'davidmgray.com', href: site.url },
+  { label: 'github.com/davidgraymi', href: 'https://github.com/davidgraymi' },
+  { label: 'linkedin.com/in/david-gray-mi', href: 'https://www.linkedin.com/in/david-gray-mi/' },
+];
+---
+
+<Base
+  title="Resume"
+  jsonLd={personSchema}
+  description="David Gray's resume: product security and cloud at Boeing, five years of real-time embedded software before that, and an M.S. in CS at Illinois."
+>
+  <div class="wrap max-w-4xl py-10 md:py-14">
+    <div class="no-print flex flex-wrap items-center justify-between gap-3">
+      <p class="kicker">Resume</p>
+      <div class="flex flex-wrap gap-2.5">
+        <a href="/files/David-Gray-Resume.pdf" class="btn btn-primary" download>
+          <Icon name="file" size={15} />
+          Download PDF
+        </a>
+        <button type="button" class="btn btn-ghost" data-print>Print</button>
+      </div>
+    </div>
+
+    <article class="resume ticked-frame mt-6">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="bg-surface p-7 sm:p-10 md:p-12">
+        <header class="border-b border-outline-variant pb-6">
+          <h1 class="text-h2 font-semibold tracking-tight text-on-surface">{site.name}</h1>
+          <p class="mt-1.5 text-title-sm text-on-surface-variant">{site.role}</p>
+          <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-label text-on-surface-variant">
+            {
+              contact.map((c) => (
+                <li>{c.href ? <a href={c.href} class="hover:text-primary">{c.label}</a> : c.label}</li>
+              ))
+            }
+          </ul>
+        </header>
+
+        <section class="resume-section">
+          <h2 class="kicker">Experience</h2>
+          <div class="mt-4 space-y-6">
+            {
+              roles.map((role) => (
+                <div class="resume-item">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                    <h3 class="text-body-lg font-semibold text-on-surface">
+                      {role.title} <span class="font-normal text-on-surface-variant">· {role.org}</span>
+                    </h3>
+                    <p class="font-mono text-label text-on-surface-variant">{role.period}</p>
+                  </div>
+                  <ul class="mt-2 space-y-1.5">
+                    {role.points.map((point) => (
+                      <li class="flex gap-2.5 text-body-sm leading-relaxed text-on-surface-variant">
+                        <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Education</h2>
+          <div class="mt-4 space-y-3">
+            {
+              education.map((item) => (
+                <div class="resume-item flex flex-wrap items-baseline justify-between gap-x-4">
+                  <p class="text-body font-semibold text-on-surface">
+                    {item.degree} <span class="font-normal text-on-surface-variant">· {item.school}</span>
+                    {item.note && <span class="block text-body-sm font-normal text-on-surface-variant">{item.note}</span>}
+                  </p>
+                  <p class="font-mono text-label text-on-surface-variant">{item.period}</p>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Skills</h2>
+          <dl class="mt-4 grid gap-x-6 gap-y-2 text-body-sm sm:grid-cols-[9rem_1fr]">
+            {
+              skills.map((group) => (
+                <>
+                  <dt class="font-semibold text-on-surface">{group.group}</dt>
+                  <dd class="text-on-surface-variant">{group.items.join(' · ')}</dd>
+                </>
+              ))
+            }
+          </dl>
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Publications</h2>
+          <ul class="mt-4 space-y-2.5">
+            {
+              publications.map((p) => (
+                <li class="resume-item text-body-sm leading-relaxed text-on-surface-variant">
+                  {p.authors.replace(/\.$/, '')}. “{p.href ? <a href={p.href} class="text-on-surface underline decoration-outline underline-offset-2 hover:text-primary">{p.title}</a> : <span class="text-on-surface">{p.title}</span>}.” {p.venue}, {p.year}.
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Leadership</h2>
+          <ul class="mt-4 space-y-2.5">
+            {
+              leadership.map((l) => (
+                <li class="resume-item flex flex-wrap items-baseline justify-between gap-x-4 text-body-sm">
+                  <p class="text-on-surface-variant">
+                    <span class="font-semibold text-on-surface">{l.title} · {l.org}.</span> {l.summary}
+                  </p>
+                  <p class="font-mono text-label text-on-surface-variant">{l.period}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <p class="no-print mt-6 text-body-sm text-on-surface-variant">
+      The longer version, with the why behind each job, is on the <a href="/about" class="link-underline text-on-surface">About page</a>.
+    </p>
+  </div>
+</Base>
+
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>

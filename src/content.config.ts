@@ -25,7 +25,7 @@ const work = defineCollection({
       /** Free-form badge: "Professional", "Personal", "Research", ... */
       kind: z.string().default('Personal'),
       /** Which filter tab on /work this project appears under. */
-      category: z.enum(['embedded', 'ai', 'tools']).default('tools'),
+      category: z.enum(['security', 'embedded', 'ai', 'tools']).default('tools'),
       year: z.string(),
       /** Ordered most-important-first; the first four show on cards. */
       stack: z.array(z.string()).default([]),
@@ -38,6 +38,8 @@ const work = defineCollection({
       featured: z.boolean().default(false),
       /** Lower sorts first within featured / non-featured groups. */
       order: z.number().default(100),
+      /** Older or smaller projects move to a compact list under the main grid on /work. */
+      archived: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
 });
@@ -51,6 +53,8 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       tags: z.array(z.string()).default([]),
+      /** Posts sharing a series id get a "Part n of m" nav, ordered by pubDate. */
+      series: z.string().optional(),
       cover: image().optional(),
       coverAlt: z.string().default(''),
       draft: z.boolean().default(false),

@@ -1,0 +1,6 @@
+# Found a security problem on davidmgray.com or in one of my projects?
+# Email me. I'll reply within a few days and credit you if you'd like.
+Contact: mailto:davidgraymi@gmail.com
+Expires: 2027-10-19T00:00:00Z
+Preferred-Languages: en
+Canonical: https://davidmgray.com/.well-known/security.txt

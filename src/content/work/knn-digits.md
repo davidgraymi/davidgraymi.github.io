@@ -6,6 +6,7 @@ category: ai
 year: '2020'
 stack: ['Python', 'KNN', 'Optimization']
 highlight: Optimizes k without recomputing distances per candidate
+archived: true
 order: 9
 links:
   - label: Research report

@@ -31,7 +31,7 @@ export const socials: SocialLink[] = [
   { label: 'GitHub', href: 'https://github.com/davidgraymi', handle: '@davidgraymi', icon: 'github' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-gray-mi/', handle: 'david-gray-mi', icon: 'linkedin' },
   { label: 'Email', href: `mailto:${site.email}`, handle: site.email, icon: 'mail' },
-  { label: 'Resume', href: '/files/Resume.docx', handle: 'Download (.docx)', icon: 'file' },
+  { label: 'Resume', href: '/resume', handle: 'Web or PDF', icon: 'file' },
 ];
 
 export const nav = [

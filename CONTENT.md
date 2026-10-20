@@ -131,12 +131,21 @@ To take down the "open to consulting" pill, set `availableForWork: false`.
 
 Overwrite `src/assets/avatar.png`. It appears on the homepage and `/about`.
 
-## Replace the social share card
+## Social share cards
 
-`public/og.png`, 1200×630. This is what shows up when someone pastes a link
-into Slack, LinkedIn or iMessage.
+Every post, project and top-level page gets its own 1200×630 card, drawn at
+build time from its title and description (`src/lib/og.ts`). Nothing to do when
+you add content. To change the wording on a top-level page's card, edit
+`src/lib/og-pages.ts`.
 
-## Replace the resume
+## Update the resume
 
-Overwrite `public/files/Resume.docx`. If you export a PDF instead, drop it in
-`public/files/` and update the `Resume` entry in `src/site.config.ts`.
+Edit `src/data/resume.ts`. `/about` and `/resume` both read from it. Then
+regenerate the PDF so the download matches the page:
+
+```bash
+npm run build && npm run resume:pdf   # writes public/files/David-Gray-Resume.pdf
+```
+
+It prints `/resume` with your local Chrome (set `CHROME_PATH` to use another
+Chromium). Commit the PDF along with the data change.

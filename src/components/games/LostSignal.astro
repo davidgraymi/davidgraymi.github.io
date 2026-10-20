@@ -1,0 +1,262 @@
+---
+/**
+ * "Lost signal": a tiny dodge game for the 404 page. Packets rain down; steer
+ * the receiver left and right to avoid them. Nothing runs until the player
+ * asks (key, click, tap), and the links around it stay fully usable.
+ */
+---
+
+<div class="ruled-panel lost-signal" data-lost-signal>
+  <span class="tick tick-tl"></span><span class="tick tick-tr"></span>
+  <span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+  <div class="flex items-center justify-between gap-4 border-b border-rule-soft px-4 py-2.5 font-mono text-label uppercase tracking-[0.14em] text-on-surface-variant">
+    <span>Lost signal</span>
+    <span>
+      Score <span class="text-on-surface" data-score>0</span>
+      <span class="mx-1.5" aria-hidden="true">/</span>
+      Best <span class="text-primary" data-best>0</span>
+    </span>
+  </div>
+
+  <div class="relative">
+    <canvas
+      class="block aspect-[9/5] w-full touch-none bg-surface-container-lowest"
+      data-canvas
+      role="img"
+      aria-label="Lost signal game: dodge falling packets by moving left and right."
+    ></canvas>
+    <!-- Colour probes: canvas can't resolve light-dark(), so read computed colours from these -->
+    <span class="hidden text-primary" data-c="signal"></span>
+    <span class="hidden text-on-surface" data-c="packet"></span>
+    <span class="hidden text-on-surface-variant" data-c="muted"></span>
+    <span class="hidden text-rule-soft" data-c="grid"></span>
+
+    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center" data-overlay>
+      <p class="font-mono text-body-sm text-on-surface" data-message>Signal lost. Want to find it?</p>
+      <button type="button" class="btn btn-tonal" data-start>Play</button>
+    </div>
+  </div>
+
+  <p class="border-t border-rule-soft px-4 py-2.5 text-caption text-on-surface-variant">
+    <kbd class="font-mono">←</kbd> <kbd class="font-mono">→</kbd> or <kbd class="font-mono">A</kbd>
+    <kbd class="font-mono">D</kbd> to steer, <kbd class="font-mono">Space</kbd> to start. On touch, drag across the screen.
+  </p>
+  <p class="sr-only" aria-live="polite" data-live></p>
+</div>
+
+<script>
+  const KEY = 'lost-signal-best';
+  const W = 360;
+  const H = 200;
+  const CELL = 8;
+  const PW = 24;
+
+  type Packet = { x: number; y: number; v: number };
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-lost-signal]')) {
+    const $ = <T extends Element>(s: string) => root.querySelector(s) as T;
+    const canvas = $<HTMLCanvasElement>('[data-canvas]');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) continue;
+    const overlay = $<HTMLElement>('[data-overlay]');
+    const message = $<HTMLElement>('[data-message]');
+    const startBtn = $<HTMLButtonElement>('[data-start]');
+    const scoreEl = $<HTMLElement>('[data-score]');
+    const bestEl = $<HTMLElement>('[data-best]');
+    const live = $<HTMLElement>('[data-live]');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    let best = 0;
+    try {
+      best = Number(localStorage.getItem(KEY)) || 0;
+    } catch {
+      /* storage blocked: best score just won't persist */
+    }
+    bestEl.textContent = String(best);
+
+    let colours: Record<string, string> = {};
+    const readColours = () => {
+      colours = {};
+      for (const el of root.querySelectorAll<HTMLElement>('[data-c]')) {
+        colours[el.dataset.c!] = getComputedStyle(el).color;
+      }
+    };
+
+    const resize = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const w = canvas.clientWidth || W;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(((w * H) / W) * dpr);
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+    };
+
+    let running = false;
+    let raf = 0;
+    let last = 0;
+    let t = 0;
+    let spawn = 0;
+    let px = W / 2;
+    let target: number | null = null;
+    let packets: Packet[] = [];
+    const held = new Set<string>();
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = colours.grid;
+      for (let x = CELL; x < W; x += CELL * 4) ctx.fillRect(x, 0, 1, H);
+      ctx.fillStyle = colours.packet;
+      for (const p of packets) ctx.fillRect(p.x, p.y, CELL, CELL);
+      ctx.fillStyle = colours.signal;
+      const top = H - CELL * 2;
+      ctx.fillRect(px - PW / 2, top + CELL, PW, CELL);
+      ctx.fillRect(px - CELL / 2, top, CELL, CELL);
+    };
+
+    const score = () => Math.floor(t * 10);
+
+    const end = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+      const s = score();
+      if (s > best) {
+        best = s;
+        bestEl.textContent = String(best);
+        try {
+          localStorage.setItem(KEY, String(best));
+        } catch {
+          /* ignore */
+        }
+      }
+      message.textContent = `Signal dropped at ${s}. Best ${best}.`;
+      live.textContent = message.textContent;
+      startBtn.textContent = 'Try again';
+      overlay.hidden = false;
+    };
+
+    const step = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      t += dt;
+      // Reduced motion: everything moves at roughly half speed.
+      const pace = (reduced.matches ? 0.55 : 1) * (1 + t / 25);
+
+      const k = (held.has('ArrowRight') || held.has('d') ? 1 : 0) - (held.has('ArrowLeft') || held.has('a') ? 1 : 0);
+      if (k) target = null;
+      if (target !== null) px += Math.sign(target - px) * Math.min(Math.abs(target - px), 260 * dt);
+      else px += k * 200 * dt;
+      px = Math.max(PW / 2, Math.min(W - PW / 2, px));
+
+      spawn -= dt * pace;
+      if (spawn <= 0) {
+        spawn = 0.42;
+        const x = Math.floor(Math.random() * (W / CELL)) * CELL;
+        packets.push({ x, y: -CELL, v: 55 + Math.random() * 45 });
+      }
+      const top = H - CELL * 2;
+      for (const p of packets) p.y += p.v * pace * dt;
+      packets = packets.filter((p) => p.y < H);
+      const hit = packets.some(
+        (p) =>
+          p.y + CELL > top + CELL && p.x < px + PW / 2 && p.x + CELL > px - PW / 2 ||
+          p.y + CELL > top && p.y < top + CELL && p.x < px + CELL / 2 && p.x + CELL > px - CELL / 2,
+      );
+
+      scoreEl.textContent = String(score());
+      draw();
+      if (hit) end();
+      else raf = requestAnimationFrame(step);
+    };
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      packets = [];
+      t = 0;
+      spawn = 0;
+      px = W / 2;
+      target = null;
+      overlay.hidden = true;
+      live.textContent = 'Game started.';
+      canvas.focus({ preventScroll: true });
+      last = performance.now();
+      raf = requestAnimationFrame(step);
+    };
+
+    const pause = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+      held.clear();
+      message.textContent = `Paused at ${score()}.`;
+      startBtn.textContent = 'Resume';
+      overlay.hidden = false;
+    };
+    const resume = () => {
+      if (running) return;
+      if (startBtn.textContent !== 'Resume') return start();
+      running = true;
+      overlay.hidden = true;
+      last = performance.now();
+      raf = requestAnimationFrame(step);
+    };
+
+    // A tap anywhere on the idle screen starts, not just on the button.
+    overlay.addEventListener('click', resume);
+    canvas.tabIndex = 0;
+
+    // Keys: steer only while playing, and never swallow keys aimed at links,
+    // buttons or modifier shortcuts (navigation always wins).
+    const steering = new Set(['ArrowLeft', 'ArrowRight', 'a', 'd']);
+    const ownsFocus = () => {
+      const a = document.activeElement;
+      return !a || a === document.body || a === canvas;
+    };
+    addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (!ownsFocus()) return;
+      if (!running && (key === ' ' || key === 'Enter' || steering.has(key))) {
+        if (document.querySelector('dialog[open]')) return;
+        e.preventDefault();
+        resume();
+      } else if (running && steering.has(key)) {
+        e.preventDefault();
+        held.add(key);
+      } else if (running && key === 'Escape') pause();
+    });
+    addEventListener('keyup', (e) => held.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key));
+
+    // Pointer / touch: follow the finger across the canvas.
+    const toX = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect();
+      return ((e.clientX - r.left) / r.width) * W;
+    };
+    canvas.addEventListener('pointerdown', (e) => {
+      if (!running) resume();
+      target = toX(e);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (running && (e.buttons || e.pointerType === 'mouse')) target = toX(e);
+    });
+
+    document.addEventListener('visibilitychange', () => document.hidden && pause());
+    canvas.addEventListener('blur', () => running && !root.contains(document.activeElement) && pause());
+
+    const refresh = () => {
+      readColours();
+      draw();
+    };
+    new MutationObserver(refresh).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refresh);
+    new ResizeObserver(() => {
+      resize();
+      draw();
+    }).observe(canvas);
+
+    readColours();
+    resize();
+    draw();
+  }
+</script>

@@ -34,3 +34,17 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Check links and security.txt
+        run: npm run check:site
+
+      - name: Lighthouse (accessibility, best practices, SEO must pass)
+        run: npx --yes @lhci/cli@0.15 autorun
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci/reports
+          if-no-files-found: ignore

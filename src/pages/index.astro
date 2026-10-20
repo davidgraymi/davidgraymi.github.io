@@ -11,6 +11,7 @@ import { site, socials } from '~/site.config';
 import { offTheClock, services, stats } from '~/data/resume';
 import avatar from '~/assets/avatar.png';
 import { personSchema, websiteSchema } from '~/lib/schema';
+import { hasPhotos } from '~/lib/nav';
 
 const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => a.data.order - b.data.order)
@@ -19,6 +20,12 @@ const featured = (await getCollection('work', ({ data }) => !data.draft && data.
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+
+// Until there's an album, the diving and climbing cards shouldn't lead to an empty page.
+const showPhotos = await hasPhotos();
+const hobbies = offTheClock.map((item) =>
+  item.href === '/photos' && !showPhotos ? { ...item, href: undefined } : item,
+);
 ---
 
 <Base jsonLd={[websiteSchema, personSchema]}>
@@ -214,7 +221,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
       <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-4">
         {
-          offTheClock.map((item) => (
+          hobbies.map((item) => (
             <div class="ruled-cell is-interactive dot-reveal flex flex-col p-7 md:p-8">
               <p class="font-mono text-label font-semibold uppercase tracking-[0.12em] text-primary">{item.label}</p>
               <h3 class="mt-4 text-title font-semibold leading-snug text-on-surface">{item.title}</h3>

@@ -8,6 +8,8 @@ stack: ['C', 'Ada', 'RTOS', 'Bare metal']
 highlight: In production. Globally distributed.
 featured: true
 order: 1
+cover: ../../assets/work/real-time-processor.svg
+coverAlt: Diagram of the software stack, from hardware and kernel up through the communication protocol and task scheduler to application tasks, beside a timing chart of three periodic tasks sharing one core without missing a deadline.
 links: []
 ---
 

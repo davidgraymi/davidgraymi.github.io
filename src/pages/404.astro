@@ -1,30 +1,36 @@
 ---
 import Base from '~/layouts/Base.astro';
 import Icon from '~/components/Icon.astro';
+import LostSignal from '~/components/games/LostSignal.astro';
 ---
 
 <Base title="Not found" noindex>
   <section class="dot-field">
-    <div class="wrap flex min-h-[60vh] flex-col items-start justify-center py-20">
-      <p
-        class="inline-block rounded-md px-2.5 py-0.5 font-mono text-label uppercase tracking-[0.14em] font-semibold bg-surface-container-high text-primary"
-      >
-        Error 404
-      </p>
-      <h1 class="mt-5 font-semibold tracking-tight text-h1 text-on-surface">
-        Segmentation fault (metaphorically)
-      </h1>
-      <p class="mt-4 max-w-lg text-body-lg leading-relaxed text-on-surface-variant">
-        This page doesn't exist. Either I moved it, or something linked to an address that never
-        did. Both are my problem, not yours.
-      </p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href="/" class="btn btn-primary">
-          Back home
-          <Icon name="arrow" size={16} />
-        </a>
-        <a href="/work" class="btn btn-ghost">Browse the work</a>
+    <div class="wrap grid min-h-[60vh] items-center gap-12 py-20 lg:grid-cols-[1fr_minmax(0,28rem)]">
+      <div class="flex flex-col items-start">
+        <p
+          class="inline-block rounded-md px-2.5 py-0.5 font-mono text-label uppercase tracking-[0.14em] font-semibold bg-surface-container-high text-primary"
+        >
+          Error 404
+        </p>
+        <h1 class="mt-5 font-semibold tracking-tight text-h1 text-on-surface">
+          Segmentation fault (metaphorically)
+        </h1>
+        <p class="mt-4 max-w-lg text-body-lg leading-relaxed text-on-surface-variant">
+          This page doesn't exist. Either I moved it, or something linked to an address that never
+          did. Both are my problem, not yours.
+        </p>
+        <nav aria-label="Find your way back" class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/" class="btn btn-primary">
+            Back home
+            <Icon name="arrow" size={16} />
+          </a>
+          <a href="/work" class="btn btn-ghost">Browse the work</a>
+          <a href="/blog" class="btn btn-ghost">Read the blog</a>
+        </nav>
       </div>
+
+      <LostSignal />
     </div>
   </section>
 </Base>
