@@ -8,7 +8,9 @@ stack: ['Dart', 'Flutter', 'Web']
 highlight: Play it in the browser in about two seconds
 order: 6
 links:
-  - label: Play Wordlet
+  - label: Play today's puzzle
+    href: /play/wordlet
+  - label: Play Wordlet (Flutter)
     href: /wordlet
 ---
 
@@ -20,5 +22,8 @@ tight feedback loops. The short answer is yes, with caveats around initial load.
 
 No account, no install, no scoreboard harvesting your email address. Open it and
 play.
+
+There is also a [daily edition](/play/wordlet): the same word pool and rules,
+one word a day for everyone, with your streak kept in the browser.
 
 [Play Wordlet →](/wordlet)
