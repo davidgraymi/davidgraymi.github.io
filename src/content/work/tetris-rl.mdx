@@ -14,6 +14,8 @@ links:
     href: https://github.com/davidgraymi/tetris-ai
 ---
 
+import TetrisVsBot from '~/components/games/TetrisVsBot.astro';
+
 A school project with a classmate, and one of the more purely enjoyable things I
 have built.
 
@@ -22,3 +24,20 @@ is so easy to get wrong. Score per line cleared sounds obvious, and produces an
 agent that stacks recklessly and dies. The learning is in the shaping: how much
 to punish height, how much to punish holes, and how much to leave alone so the
 agent can discover something you did not think of.
+
+## Beat the bot
+
+The agent below is the real one. Its network is tiny — four inputs, two hidden
+layers of 32, one output — so the trained weights are exported straight from
+the Keras checkpoint to plain JSON and run in your browser with no ML runtime.
+
+It never chooses individual key presses. For each piece it tries every
+rotation and column, measures the board that would result (lines cleared,
+holes, bumpiness and total height) and asks the network how good that board
+is. The dashed outline is the placement it picked, and V̂ is the value it
+expects from it. It sees only the current piece and does no lookahead.
+
+You both get the same pieces in the same order. The speed setting only
+changes how fast it moves; its choices are the same at every speed.
+
+<TetrisVsBot />
