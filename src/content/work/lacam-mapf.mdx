@@ -13,6 +13,7 @@ links:
 ---
 
 import LacamFlipbook from '~/components/LacamFlipbook.astro';
+import RouteTheRobots from '~/components/games/RouteTheRobots.astro';
 
 <LacamFlipbook />
 
@@ -79,3 +80,13 @@ paper adds a PIBT-style priority scheme to cut that down substantially. I
 kept mine simple on purpose: the assignment above is exactly what's in
 `hard_mapf.py`, and it's fast enough to pass every instance in the course's
 test suite well under the time limit, which was the actual assignment.
+
+## Route the robots yourself
+
+The solver below is a small JavaScript port of the same idea, with the
+PIBT-style configuration generator from the paper in place of my greedy
+assignment. Pick a puzzle or draw your own, watch it route every robot at
+once, then try to beat it by hand. LaCam is complete but not optimal, so on
+most boards a careful human can shave a few steps off its plan.
+
+<RouteTheRobots />
