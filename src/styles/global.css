@@ -681,7 +681,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   }
 }
 
-/* Résumé sections: one rhythm on screen, tighter on paper */
+/* Resume sections: one rhythm on screen, tighter on paper */
 .resume-section { padding-top: 1.75rem; }
 
 /* ---------------------------------------------------------------------------

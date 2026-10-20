@@ -1,0 +1,188 @@
+---
+/**
+ * "Draw a digit": a live weighted-KNN classifier over a 750-digit MNIST subset.
+ * The markup ships with the page; the game code and the ~300 KB training set
+ * load only when the panel scrolls near the viewport.
+ */
+const K_DEFAULT = 5;
+const digits = Array.from({ length: 10 }, (_, d) => d);
+---
+
+<figure class="knn-game not-prose ruled-panel my-10" data-knn-game data-k={K_DEFAULT}>
+  <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
+
+  <div class="grid sm:grid-cols-2">
+    <div class="border-b border-rule-soft p-5 sm:border-r sm:border-b-0">
+      <p class="kicker" id="knn-pad-label">Draw a digit</p>
+      <div class="relative mt-4 aspect-square w-full border border-outline-variant bg-surface-container-low">
+        <canvas
+          data-knn-pad
+          width="280"
+          height="280"
+          tabindex="0"
+          role="application"
+          aria-roledescription="drawing pad"
+          aria-labelledby="knn-pad-label"
+          aria-describedby="knn-pad-help"
+          class="peer block size-full cursor-crosshair touch-none text-primary"></canvas>
+        <span
+          data-knn-cursor
+          aria-hidden="true"
+          class="knn-cursor pointer-events-none absolute top-0 left-0 hidden size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary peer-focus-visible:block"
+        ></span>
+        <p
+          data-knn-hint
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 grid place-items-center p-6 text-center font-mono text-caption text-on-surface-variant"
+        >
+          Draw 0 to 9, large and centred
+        </p>
+      </div>
+      <p id="knn-pad-help" class="sr-only">
+        Draw with a mouse, finger or pen. With the keyboard: arrow keys move the pen, Space puts it down or lifts it,
+        Delete clears.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button type="button" class="btn btn-ghost" data-knn-clear>Clear</button>
+        <button type="button" class="btn btn-tonal" data-knn-example disabled>Try a test digit</button>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-5 p-5">
+      <div>
+        <p class="kicker">Prediction</p>
+        <div class="mt-4 flex items-center gap-5">
+          <output
+            data-knn-guess
+            for="knn-k"
+            class="w-16 text-center font-mono text-display leading-none font-semibold text-primary">–</output>
+          <div class="min-w-0 flex-1">
+            <p data-knn-confidence class="font-mono text-body-sm text-on-surface">Waiting for ink</p>
+            <p class="mt-1 text-caption text-on-surface-variant">Share of the weighted vote</p>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <canvas
+              data-knn-seen
+              width="28"
+              height="28"
+              class="knn-pixelated size-14 border border-outline-variant bg-surface-container-low text-primary"
+              aria-hidden="true"></canvas>
+            <span class="font-mono text-label text-on-surface-variant">28×28</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="font-mono text-label text-on-surface-variant">Votes</p>
+        <ol class="mt-2 grid grid-cols-10 gap-1" data-knn-votes aria-label="Weighted vote per digit">
+          {
+            digits.map((d) => (
+              <li class="flex flex-col items-center gap-1" data-digit={d}>
+                <span class="flex h-14 w-full items-end bg-surface-container">
+                  <span class="knn-bar block w-full bg-outline-variant" data-bar />
+                </span>
+                <span class="font-mono text-label text-on-surface-variant" data-digit-label>
+                  {d}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div>
+        <label for="knn-k" class="flex items-baseline justify-between font-mono text-label text-on-surface-variant">
+          <span>Neighbours</span>
+          <span>k = <span data-knn-k-value>{K_DEFAULT}</span></span>
+        </label>
+        <input
+          id="knn-k"
+          type="range"
+          min="1"
+          max="15"
+          step="1"
+          value={K_DEFAULT}
+          data-knn-k
+          class="mt-2 h-11 w-full cursor-pointer accent-primary"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-rule-soft p-5">
+    <p class="kicker">Nearest training digits</p>
+    <ol
+      data-knn-neighbours
+      class="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-8"
+      aria-label="Nearest training digits, closest first"
+    >
+    </ol>
+    <p data-knn-empty class="mt-1 text-body-sm text-on-surface-variant">
+      The closest matches from the training set appear here, closest first.
+    </p>
+  </div>
+
+  <figcaption class="border-t border-rule-soft px-5 py-4 text-caption text-on-surface-variant">
+    <span data-knn-status>Loading 750 MNIST training digits…</span>{' '}Everything runs in your browser: your drawing is cropped, scaled to 20px and centred by mass on a 28×28 grid, the
+    same way MNIST was prepared, then compared pixel by pixel against every training digit.
+  </figcaption>
+
+  <p class="sr-only" aria-live="polite" data-knn-live></p>
+</figure>
+
+<template id="knn-neighbour-template">
+  <li class="flex flex-col items-center gap-1">
+    <canvas
+      width="28"
+      height="28"
+      class="knn-pixelated aspect-square w-full border border-outline-variant bg-surface-container-low text-on-surface"
+    ></canvas>
+    <span class="font-mono text-label text-on-surface-variant" data-label></span>
+  </li>
+</template>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-knn-game]');
+  if (roots.length) {
+    const start = (root: HTMLElement) =>
+      import('~/lib/games/knn-digits/game').then(({ mount }) => mount(root));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            io.unobserve(entry.target);
+            start(entry.target as HTMLElement);
+          }
+        },
+        { rootMargin: '300px 0px' },
+      );
+      roots.forEach((root) => io.observe(root));
+    } else {
+      roots.forEach(start);
+    }
+  }
+</script>
+
+<style>
+  /* The game sits inside .prose on work pages; undo its list styling. */
+  .knn-game ol {
+    padding: 0;
+    list-style: none;
+  }
+  .knn-game li {
+    margin: 0;
+  }
+  .knn-pixelated {
+    image-rendering: pixelated;
+  }
+  .knn-bar {
+    height: 0;
+    transition: height var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .knn-bar {
+      transition: none;
+    }
+  }
+</style>

@@ -1,5 +1,5 @@
 /**
- * The résumé, in one place. /about and /resume both read from here, and the
+ * The resume, in one place. /about and /resume both read from here, and the
  * PDF in public/files/ is printed from /resume (npm run resume:pdf).
  * Add a job, it appears everywhere.
  */

@@ -41,7 +41,7 @@ commit.
 ## The part I care about more
 
 Rebuilding the site meant re-reading everything I had written about my own work,
-and most of it was written in the flattened voice of a résumé. "Developed a Go
+and most of it was written in the flattened voice of a resume. "Developed a Go
 HTTPS server to streamline integration testing." True, and it tells you nothing
 about the two weeks of finding out why the old process was slow, or the argument
 about whether it was worth fixing at all.
