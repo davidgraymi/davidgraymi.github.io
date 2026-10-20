@@ -6,6 +6,9 @@ import Base from '~/layouts/Base.astro';
 import Icon from '~/components/Icon.astro';
 import BackLink from '~/components/BackLink.astro';
 import CallToAction from '~/components/CallToAction.astro';
+import PostCard from '~/components/PostCard.astro';
+import Section from '~/components/Section.astro';
+import { publishedPosts } from '~/lib/blog';
 // Math only renders in posts and project write-ups, so KaTeX's CSS and fonts load only here.
 import 'katex/dist/katex.min.css';
 
@@ -17,6 +20,8 @@ export const getStaticPaths = (async () => {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = entry.data;
+// Posts that name this project in their `project:` frontmatter.
+const posts = (await publishedPosts()).filter((p) => p.data.project?.id === entry.id);
 ---
 
 <Base title={title} description={blurb} type="article" image={`/og/work/${entry.id}.png`}>
@@ -99,6 +104,18 @@ const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = e
       </div>
     </div>
   </article>
+
+  {
+    posts.length > 0 && (
+      <Section kicker="Writing" title="More on this project" alt>
+        <div class="ruled-list mt-10">
+          {posts.map((post) => (
+            <PostCard entry={post} />
+          ))}
+        </div>
+      </Section>
+    )
+  }
 
   <CallToAction />
 </Base>

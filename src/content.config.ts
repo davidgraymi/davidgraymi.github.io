@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
@@ -55,6 +55,8 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       /** Posts sharing a series id get a "Part n of m" nav, ordered by pubDate. */
       series: z.string().optional(),
+      /** The /work project this post is about. Links them both ways; the build fails on a bad slug. */
+      project: reference('work').optional(),
       cover: image().optional(),
       coverAlt: z.string().default(''),
       draft: z.boolean().default(false),

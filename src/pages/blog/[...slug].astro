@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { render } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '~/layouts/Base.astro';
 import FormattedDate from '~/components/FormattedDate.astro';
@@ -24,6 +24,10 @@ export const getStaticPaths = (async () => {
 const { entry, newer, older, series } = Astro.props;
 const { Content, headings } = await render(entry);
 const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entry.data;
+
+// A draft project has no page to link to.
+const linked = entry.data.project && (await getEntry(entry.data.project));
+const project = linked && !linked.data.draft ? linked : undefined;
 
 const { words, minutes: readingMinutes } = readingStats(entry.body);
 
@@ -131,6 +135,18 @@ const jsonLd = {
         <div class="prose">
           <Content />
         </div>
+
+        {
+          project && (
+            <aside aria-label="Project" class="mt-16 border border-l-4 border-outline-variant border-l-primary bg-surface-container-low p-5">
+              <p class="kicker">The project behind this post</p>
+              <p class="mt-2 font-semibold text-on-surface">
+                <a href={`/work/${project.id}`} class="link-underline hover:text-primary">{project.data.title}</a>
+              </p>
+              <p class="mt-1.5 text-body-sm leading-relaxed text-on-surface-variant">{project.data.blurb}</p>
+            </aside>
+          )
+        }
 
         {
           (newer || older) && (

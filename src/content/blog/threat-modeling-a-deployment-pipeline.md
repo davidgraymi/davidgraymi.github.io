@@ -4,6 +4,7 @@ description: A pipeline can change every system you run, at 3am, with nobody wat
 pubDate: 2026-10-26
 tags: ['security', 'threat-modeling', 'kubernetes', 'devsecops']
 draft: true
+project: zero-trust-delivery
 ---
 
 Ask a team who has admin on production and they'll list people. The pipeline
