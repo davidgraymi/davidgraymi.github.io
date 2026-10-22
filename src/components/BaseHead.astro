@@ -2,6 +2,7 @@
 import { site } from '~/site.config';
 import { pageCardFor } from '~/lib/og-pages';
 import Analytics from './Analytics.astro';
+import bodyFont from '@fontsource-variable/roboto-flex/files/roboto-flex-latin-opsz-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -33,6 +34,9 @@ const ogImage = new URL(image, Astro.site);
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex" />}
+
+<!-- The body font, fetched alongside the CSS instead of after it, so hero text settles sooner. -->
+<link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/images/icon.png" />

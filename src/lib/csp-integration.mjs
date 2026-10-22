@@ -14,17 +14,22 @@ import { fileURLToPath } from 'node:url';
  * risk than script injection, and Astro's built-in CSP can't relax styles alone.
  */
 // Google Analytics (src/components/Analytics.astro), per Google's GA4 CSP guide.
+// Google Signals sends some hits to google.com and doubleclick.net, so those are allowed too.
 const GTAG = 'https://*.googletagmanager.com';
-const GA_BEACONS = 'https://*.google-analytics.com https://*.analytics.google.com';
+const GA_BEACONS =
+  'https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://*.google.com';
+// Cloudflare Web Analytics: Cloudflare injects this beacon at the edge, not in the build.
+const CF_BEACON_SCRIPT = 'https://static.cloudflareinsights.com';
+const CF_BEACON = 'https://cloudflareinsights.com';
 
 const policy = (scriptHashes) =>
   [
     "default-src 'self'",
-    `script-src 'self' ${GTAG} ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`.trim(),
+    `script-src 'self' ${GTAG} ${CF_BEACON_SCRIPT} ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`.trim(),
     "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: ${GTAG} https://*.google-analytics.com`,
+    `img-src 'self' data: ${GTAG} ${GA_BEACONS}`,
     "font-src 'self' data:",
-    `connect-src 'self' ${GTAG} ${GA_BEACONS}`,
+    `connect-src 'self' ${GTAG} ${GA_BEACONS} ${CF_BEACON}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
