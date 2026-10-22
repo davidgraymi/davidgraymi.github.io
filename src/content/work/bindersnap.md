@@ -11,6 +11,10 @@ order: 5
 links:
   - label: bindersnap.com
     href: https://bindersnap.com
+  - label: The app
+    href: https://app.bindersnap.com
+  - label: Help center
+    href: https://bindersnap.com/help
 ---
 
 My wife complained — repeatedly, correctly — about the policy management
