@@ -10,7 +10,7 @@ export const personSchema = {
   email: `mailto:${site.email}`,
   jobTitle: site.role.split(' — ')[0],
   description: site.tagline,
-  image: new URL('/images/icon.png', site.url).href,
+  image: new URL('/images/david-gray.jpg', site.url).href,
   address: { '@type': 'PostalAddress', addressLocality: 'St. Louis', addressRegion: 'MO', addressCountry: 'US' },
   alumniOf: education.map((e) => ({ '@type': 'CollegeOrUniversity', name: e.school })),
   sameAs: socials.filter((s) => s.href.startsWith('http')).map((s) => s.href),
