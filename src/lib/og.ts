@@ -140,3 +140,30 @@ export async function renderCard({ kicker, title, description, path, meta }: Car
   const svg = await satori(tree as Parameters<typeof satori>[0], { width: 1200, height: 630, fonts: await loadFonts() });
   return sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
 }
+
+/**
+ * The square "dg" mark used for apple-touch-icon and the schema.org Person image.
+ * iMessage and some chat apps show this instead of the social card, so it has to
+ * read as the same brand. Full bleed: iOS rounds the corners itself.
+ */
+export async function renderIcon(size = 512): Promise<Buffer> {
+  const tree = h(
+    'div',
+    {
+      width: size,
+      height: size,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: C.amber,
+      color: C.amberInk,
+      fontFamily: 'Mono',
+      fontSize: size * 0.5,
+      letterSpacing: -size * 0.02,
+    },
+    'dg',
+  );
+
+  const svg = await satori(tree as Parameters<typeof satori>[0], { width: size, height: size, fonts: await loadFonts() });
+  return sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
+}
