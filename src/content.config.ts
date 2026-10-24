@@ -32,6 +32,17 @@ const work = defineCollection({
       /** The one number or fact worth remembering about this project. */
       highlight: z.string().optional(),
       links: z.array(linkSchema).default([]),
+      /** A shipped product. Adds SoftwareApplication JSON-LD to the project page. */
+      product: z
+        .object({
+          url: z.string(),
+          applicationCategory: z.string(),
+          audience: z.string().optional(),
+          price: z.string().optional(),
+          priceUnit: z.string().optional(),
+          featureList: z.array(z.string()).default([]),
+        })
+        .optional(),
       cover: image().optional(),
       coverAlt: z.string().default(''),
       /** Featured projects lead the /work page and appear on the homepage. */

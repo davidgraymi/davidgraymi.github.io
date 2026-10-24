@@ -2,6 +2,7 @@
 title: "Bindersnap's new look, and why most of it isn't color"
 description: Bindersnap now has a warm redesign, its own home at bindersnap.com, the app at app.bindersnap.com, and a landing page that paints in 2.4 s on a phone.
 pubDate: 2026-10-22
+updatedDate: 2026-10-24
 tags: ['bindersnap', 'design', 'web-performance', 'healthcare', 'product']
 project: bindersnap
 ---
@@ -12,23 +13,21 @@ hospice or home health agency, you have met its cousins. Somewhere there is a
 `_v2`, a `_FINAL_final`, and a version someone emailed to the administrator
 for sign-off that nobody can find again.
 
-[Bindersnap](https://bindersnap.com) is my answer to that file. This month it
-got a new look, a new address for the app, and a public site with real pages
-on it. Here is what changed, and why most of it is not about color.
+[Bindersnap](https://bindersnap.com) replaces that file. This month the
+product shipped a new look, a dedicated address for the app, and a public
+library of guides for the people who use it. Here is what changed, and why
+most of it is not about color.
 
 ## What Bindersnap is now
 
-Bindersnap is policy and procedure management for small healthcare providers.
-Each policy keeps its current approved version and a record of who signed off
-on it, so when a surveyor asks which version was approved, the answer is on
-the page. Writers pay $39 a month each. Reviewers and readers cost nothing,
+Bindersnap is production policy and procedure management software for small
+healthcare providers. Each policy keeps its current approved version and a
+permanent record of who signed off on it, so when a surveyor asks which
+version was approved, the answer is on the page. Writers pay $39 a month each. Reviewers and readers cost nothing,
 and every organization starts with a 14-day trial with no card.
 
-That is narrower than how I used to describe it. The
-[old write-up](/work/bindersnap) called it "GitHub for everyone who doesn't
-use GitHub", which was true and helped nobody decide whether to try it. The
-people who feel this problem most are compliance and operations leads at small
-providers. They run approvals through Word, email and a shared drive today,
+The redesign sharpens who it is for. The people who feel this problem most
+are compliance and operations leads at small providers. They run approvals through Word, email and a shared drive today,
 and they have been asked "which version did we approve?" without a good
 answer. The redesign is built for that one person.
 
@@ -140,7 +139,7 @@ a [hand hygiene policy template](https://bindersnap.com/templates/hand-hygiene-p
 an [emergency preparedness policy template](https://bindersnap.com/templates/emergency-preparedness-policy)
 and a [required healthcare policies checklist](https://bindersnap.com/tools/required-policies-checklist).
 
-**Honest comparisons**, starting with the one most people are actually
+**Comparisons**, starting with the one most people are actually
 choosing between:
 [policy software vs. a shared drive](https://bindersnap.com/compare/shared-drive).
 There are also pages on
@@ -158,15 +157,14 @@ it. The [security page](https://bindersnap.com/legal/security) and
 [privacy policy](https://bindersnap.com/legal/privacy) say plainly what the
 product stores, and Bindersnap holds no patient data at all.
 
-## What is still hard
+## What comes next
 
-It is still a solo project. A rebrand does not change that, and the backlog
-is longer than the list above. The pages are written, but nothing tells me
-yet whether the right people will find them. That is the next thing to
-measure.
+With the public library in place, the next step is measurement: which guides
+bring compliance leads in, and which ones turn into trials. The roadmap
+continues from there.
 
-What did change is that the product finally looks like it was made for the
-person who has to answer the surveyor, not for the engineer who built it. If
+The redesign makes Bindersnap look like what it is: software made for the
+person who has to answer the surveyor. If
 that person is you, or you know them, [the trial is
 here](https://app.bindersnap.com/-/signup) and the
 [getting started guide](https://bindersnap.com/help/getting-started) shows

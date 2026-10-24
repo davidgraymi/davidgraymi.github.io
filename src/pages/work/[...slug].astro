@@ -9,6 +9,7 @@ import CallToAction from '~/components/CallToAction.astro';
 import PostCard from '~/components/PostCard.astro';
 import Section from '~/components/Section.astro';
 import { publishedPosts } from '~/lib/blog';
+import { site } from '~/site.config';
 // Math only renders in posts and project write-ups, so KaTeX's CSS and fonts load only here.
 import 'katex/dist/katex.min.css';
 
@@ -19,12 +20,34 @@ export const getStaticPaths = (async () => {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt } = entry.data;
+const { title, blurb, kind, year, stack, highlight, links, cover, coverAlt, product } = entry.data;
 // Posts that name this project in their `project:` frontmatter.
 const posts = (await publishedPosts()).filter((p) => p.data.project?.id === entry.id);
+
+const jsonLd = product && {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: title,
+  description: blurb,
+  url: product.url,
+  applicationCategory: product.applicationCategory,
+  operatingSystem: 'Web browser',
+  ...(product.audience && { audience: { '@type': 'BusinessAudience', name: product.audience } }),
+  ...(product.featureList.length > 0 && { featureList: product.featureList }),
+  ...(product.price && {
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'USD',
+      ...(product.priceUnit && { description: product.priceUnit }),
+    },
+  }),
+  author: { '@type': 'Person', name: site.name, url: site.url },
+  subjectOf: { '@type': 'WebPage', url: new URL(`/work/${entry.id}`, site.url).href },
+};
 ---
 
-<Base title={title} description={blurb} type="article" image={`/og/work/${entry.id}.png`}>
+<Base title={title} description={blurb} type="article" image={`/og/work/${entry.id}.png`} jsonLd={jsonLd || undefined}>
   <article>
     <header class="dot-field border-b border-outline-variant">
       <div class="wrap py-14 md:py-20">
