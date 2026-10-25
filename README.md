@@ -19,7 +19,7 @@ npm run dev      # http://localhost:4321
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the built site locally |
 | `npm run check` | Type-check content collections, props and links |
-| `npm run check:site` | After a build: internal links, `#anchors` and `security.txt` expiry |
+| `npm run check:site` | After a build: internal links, `#anchors`, `security.txt` expiry, and the SEO basics Bing flags (`<title>` ≤ 70 chars, one `<h1>`, alt text on every image) |
 | `npm run resume:pdf` | After a build: print `/resume` to `public/files/David-Gray-Resume.pdf` |
 | `npm run games:thumbnails` | After a build: capture the `/play` card previews into `src/assets/games/` |
 

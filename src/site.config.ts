@@ -8,6 +8,8 @@ export const site = {
   url: 'https://davidmgray.com',
   /** Shown under the name in the header and in metadata. */
   role: 'Software Engineer — machine learning, ML performance & secure cloud systems',
+  /** The homepage <title> after the name; keep the whole thing under 70 characters. */
+  titleRole: 'Software Engineer, ML Performance & Secure Cloud',
   location: 'St. Louis, Missouri',
   email: 'davidgraymi@gmail.com',
   /** The one-line pitch used for <meta description> and social cards. */

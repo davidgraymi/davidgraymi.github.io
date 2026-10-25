@@ -1,6 +1,8 @@
 // Post-build checks on dist/ that astro check can't do:
 //   1. every internal href/src resolves to a built file (and #fragments to an id)
 //   2. security.txt hasn't expired, and won't within 30 days
+//   3. every page passes the basics Bing Webmaster Tools flags: a <title> of at
+//      most 70 characters, exactly one <h1>, and non-empty alt text on every <img>
 // Run after `npm run build`: npm run check:site
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -12,9 +14,28 @@ async function* htmlFiles(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (full === path.join(DIST, 'wordlet')) continue; // Flutter build, not ours to lint
       yield* htmlFiles(full);
     } else if (entry.name.endsWith('.html')) yield full;
+  }
+}
+
+const WORDLET = path.join(DIST, 'wordlet') + path.sep; // Flutter build: SEO-checked, links not ours to lint
+const MAX_TITLE = 70;
+
+const decodeEntities = (s) =>
+  s.replace(/&(amp|lt|gt|quot|#39|#x27);/g, (m) => ({ '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&#x27;': "'" })[m]);
+
+function checkSeo(page, html) {
+  const title = decodeEntities(html.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1]?.trim() ?? '');
+  if (!title) problems.push(`${page}: missing <title>`);
+  else if (title.length > MAX_TITLE) problems.push(`${page}: <title> is ${title.length} chars (max ${MAX_TITLE}): "${title}"`);
+
+  const h1s = html.match(/<h1[\s>]/g)?.length ?? 0;
+  if (h1s !== 1) problems.push(`${page}: has ${h1s} <h1> tags, expected exactly 1`);
+
+  // Bing reports alt="" (which Astro renders as a bare `alt`) as missing, so every image needs real text.
+  for (const [img] of html.matchAll(/<img\b[^>]*>/g)) {
+    if (!/\salt="[^"]*\S[^"]*"/.test(img)) problems.push(`${page}: <img> without alt text: ${img.slice(0, 100)}`);
   }
 }
 
@@ -40,6 +61,8 @@ async function idsIn(file) {
 for await (const file of htmlFiles(DIST)) {
   const html = await readFile(file, 'utf8');
   const page = '/' + path.relative(DIST, file).replace(/index\.html$/, '');
+  checkSeo(page, html);
+  if (file.startsWith(WORDLET)) continue;
   for (const [, attr, raw] of html.matchAll(/\s(href|src)="([^"]+)"/g)) {
     if (!raw.startsWith('/') && !raw.startsWith('#')) continue;
     if (raw.startsWith('//')) continue;
@@ -68,4 +91,4 @@ if (problems.length) {
   console.error(`\n${problems.length} problem(s) found.`);
   process.exit(1);
 }
-console.log('✓ internal links and security.txt look good');
+console.log('✓ internal links, security.txt, titles, headings and alt text look good');

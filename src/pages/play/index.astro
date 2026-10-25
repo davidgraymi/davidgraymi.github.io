@@ -48,11 +48,11 @@ const sections = (Object.keys(groups) as (keyof typeof groups)[]).map((key) => (
                 const light = shot(game.slug, 'light');
                 return (
                   <li class="ruled-cell is-interactive group relative flex flex-col">
-                    <div class="game-thumb relative aspect-[4/3] overflow-hidden border-b border-rule-soft bg-surface-container-lowest">
+                    <div class="game-thumb relative aspect-[4/3] overflow-hidden border-b border-rule-soft bg-surface-container-lowest" aria-hidden="true">
                       {dark && light ? (
                         <>
-                          <Image src={dark} alt="" widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-dark size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
-                          <Image src={light} alt="" widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-light size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
+                          <Image src={dark} alt={`${game.title} screenshot, dark theme`} widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-dark size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
+                          <Image src={light} alt={`${game.title} screenshot, light theme`} widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-light size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
                         </>
                       ) : (
                         <div class="dot-field size-full" />

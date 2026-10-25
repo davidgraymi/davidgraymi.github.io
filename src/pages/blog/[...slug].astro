@@ -23,7 +23,7 @@ export const getStaticPaths = (async () => {
 
 const { entry, newer, older, series } = Astro.props;
 const { Content, headings } = await render(entry);
-const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = entry.data;
+const { title, seoTitle, description, pubDate, updatedDate, tags, cover, coverAlt } = entry.data;
 
 // A draft project has no page to link to.
 const linked = entry.data.project && (await getEntry(entry.data.project));
@@ -50,7 +50,7 @@ const jsonLd = {
 };
 ---
 
-<Base title={title} description={description} type="article" image={`/og/blog/${entry.id}.png`} jsonLd={jsonLd}>
+<Base title={seoTitle ?? title} description={description} type="article" image={`/og/blog/${entry.id}.png`} jsonLd={jsonLd}>
   <article>
     <header class="dot-field border-b border-outline-variant">
       <div class="wrap max-w-4xl py-14 md:py-18">
