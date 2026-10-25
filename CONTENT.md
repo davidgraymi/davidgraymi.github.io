@@ -28,6 +28,7 @@ Your post here. Standard markdown: headings, **bold**, `code`, lists,
 | Field | Required | Notes |
 | --- | --- | --- |
 | `title` | yes | |
+| `seoTitle` | no | Shorter `<title>` for search results. Titles over 70 characters drop the " — David Gray" suffix, and `npm run check:site` fails if they are still too long |
 | `description` | yes | Listing page + `<meta description>` + social card |
 | `pubDate` | yes | `YYYY-MM-DD`, sorts newest first |
 | `updatedDate` | no | Renders an "updated" note |

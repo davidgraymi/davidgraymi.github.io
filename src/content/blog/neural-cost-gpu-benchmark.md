@@ -1,5 +1,6 @@
 ---
 title: "GPU vs. CPU: Roofline Benchmarks on Apple Silicon MPS with neural-cost v0.2.0"
+seoTitle: "GPU vs. CPU: Roofline Benchmarks on Apple Silicon MPS"
 description: "The neural-cost v0.2.0 GPU benchmark moves from CPU roofline analysis to Apple Silicon's MPS GPU backend — measuring PyTorch and JAX across five architectures, four batch sizes, and both eager and compiled execution modes."
 pubDate: 2026-09-30
 updatedDate: 2026-10-19

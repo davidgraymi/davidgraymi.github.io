@@ -23,7 +23,10 @@ const {
   jsonLd,
 } = Astro.props;
 
-const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
+// Search engines truncate past ~70 characters, so long titles drop the site name (npm run check:site enforces it).
+const MAX_TITLE = 70;
+const branded = title ? `${title} — ${site.name}` : `${site.name} — ${site.titleRole}`;
+const pageTitle = title && branded.length > MAX_TITLE ? title : branded;
 const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site);
 const ogImage = new URL(image, Astro.site);
 ---

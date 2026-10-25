@@ -18,7 +18,7 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A Wordle like project.">
+  <meta name="description" content="Wordlet: an endless five-letter word game in the style of Wordle, with a new word every round. Built with Flutter by David Gray.">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,10 +29,15 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>wordlet</title>
+  <title>Wordlet — Endless Word Game — David Gray</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Flutter paints the game on a canvas, so give crawlers and screen readers a heading.
+       Re-add this (and the title/description above) after regenerating the Flutter build;
+       npm run check:site fails without it. -->
+  <h1 style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Wordlet: an endless five-letter word game</h1>
+  <noscript><p>Wordlet needs JavaScript. Try the <a href="/play/wordlet">daily Wordlet</a> instead.</p></noscript>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

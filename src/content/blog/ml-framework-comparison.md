@@ -1,5 +1,6 @@
 ---
 title: "PyTorch vs. JAX vs. TensorFlow: A Roofline Benchmark Across 5 Architectures"
+seoTitle: "PyTorch vs. JAX vs. TensorFlow: A Roofline Benchmark"
 description: An empirical investigation comparing PyTorch 2.14, JAX 0.11, and TensorFlow across five model architectures and four batch sizes, measuring compiler speedups, kernel overheads, and hardware limits on Apple Silicon.
 pubDate: 2026-09-29
 updatedDate: 2026-10-19
