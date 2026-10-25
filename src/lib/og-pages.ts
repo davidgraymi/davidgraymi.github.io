@@ -9,10 +9,10 @@ import type { Card } from './og';
 export const pageCards: Record<string, Card> = {
   index: {
     kicker: 'Machine learning',
-    title: 'Engineer. Scientist. Occasionally underwater.',
-    description: 'Machine learning systems and how fast they really run, built on years of secure cloud and embedded engineering.',
+    title: site.name,
+    description: 'Machine learning · ML performance · Secure cloud',
     path: '/',
-    meta: site.location,
+    portrait: true,
   },
   work: {
     kicker: 'Work',
@@ -34,16 +34,17 @@ export const pageCards: Record<string, Card> = {
   },
   about: {
     kicker: 'About',
-    title: "Hi, I'm David. I got into this to find out how the magic worked.",
+    title: site.name,
+    description: `Software engineer · ${site.location}`,
     path: '/about',
-    meta: site.location,
+    portrait: true,
   },
   resume: {
     kicker: 'Resume',
-    title: 'David Gray',
-    description: site.role,
+    title: site.name,
+    description: 'Resume · Machine learning · Secure cloud',
     path: '/resume',
-    meta: 'Web · PDF',
+    portrait: true,
   },
   contact: {
     kicker: 'Contact',

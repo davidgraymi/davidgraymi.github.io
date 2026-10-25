@@ -38,18 +38,24 @@ const ogImage = new URL(image, Astro.site);
 <!-- The body font, fetched alongside the CSS instead of after it, so hero text settles sooner. -->
 <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />
 
+<!-- .ico first for crawlers that only read one; browsers that understand SVG take the later, sharper one. -->
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/images/icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
 <!-- Match --md-sys-color-surface; Base.astro rewrites these when the toggle pins a theme. -->
 <meta name="theme-color" content="#06090e" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
 <meta property="og:type" content={type} />
+<meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content={site.name} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:secure_url" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={pageTitle} />
