@@ -63,6 +63,15 @@ The `CNAME` file lives in `public/`, so the custom domain survives every deploy.
 Pull requests also run Lighthouse CI (`lighthouserc.json`) over seven pages:
 accessibility must stay at 95+, best practices and SEO at 90+.
 
+### IndexNow
+
+After each deploy, `scripts/indexnow.mjs` pings [IndexNow](https://www.indexnow.org)
+(Bing, Yandex, Naver, Seznam, Yep) with only the pages that changed. The build
+writes `/indexnow-manifest.json`, a content hash per sitemap URL, and diffs it
+against the live copy before deploying; new, edited and removed pages get
+submitted. The key file is `public/8a553f364d194bbdafc1cceacae6d270.txt`; if you
+rotate the key, rename that file and update `INDEXNOW_KEY` in the script.
+
 ### Security headers
 
 GitHub Pages can't send response headers, so every page carries a
