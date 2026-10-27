@@ -3,9 +3,11 @@
 //   2. security.txt hasn't expired, and won't within 30 days
 //   3. every page passes the basics Bing Webmaster Tools flags: a <title> of at
 //      most 70 characters, exactly one <h1>, and non-empty alt text on every <img>
+//   4. the IndexNow key file is published, so engines accept our submissions
 // Run after `npm run build`: npm run check:site
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { INDEXNOW_KEY } from './indexnow.mjs';
 
 const DIST = path.resolve('dist');
 const problems = [];
@@ -86,9 +88,12 @@ else if (new Date(expires).valueOf() - Date.now() < 30 * 864e5) {
   problems.push(`.well-known/security.txt expires ${expires}; bump it (RFC 9116 allows up to a year)`);
 }
 
+const indexNowKey = await readFile(path.join(DIST, `${INDEXNOW_KEY}.txt`), 'utf8').catch(() => '');
+if (indexNowKey.trim() !== INDEXNOW_KEY) problems.push(`${INDEXNOW_KEY}.txt is missing or doesn't hold the IndexNow key`);
+
 if (problems.length) {
   console.error(problems.map((p) => `✗ ${p}`).join('\n'));
   console.error(`\n${problems.length} problem(s) found.`);
   process.exit(1);
 }
-console.log('✓ internal links, security.txt, titles, headings and alt text look good');
+console.log('✓ internal links, security.txt, titles, headings, alt text and IndexNow key look good');
