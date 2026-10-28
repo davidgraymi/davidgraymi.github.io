@@ -179,6 +179,8 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
 </style>
 
 <script>
+  import { track } from '~/lib/track';
+
   const dialog = document.getElementById('command-palette') as HTMLDialogElement | null;
   const searchInput = document.getElementById('command-search') as HTMLInputElement | null;
   const items = Array.from(document.querySelectorAll('.command-item')) as HTMLElement[];
@@ -188,6 +190,7 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
   function openPalette() {
     if (!dialog) return;
     dialog.showModal();
+    track('palette_open');
     if (searchInput) {
       searchInput.value = '';
       searchInput.focus();
@@ -219,10 +222,14 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
   function executeItem(item: HTMLElement) {
     const href = item.getAttribute('data-href');
     const action = item.getAttribute('data-action');
+    // What people typed, and what they picked from it.
+    const term = searchInput?.value.trim();
+    if (term) track('search', { search_term: term, result: item.getAttribute('data-title') ?? '' });
 
     closePalette();
 
     if (action === 'copy-email') {
+      track('contact_email', { method: 'palette' });
       navigator.clipboard.writeText('davidgraymi@gmail.com');
       alert('Email copied to clipboard: davidgraymi@gmail.com');
       return;

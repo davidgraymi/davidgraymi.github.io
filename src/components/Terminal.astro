@@ -84,6 +84,8 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
 </style>
 
 <script>
+  import { track } from '~/lib/track';
+
   type UI = typeof import('~/lib/terminal/ui');
   let ui: Promise<UI> | undefined;
 
@@ -96,6 +98,7 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
     if (e.defaultPrevented || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
     if (isTyping(e.target) || document.querySelector('dialog[open]')) return;
     e.preventDefault();
+    track('terminal_open');
     ui ??= import('~/lib/terminal/ui');
     ui.then((m) => m.openTerminal());
   });
