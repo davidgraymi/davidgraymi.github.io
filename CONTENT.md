@@ -37,6 +37,7 @@ Your post here. Standard markdown: headings, **bold**, `code`, lists,
 | `coverAlt` | no | Alt text — write one if you use a cover |
 | `draft` | no | `true` hides it from the site and the RSS feed |
 | `project` | no | Slug of a `/work` project, e.g. `sign-language-interpreter`. The post links to the project and the project lists the post |
+| `linkedin` | no | Text of the LinkedIn post that shares it, sent once by the deploy that first publishes the post. Defaults to `description`; `false` skips LinkedIn. `#words` become hashtags. Setup is at the top of `scripts/linkedin.mjs` |
 
 ### Figures and charts
 
