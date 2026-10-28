@@ -168,7 +168,7 @@ export const leadership: { title: string; org: string; period: string; summary: 
 export const skills: { group: string; items: string[] }[] = [
   {
     group: 'Security & cloud',
-    items: ['Threat modeling', 'Zero-trust delivery', 'Kubernetes', 'Istio', 'Helm', 'Terraform', 'Azure', 'AWS'],
+    items: ['Threat modeling', 'Zero-trust delivery', 'Kubernetes', 'Istio', 'Helm', 'Azure', 'AWS'],
   },
   {
     group: 'Systems',
@@ -195,7 +195,7 @@ export const stats: { value: string; label: string }[] = [
 export const services: { title: string; body: string }[] = [
   {
     title: 'Applied machine learning',
-    body: 'Classifiers and NLP pipelines that ship — data preparation through evaluation through deployment — and the performance work to know what they cost to run across PyTorch, JAX and TensorFlow. I care more about the failure modes than the leaderboard.',
+    body: 'Classifiers, NLP and computer vision, built end to end in my master\'s and my own projects, from data preparation through evaluation, plus the performance work to know what they cost to run across PyTorch, JAX and TensorFlow. I care more about the failure modes than the leaderboard.',
   },
   {
     title: 'Product & cloud security',

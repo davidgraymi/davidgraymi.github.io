@@ -6,7 +6,6 @@ category: security
 year: '2025 — present'
 stack: ['Kubernetes', 'Azure', 'Istio', 'Helm', 'Infrastructure-as-code']
 highlight: Live demo that helped secure the company's share of a $90M award
-featured: true
 order: 0.5
 cover: ../../assets/work/cloud-migration.svg
 coverAlt: Diagram of three applications moving into a Kubernetes cluster on Azure, each running beside a service-mesh sidecar, with encrypted links between them.

@@ -73,6 +73,12 @@ const blog = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().default(''),
       draft: z.boolean().default(false),
+      /**
+       * The LinkedIn post that announces it, shared automatically after the deploy
+       * that first publishes the post (scripts/linkedin.mjs). Defaults to the
+       * description; `false` keeps it off LinkedIn. #words become hashtags.
+       */
+      linkedin: z.union([z.string().max(3000), z.literal(false)]).optional(),
     }),
 });
 

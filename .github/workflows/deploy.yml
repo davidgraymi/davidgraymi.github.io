@@ -50,6 +50,15 @@ jobs:
           name: indexnow-urls
           path: indexnow-urls.txt
 
+      - name: List posts to share (LinkedIn)
+        run: node scripts/linkedin.mjs diff linkedin-posts.json
+
+      - name: Upload LinkedIn post list
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-posts
+          path: linkedin-posts.json
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -86,3 +95,28 @@ jobs:
 
       - name: Submit changed URLs
         run: node scripts/indexnow.mjs submit indexnow-urls.txt
+
+  linkedin:
+    name: Share new posts on LinkedIn
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download LinkedIn post list
+        uses: actions/download-artifact@v4
+        with:
+          name: linkedin-posts
+
+      # Skips when the secrets aren't set; fails when the token has expired.
+      - name: Share new posts
+        run: node scripts/linkedin.mjs post linkedin-posts.json
+        env:
+          LINKEDIN_TOKEN: ${{ secrets.LINKEDIN_TOKEN }}
+          LINKEDIN_AUTHOR: ${{ secrets.LINKEDIN_AUTHOR }}

@@ -6,9 +6,20 @@ import { site } from '~/site.config';
  * only reports from the real domain: previews and Lighthouse CI stay out of the
  * numbers. The CSP in src/lib/csp-integration.mjs allows Google's hosts.
  *
- * GA's enhanced measurement already records outbound links (GitHub, LinkedIn)
- * and file downloads (resume PDF, project zips). The one thing it can't see is
- * someone reaching for the email address, so that's tracked here.
+ * GA's enhanced measurement already records page views, outbound links, file
+ * downloads and 90% scrolls. The events below answer the questions it can't:
+ *
+ *   contact_email    someone reached for the address (mailto, copy button, palette)
+ *   profile_click    which profile they went to: github, linkedin, huggingface, scholar
+ *   resume_download  the PDF, wherever it was linked from
+ *   cta_click        a "Get in touch" style link to /contact
+ *   read_progress    25/50/75/100% of a post's body actually scrolled past
+ *   game_start       first input on a /play game
+ *   palette_open, terminal_open, search   from their components, via src/lib/track.ts
+ *
+ * Clicks carry link_location (header, footer or content) so the same link in
+ * two places can be told apart. Mark contact_email, resume_download and
+ * cta_click as key events in GA4 (Admin > Events).
  */
 const id = site.analyticsId;
 const host = new URL(site.url).hostname;
@@ -27,9 +38,57 @@ const host = new URL(site.url).hostname;
         gtag('js', new Date());
         gtag('config', id);
 
+        const where = (el) => (el.closest('header') ? 'header' : el.closest('footer') ? 'footer' : 'content');
+        const PROFILES = {
+          'github.com': 'github',
+          'www.linkedin.com': 'linkedin',
+          'huggingface.co': 'huggingface',
+          'scholar.google.com': 'scholar',
+        };
+
         document.addEventListener('click', (e) => {
-          const el = e.target instanceof Element && e.target.closest('a[href^="mailto:"], [data-copy-email]');
-          if (el) gtag('event', 'contact_email', { method: el.matches('a') ? 'mailto' : 'copy' });
+          const el = e.target instanceof Element && e.target.closest('a[href], [data-copy-email]');
+          if (!el) return;
+          if (!el.matches('a')) return gtag('event', 'contact_email', { method: 'copy', link_location: where(el) });
+
+          const url = new URL(el.href, location.href);
+          const link_location = where(el);
+          if (url.protocol === 'mailto:') gtag('event', 'contact_email', { method: 'mailto', link_location });
+          else if (PROFILES[url.hostname]) gtag('event', 'profile_click', { network: PROFILES[url.hostname], link_location });
+          else if (url.pathname.endsWith('Resume.pdf')) gtag('event', 'resume_download', { link_location });
+          else if (url.origin === location.origin && url.pathname.replace(/\/$/, '') === '/contact')
+            gtag('event', 'cta_click', { link_text: el.textContent.trim().slice(0, 60), link_location });
+        });
+
+        // The rest looks for elements, and this script runs in <head>.
+        document.addEventListener('DOMContentLoaded', () => {
+          // How far into a post people read: the body, not the page (the footer
+          // and related links would inflate a plain scroll percentage).
+          const body = location.pathname.startsWith('/blog/') && document.querySelector('article .prose');
+          if (body) {
+            const marks = [25, 50, 75, 100];
+            const onScroll = () => {
+              const box = body.getBoundingClientRect();
+              const read = ((innerHeight - box.top) / box.height) * 100;
+              while (marks.length && read >= marks[0]) gtag('event', 'read_progress', { percent: marks.shift() });
+              if (!marks.length) removeEventListener('scroll', onScroll);
+            };
+            addEventListener('scroll', onScroll, { passive: true });
+          }
+
+          // First real input on a game page, not just a visit. Games read keys from
+          // window, so keys count anywhere outside the "How to play" dialog.
+          const game = document.querySelector('.play-game');
+          if (game) {
+            const start = () => {
+              gtag('event', 'game_start', { game: location.pathname.split('/').filter(Boolean).pop() });
+              game.removeEventListener('pointerdown', start);
+              removeEventListener('keydown', onKey);
+            };
+            const onKey = (e) => !e.target.closest?.('dialog') && start();
+            game.addEventListener('pointerdown', start);
+            addEventListener('keydown', onKey);
+          }
         });
       </script>
     </>
