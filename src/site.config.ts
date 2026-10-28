@@ -14,7 +14,7 @@ export const site = {
   email: 'davidgraymi@gmail.com',
   /** The one-line pitch used for <meta description> and social cards. */
   tagline:
-    'I build machine learning systems and measure how fast they really run, backed by four years of real-time embedded engineering, a year of product security on Kubernetes and Azure, and a data science master\'s in progress at Illinois.',
+    'I build machine learning systems and measure how fast they really run, backed by five years at Boeing, first in real-time embedded software and now in product security, and a data science master\'s in progress at Illinois.',
   /** Set to false to hide the "available for work" pill site-wide. */
   availableForWork: true,
   availabilityNote: 'Open to consulting and interesting problems',
