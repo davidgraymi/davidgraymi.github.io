@@ -67,7 +67,7 @@ async function collect(): Promise<TerminalData> {
       availability: site.availableForWork ? site.availabilityNote : undefined,
       email: site.email,
     },
-    socials: socials.filter((s) => s.href.startsWith('http')).map((s) => ({ name: s.label.toLowerCase(), href: s.href })),
+    socials: socials.filter((s) => s.href.startsWith('http')).map((s) => ({ name: s.label.toLowerCase().replace(/\s+/g, '-'), href: s.href })),
     sections,
     dirs,
     games: findGames(),

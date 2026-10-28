@@ -7,7 +7,7 @@ year: '2023 — present'
 stack: ['TypeScript', 'React', 'Bun', 'Gitea']
 highlight: Live at app.bindersnap.com. $39 per writer per month, with reviewers and readers always free
 featured: true
-order: 5
+order: -1
 links:
   - label: bindersnap.com
     href: https://bindersnap.com

@@ -6,7 +6,6 @@ category: ai
 year: '2025'
 stack: ['PyTorch', 'EmbeddingGemma', 'NLP', 'Information retrieval']
 highlight: Classifies sentence embeddings into care teams, then retrieves supporting research
-featured: true
 order: -1
 links:
   - label: Source on GitHub
