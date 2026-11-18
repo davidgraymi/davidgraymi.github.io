@@ -7,14 +7,21 @@ import WorkCard from '~/components/WorkCard.astro';
 import PostCard from '~/components/PostCard.astro';
 import CallToAction from '~/components/CallToAction.astro';
 import Icon from '~/components/Icon.astro';
+import ProductCard from '~/components/ProductCard.astro';
+import ProofQuote from '~/components/ProofQuote.astro';
+import { products } from '~/data/products';
+import { quotes, receipts } from '~/data/proof';
 import { site, socials } from '~/site.config';
 import { offTheClock, services, stats } from '~/data/resume';
 import avatar from '~/assets/avatar.png';
 import { personSchema, websiteSchema } from '~/lib/schema';
 import { hasPhotos } from '~/lib/nav';
 
-const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured))
-  .sort((a, b) => a.data.order - b.data.order)
+// Products have their own row above, so Selected work shows the next three
+// projects: featured first, then by order.
+const productSlugs = new Set(products.map((p) => p.slug));
+const featured = (await getCollection('work', ({ id, data }) => !data.draft && !productSlugs.has(id)))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.order - b.data.order)
   .slice(0, 3);
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -71,7 +78,7 @@ const hobbies = offTheClock.map((item) =>
             <span>Machine Learning & Systems</span>
           </div>
 
-          <h1 class="mt-4 max-w-3xl font-semibold leading-[1.04] tracking-tight text-[1.85rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4.25rem] text-on-surface">
+          <h1 class="mt-4 max-w-3xl font-serif font-medium leading-[1.04] tracking-tight text-[1.85rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4.25rem] text-on-surface">
             Engineer. Scientist.<br /><span class="shimmer-text">Occasionally underwater.</span>
           </h1>
 
@@ -124,7 +131,7 @@ const hobbies = offTheClock.map((item) =>
       </div>
 
       {/* Stats: ruled telemetry strip */}
-      <div class="ruled-panel mt-16">
+      <div class="ruled-panel is-instrument mt-16">
         <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
       <div class="ruled-grid grid-cols-2 md:grid-cols-4">
         {
@@ -144,12 +151,42 @@ const hobbies = offTheClock.map((item) =>
     </div>
   </section>
 
+  {/* --------------------------------------------------------------- proof */}
+  <Section kicker="In other words" title="What it's like to work with me">
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {quotes.map((quote) => <ProofQuote quote={quote} class="lg:col-span-2" />)}
+      {
+        receipts.map((r) => (
+          <div class="surface flex flex-col p-7">
+            <p class="kicker">On the record</p>
+            <p class="receipt-value mt-6">{r.value}</p>
+            <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{r.label}</p>
+            <a href={r.source.href} class="receipt-source mt-auto inline-flex min-h-11 items-center pt-4">
+              {r.source.label} →
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* ------------------------------------------------------------ products */}
+  <Section
+    kicker="Things you can use"
+    title="Products, not just projects"
+    lead="Two things I've built that are out in the world today. One is a business; one is a library."
+    alt
+  >
+    <div class="mt-12 grid gap-6 md:grid-cols-2">
+      {products.map((product) => <ProductCard product={product} />)}
+    </div>
+  </Section>
+
   {/* ------------------------------------------------------------ services */}
   <Section
     kicker="How I can help"
     title="The kinds of problem I'm good at"
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
-    alt
   >
     <div class="ruled-panel mt-12">
       <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
@@ -175,7 +212,8 @@ const hobbies = offTheClock.map((item) =>
   <Section
     kicker="Selected work"
     title="A few things worth showing"
-    lead="Some of it shipped to production on hardware I'll never see again. Some of it is a side project my wife asked for. Both taught me something."
+    lead="Some of it shipped to production on hardware I'll never see again. Some of it started as a class project and outlived the class. All of it taught me something."
+    alt
   >
     <div class="ruled-panel mt-12">
       <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
@@ -197,7 +235,7 @@ const hobbies = offTheClock.map((item) =>
   {/* ------------------------------------------------------------- writing */}
   {
     posts.length > 0 && (
-      <Section kicker="Writing" title="Notes from the workbench" alt>
+      <Section kicker="Writing" title="Notes from the workbench">
         <div class="ruled-list mt-10">
           {posts.map((entry) => (
             <PostCard entry={entry} />
@@ -215,7 +253,8 @@ const hobbies = offTheClock.map((item) =>
   <Section
     kicker="Off the clock"
     title="The parts that aren't on the resume"
-    lead="Same habits, different problems. Most of what I'm good at at work, I practised somewhere else first."
+    lead="Same habits, different problems. Most of what I'm good at at work, I practiced somewhere else first."
+    alt
   >
     <div class="ruled-panel mt-12">
       <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />

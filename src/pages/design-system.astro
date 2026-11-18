@@ -8,6 +8,11 @@ import Base from '~/layouts/Base.astro';
 import PageHeader from '~/components/PageHeader.astro';
 import Section from '~/components/Section.astro';
 import Icon from '~/components/Icon.astro';
+import AuthorCard from '~/components/AuthorCard.astro';
+import ProductCard from '~/components/ProductCard.astro';
+import ProofQuote from '~/components/ProofQuote.astro';
+import { products } from '~/data/products';
+import { quotes } from '~/data/proof';
 
 const colorGroups = [
   {
@@ -59,6 +64,16 @@ const typeScale = [
   ['text-label', '12px', 'Mono labels, chips — the floor'],
 ];
 
+// Each trait the site has to prove, and the design decision that carries it.
+const principles = [
+  ['Engineer', 'Measurements look like measurements', 'Mono numerals, square panels with corner ticks — only where the content is data.'],
+  ['Smart', 'Reads like a good essay', 'Newsreader serif for headlines and articles. Generous measure, 19px body, real hierarchy.'],
+  ['Friendly', 'Warm, not clinical', 'Stone and cream neutrals, charcoal instead of blue-black, soft 14px card corners, a real photo up top.'],
+  ['Kind', 'Never makes you work for it', 'Plain labels, 44px targets, AA contrast in both themes, nothing that moves without a reason.'],
+  ['Trustworthy', 'Every claim has a receipt', 'Numbers link to their source. Quotes carry a name, a role, and how they know me.'],
+  ['Maker', 'Products, not features', 'Product cards lead with the problem, show a live status, and end in one action you can take today.'],
+];
+
 const radii = [
   ['rounded-xs', '4px'],
   ['rounded-sm', '6px'],
@@ -74,11 +89,27 @@ const radii = [
 <Base title="Design system" description="Tokens and components behind davidmgray.com." noindex>
   <PageHeader
     kicker="Design system"
-    title="Instrument Panel"
-    lead="Amber signal on slate and obsidian. Every value on this page is a token, and every component here is the one the site ships. Flip the theme toggle to check both modes."
+    title="Workbench"
+    lead="Precise like an instrument, warm like a workshop. Amber signal on paper and charcoal. Every value on this page is a token, and every component here is the one the site ships. Flip the theme toggle to check both modes."
   />
 
-  <Section kicker="01 · Colour" title="Roles, not hex codes" lead="Components ask for a role (primary, surface-container, on-surface-variant). Each role resolves to a light and dark value from the reference palette.">
+  <Section kicker="00 · Principles" title="What the design has to prove" lead="The site exists to show that I'm someone you'd want to work with. Each trait below maps to a specific, checkable design decision.">
+    <div class="ruled-panel mt-10">
+      <div class="ruled-grid md:grid-cols-2 lg:grid-cols-3">
+        {
+          principles.map(([trait, claim, how]) => (
+            <div class="ruled-cell p-6 md:p-7">
+              <p class="font-mono text-label font-semibold uppercase tracking-[0.12em] text-primary">{trait}</p>
+              <h3 class="mt-3 font-serif text-headline-sm font-medium text-on-surface">{claim}</h3>
+              <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{how}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
+
+  <Section alt kicker="01 · Colour" title="Roles, not hex codes" lead="Components ask for a role (primary, surface-container, on-surface-variant). Each role resolves to a light and dark value from the reference palette. Amber means act here. Sage means it works: shipped, live, available. Neutrals are warm stone; nothing is blue-grey.">
     <div class="mt-10 space-y-10">
       {
         colorGroups.map((group) => (
@@ -100,22 +131,40 @@ const radii = [
     </div>
   </Section>
 
-  <Section alt kicker="02 · Type" title="One scale, twelve pixels up" lead="Roboto Flex for everything readable, JetBrains Mono for labels and data. Nothing renders below 12px.">
-    <div class="mt-10 divide-y divide-outline-variant rounded-card border border-outline-variant bg-surface-container-low">
+  <Section kicker="02 · Type" title="Three voices, one scale" lead="Serif is how I talk: headlines, articles, quotes. Sans is the interface: buttons, nav, cards. Mono is the evidence: numbers, dates, labels. Nothing renders below 12px.">
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      <div class="surface p-6">
+        <p class="kicker">Voice · font-serif</p>
+        <p class="mt-4 font-serif text-headline font-medium leading-tight text-on-surface">I like problems where the consequences are real.</p>
+        <p class="mt-3 font-mono text-label text-on-surface-variant">Newsreader 400–600</p>
+      </div>
+      <div class="surface p-6">
+        <p class="kicker">Interface · font-sans</p>
+        <p class="mt-4 text-title font-semibold text-on-surface">See my work →</p>
+        <p class="mt-2 text-body-sm text-on-surface-variant">Card copy, navigation, buttons, form labels.</p>
+        <p class="mt-3 font-mono text-label text-on-surface-variant">Roboto Flex 400–650</p>
+      </div>
+      <div class="surface p-6">
+        <p class="kicker">Evidence · font-mono</p>
+        <p class="mt-4 font-mono text-headline font-bold text-primary">10× · 11 · 5 yrs</p>
+        <p class="mt-3 font-mono text-label text-on-surface-variant">JetBrains Mono 400–700</p>
+      </div>
+    </div>
+    <div class="mt-6 divide-y divide-outline-variant rounded-card border border-outline-variant bg-surface-container-low">
       {
         typeScale.map(([cls, size, use]) => (
           <div class="grid gap-2 px-5 py-4 md:grid-cols-[12rem_1fr] md:items-baseline md:gap-6">
             <div class="font-mono text-label text-on-surface-variant">
               <span class="text-primary">{cls}</span> · {size}
             </div>
-            <p class:list={[cls, 'truncate font-semibold tracking-tight text-on-surface']}>{use}</p>
+            <p class:list={[cls, ['text-display', 'text-h1', 'text-h2'].includes(cls) ? 'font-serif font-medium' : 'font-semibold', 'truncate tracking-tight text-on-surface']}>{use}</p>
           </div>
         ))
       }
     </div>
   </Section>
 
-  <Section kicker="03 · Shape & depth" title="Crisp corners, quiet shadows">
+  <Section alt kicker="03 · Shape & depth" title="Soft frames, square measurements">
     <div class="mt-10 grid gap-10 lg:grid-cols-2">
       <div>
         <h3 class="kicker">Radius</h3>
@@ -143,13 +192,13 @@ const radii = [
           }
         </div>
         <p class="mt-6 text-body-sm text-on-surface-variant">
-          Cards are flat: depth comes from hairlines, not shadows. Use 2 for floating chrome and 3–5 for overlays only.
+          Cards are flat with 14px corners: depth comes from hairlines, not shadows. A product card lifts to 2 on hover. Use 2 for floating chrome and 3–5 for overlays only. Square corners are reserved for panels that hold measurements.
         </p>
       </div>
     </div>
   </Section>
 
-  <Section alt kicker="04 · Components" title="The parts bin">
+  <Section kicker="04 · Components" title="The parts bin">
     <div class="mt-10 grid gap-6 lg:grid-cols-2">
       <div class="surface p-6">
         <h3 class="kicker">Buttons</h3>
@@ -181,7 +230,7 @@ const radii = [
         <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Spotlight card</p>
         <h3 class="mt-3 text-title font-semibold text-on-surface">Hover me</h3>
         <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">
-          Square hairline frame. On hover it fills and a signal bar draws across the top. Used for anything clickable that leads somewhere: work, posts.
+          Soft hairline frame. On hover it fills and a signal bar draws across the top. Used for anything clickable that leads somewhere: work, posts.
         </p>
       </article>
 
@@ -200,7 +249,7 @@ const radii = [
       <div class="ruled-grid md:grid-cols-3">
         <div class="ruled-cell p-6">
           <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">Static cell</p>
-          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">Hairline cells inside a framed panel with corner ticks. No hover on content that isn't clickable.</p>
+          <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">Hairline cells inside one soft frame. No hover on content that isn't clickable.</p>
         </div>
         <div class="ruled-cell is-interactive p-6">
           <span class="cell-index inline-flex rounded-md px-2.5 py-1 font-mono text-label font-semibold">02</span>
@@ -213,6 +262,17 @@ const radii = [
       </div>
     </div>
 
+    <h3 class="kicker mt-12">Instrument panel · <code class="normal-case">.is-instrument</code></h3>
+    <div class="ruled-panel is-instrument mt-5">
+      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+      <div class="ruled-grid grid-cols-2 md:grid-cols-4">
+        <div class="ruled-cell p-5"><p class="receipt-value">5 yrs</p><p class="mt-1 text-caption text-on-surface-variant">Square corners and ticks mean</p></div>
+        <div class="ruled-cell p-5"><p class="receipt-value">11</p><p class="mt-1 text-caption text-on-surface-variant">"this is data". Use it for</p></div>
+        <div class="ruled-cell p-5"><p class="receipt-value">2 min</p><p class="mt-1 text-caption text-on-surface-variant">stats strips and post or</p></div>
+        <div class="ruled-cell p-5"><p class="receipt-value">4/5</p><p class="mt-1 text-caption text-on-surface-variant">project metadata only.</p></div>
+      </div>
+    </div>
+
     <div class="mt-10 grid gap-10 lg:grid-cols-2">
       <div>
         <h3 class="kicker">Ruled list</h3>
@@ -222,7 +282,7 @@ const radii = [
         </div>
       </div>
       <div>
-        <h3 class="kicker">Ticked frame</h3>
+        <h3 class="kicker">Portrait frame · <code class="normal-case">.ticked-frame</code></h3>
         <div class="ticked-frame mt-5 max-w-xs">
           <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
           <div class="grid aspect-[4/3] place-items-center bg-surface-container font-mono text-label text-on-surface-variant">media</div>
@@ -244,10 +304,42 @@ const radii = [
     </div>
   </section>
 
-  <Section kicker="05 · Long-form" title="Prose">
+  <Section alt kicker="05 · Trust & products" title="Proof, products, and a byline" lead="The components that do the persuading. They only work if what's inside them is real: a live product, a checkable number, a quote someone actually said.">
+    <div class="mt-10 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <ProductCard product={products[0]} />
+
+      <div class="space-y-6">
+        <div class="surface p-6">
+          <h3 class="kicker">Status pill</h3>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="status-pill" data-status="live">Live</span>
+            <span class="status-pill" data-status="beta">Beta</span>
+            <span class="status-pill" data-status="research">Research</span>
+            <span class="status-pill" data-status="archived">Archived</span>
+          </div>
+          <p class="mt-4 text-body-sm text-on-surface-variant">Only <em>Live</em> uses sage: it means you can use this today, and it works.</p>
+        </div>
+        <div class="surface p-6">
+          <h3 class="kicker">Receipt</h3>
+          <p class="receipt-value mt-5">11 citations</p>
+          <p class="mt-1 text-body-sm text-on-surface-variant">for an undergraduate sign-language project</p>
+          <a href="/blog/an-unexpected-email-and-11-citations" class="receipt-source mt-3 inline-block">Source: the story →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <ProofQuote quote={quotes[0]} />
+      <div class="flex flex-col justify-center">
+        <AuthorCard class="" />
+      </div>
+    </div>
+  </Section>
+
+  <Section kicker="06 · Long-form" title="Prose">
     <div class="prose mt-10 max-w-3xl">
-      <p>Articles use <code>.prose</code>: 17px body, 1.8 line height, and amber <a href="#main">links</a> with a soft underline.</p>
-      <blockquote>Quotes get a signal-coloured rule and a faint container tint.</blockquote>
+      <p>Articles use <code>.prose</code>: Newsreader at 19px, 1.7 line height, and amber <a href="#main">links</a> with a soft underline. Tables and captions switch back to the interface face.</p>
+      <blockquote>Quotes are the voice turned up: larger italic serif, a thin signal rule, no box.</blockquote>
       <ul>
         <li>List markers pick up the primary colour.</li>
         <li><strong>Bold</strong> stays on-surface so it reads as weight, not colour.</li>

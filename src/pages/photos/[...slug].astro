@@ -21,7 +21,7 @@ const { title, date, location, images } = entry.data;
   <header class="dot-field border-b border-outline-variant">
     <div class="wrap py-12 md:py-16">
       <BackLink href="/photos" label="All albums" />
-      <h1 class="mt-6 font-semibold tracking-tight text-h1 text-on-surface">{title}</h1>
+      <h1 class="mt-6 font-serif font-medium tracking-tight text-h1 text-on-surface">{title}</h1>
       <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">
         {location && <span class="text-primary">{location}</span>}
         <FormattedDate date={date} />

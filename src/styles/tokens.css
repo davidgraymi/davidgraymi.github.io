@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Design tokens — "Instrument Panel"
+   Design tokens — "Workbench"
    Three layers, each only allowed to reference the layer above it:
 
      1. ref   (--md-ref-*)   raw palette values. Never used in components.
@@ -37,32 +37,26 @@
   --md-ref-amber-950: #451a03;
   --md-ref-amber-ink: #1a1200;
 
-  /* Sky — secondary accent */
-  --md-ref-sky-100: #e0f2fe;
-  --md-ref-sky-200: #bae6fd;
-  --md-ref-sky-400: #38bdf8;
-  --md-ref-sky-700: #0369a1;
-  --md-ref-sky-900: #0c4a6e;
-  --md-ref-sky-950: #082f49;
+  /* Sage — secondary accent. "It works": shipped, available, verified. */
+  --md-ref-sage-100: #e4f0e8;
+  --md-ref-sage-200: #c4e3d2;
+  --md-ref-sage-400: #8ccfae;
+  --md-ref-sage-700: #2c6a52;
+  --md-ref-sage-900: #1b3a2e;
+  --md-ref-sage-950: #0c241b;
 
-  /* Slate — text and outlines */
-  --md-ref-slate-50: #f8fafc;
-  --md-ref-slate-100: #f1f5f9;
-  --md-ref-slate-200: #e2e8f0;
-  --md-ref-slate-300: #cbd5e1;
-  --md-ref-slate-400: #94a3b8;
-  --md-ref-slate-500: #64748b;
-  --md-ref-slate-600: #475569;
-  --md-ref-slate-750: #273449;
-  --md-ref-slate-800: #1e293b;
-  --md-ref-slate-900: #0f172a;
-
-  /* Ink — light-mode text and rules: near-black, never slate-grey */
-  --md-ref-ink-50: #f4f4f5;
-  --md-ref-ink-700: #3f3f46;
-  --md-ref-ink-800: #27272a;
-  --md-ref-ink-900: #18181b;
-  --md-ref-ink-950: #0a0a0a;
+  /* Stone — warm neutral text and rules. Brown-grey, never blue-grey. */
+  --md-ref-stone-50: #f6f2ec;
+  --md-ref-stone-200: #e2dbd0;
+  --md-ref-stone-300: #d6cec2;
+  --md-ref-stone-400: #b3aa9e;
+  --md-ref-stone-500: #8a8177;
+  --md-ref-stone-600: #6b645b;
+  --md-ref-stone-650: #57514a;
+  --md-ref-stone-700: #3d3832;
+  --md-ref-stone-750: #36312b;
+  --md-ref-stone-900: #1f1b17;
+  --md-ref-stone-950: #15120f;
 
   /* Red — errors */
   --md-ref-red-100: #fee2e2;
@@ -72,24 +66,23 @@
   --md-ref-red-900: #7f1d1d;
   --md-ref-red-950: #450a0a;
 
-  /* Paper — light surfaces, lightest to darkest */
+  /* Paper — warm light surfaces, lightest to darkest (cream, not grey) */
   --md-ref-paper-0: #ffffff;
-  --md-ref-paper-50: #f8f9fb;
-  --md-ref-paper-100: #f1f3f7;
-  --md-ref-paper-150: #eaedf2;
-  --md-ref-paper-200: #e2e6ed;
-  --md-ref-paper-250: #dadfe7;
-  --md-ref-paper-300: #d8dde6;
+  --md-ref-paper-25: #fdfcfa;
+  --md-ref-paper-50: #faf7f2;
+  --md-ref-paper-100: #f6f0e6;
+  --md-ref-paper-150: #f0e7d8;
+  --md-ref-paper-200: #e8dcc8;
 
-  /* Obsidian — dark surfaces, darkest to lightest */
-  --md-ref-obsidian-0: #030508;
-  --md-ref-obsidian-50: #04060a;
-  --md-ref-obsidian-100: #06090e;
-  --md-ref-obsidian-200: #0a0e16;
-  --md-ref-obsidian-300: #101622;
-  --md-ref-obsidian-400: #161e2d;
-  --md-ref-obsidian-500: #1e283b;
-  --md-ref-obsidian-600: #263345;
+  /* Charcoal — warm dark surfaces, darkest to lightest (wood-stove, not obsidian) */
+  --md-ref-char-0: #0b0a08;
+  --md-ref-char-50: #0f0d0b;
+  --md-ref-char-100: #14120f;
+  --md-ref-char-200: #1a1714;
+  --md-ref-char-300: #211e1a;
+  --md-ref-char-400: #2a2621;
+  --md-ref-char-500: #34302a;
+  --md-ref-char-600: #403a33;
 }
 
 /* ---------------------------------------------------------------------------
@@ -102,15 +95,15 @@
   --md-sys-color-primary-container: light-dark(var(--md-ref-amber-500), var(--md-ref-amber-900));
   --md-sys-color-on-primary-container: light-dark(var(--md-ref-amber-ink), var(--md-ref-amber-200));
 
-  --md-sys-color-secondary: light-dark(var(--md-ref-sky-700), var(--md-ref-sky-400));
-  --md-sys-color-on-secondary: light-dark(var(--md-ref-paper-0), var(--md-ref-sky-950));
-  --md-sys-color-secondary-container: light-dark(var(--md-ref-sky-100), var(--md-ref-sky-900));
-  --md-sys-color-on-secondary-container: light-dark(var(--md-ref-sky-950), var(--md-ref-sky-200));
+  --md-sys-color-secondary: light-dark(var(--md-ref-sage-700), var(--md-ref-sage-400));
+  --md-sys-color-on-secondary: light-dark(var(--md-ref-paper-0), var(--md-ref-sage-950));
+  --md-sys-color-secondary-container: light-dark(var(--md-ref-sage-100), var(--md-ref-sage-900));
+  --md-sys-color-on-secondary-container: light-dark(var(--md-ref-sage-950), var(--md-ref-sage-200));
 
-  --md-sys-color-tertiary: light-dark(var(--md-ref-ink-800), var(--md-ref-slate-400));
-  --md-sys-color-on-tertiary: light-dark(var(--md-ref-paper-0), var(--md-ref-slate-900));
-  --md-sys-color-tertiary-container: light-dark(var(--md-ref-paper-0), var(--md-ref-slate-800));
-  --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-200));
+  --md-sys-color-tertiary: light-dark(var(--md-ref-stone-700), var(--md-ref-stone-400));
+  --md-sys-color-on-tertiary: light-dark(var(--md-ref-paper-0), var(--md-ref-stone-900));
+  --md-sys-color-tertiary-container: light-dark(var(--md-ref-paper-0), var(--md-ref-char-500));
+  --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-stone-950), var(--md-ref-stone-200));
 
   --md-sys-color-error: light-dark(var(--md-ref-red-600), var(--md-ref-red-500));
   --md-sys-color-on-error: light-dark(var(--md-ref-paper-0), var(--md-ref-red-950));
@@ -118,29 +111,32 @@
   --md-sys-color-on-error-container: light-dark(var(--md-ref-red-950), var(--md-ref-red-200));
 
   /* Surfaces: page → lowest → … → highest = further "up" toward the reader.
-     Light mode is white ground with amber-tinted containers — no grey fills. */
-  --md-sys-color-surface: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-100));
-  --md-sys-color-surface-dim: light-dark(var(--md-ref-ink-50), var(--md-ref-obsidian-50));
-  --md-sys-color-surface-bright: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-600));
-  --md-sys-color-surface-container-lowest: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-0));
-  --md-sys-color-surface-container-low: light-dark(var(--md-ref-paper-0), var(--md-ref-obsidian-200));
-  --md-sys-color-surface-container: light-dark(var(--md-ref-amber-50), var(--md-ref-obsidian-300));
-  --md-sys-color-surface-container-high: light-dark(var(--md-ref-amber-150), var(--md-ref-obsidian-400));
-  --md-sys-color-surface-container-highest: light-dark(var(--md-ref-amber-250), var(--md-ref-obsidian-500));
+     Light mode is warm paper with cream containers; dark mode is warm charcoal.
+     Neither theme uses a blue-grey. */
+  --md-sys-color-surface: light-dark(var(--md-ref-paper-25), var(--md-ref-char-100));
+  --md-sys-color-surface-dim: light-dark(var(--md-ref-paper-100), var(--md-ref-char-50));
+  --md-sys-color-surface-bright: light-dark(var(--md-ref-paper-0), var(--md-ref-char-600));
+  --md-sys-color-surface-container-lowest: light-dark(var(--md-ref-paper-0), var(--md-ref-char-0));
+  --md-sys-color-surface-container-low: light-dark(var(--md-ref-paper-50), var(--md-ref-char-200));
+  --md-sys-color-surface-container: light-dark(var(--md-ref-paper-100), var(--md-ref-char-300));
+  --md-sys-color-surface-container-high: light-dark(var(--md-ref-paper-150), var(--md-ref-char-400));
+  --md-sys-color-surface-container-highest: light-dark(var(--md-ref-paper-200), var(--md-ref-char-500));
 
   /* Content on surfaces */
-  --md-sys-color-on-surface: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-100));
-  --md-sys-color-on-surface-variant: light-dark(var(--md-ref-ink-700), var(--md-ref-slate-400));
-  --md-sys-color-outline: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-500));
-  --md-sys-color-outline-variant: light-dark(var(--md-ref-ink-900), var(--md-ref-slate-750));
-  /* Inner dividers between ruled cells: much quieter than the frame */
+  --md-sys-color-on-surface: light-dark(var(--md-ref-stone-900), var(--md-ref-stone-50));
+  --md-sys-color-on-surface-variant: light-dark(var(--md-ref-stone-650), var(--md-ref-stone-400));
+  /* outline: borders that carry meaning (inputs, hover) — 3:1 against the page */
+  --md-sys-color-outline: light-dark(var(--md-ref-stone-600), var(--md-ref-stone-500));
+  /* outline-variant: the default decorative hairline — quiet, warm */
+  --md-sys-color-outline-variant: light-dark(var(--md-ref-stone-300), var(--md-ref-stone-750));
+  /* Inner dividers between ruled cells: quieter than the frame */
   --md-sys-color-rule-soft: light-dark(
-    color-mix(in srgb, var(--md-ref-ink-900) 14%, transparent),
-    color-mix(in srgb, var(--md-ref-slate-750) 80%, transparent)
+    color-mix(in srgb, var(--md-ref-stone-300) 70%, transparent),
+    color-mix(in srgb, var(--md-ref-stone-750) 75%, transparent)
   );
 
-  --md-sys-color-inverse-surface: light-dark(var(--md-ref-ink-950), var(--md-ref-slate-100));
-  --md-sys-color-inverse-on-surface: light-dark(var(--md-ref-slate-50), var(--md-ref-slate-900));
+  --md-sys-color-inverse-surface: light-dark(var(--md-ref-stone-900), var(--md-ref-stone-50));
+  --md-sys-color-inverse-on-surface: light-dark(var(--md-ref-stone-50), var(--md-ref-stone-900));
   --md-sys-color-inverse-primary: light-dark(var(--md-ref-amber-500), var(--md-ref-amber-600));
 
   --md-sys-color-scrim: #000000;
@@ -155,13 +151,13 @@
     color-mix(in srgb, var(--md-ref-amber-500) 35%, transparent)
   );
   --md-sys-color-dot-field: light-dark(
-    color-mix(in srgb, var(--md-ref-ink-900) 22%, transparent),
-    color-mix(in srgb, var(--md-ref-slate-400) 28%, transparent)
+    color-mix(in srgb, var(--md-ref-stone-600) 22%, transparent),
+    color-mix(in srgb, var(--md-ref-stone-400) 22%, transparent)
   );
 
   /* Elevation: two shadow colours per theme, levels scale their strength */
-  --md-sys-shadow-umbra: light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.6));
-  --md-sys-shadow-penumbra: light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.7));
+  --md-sys-shadow-umbra: light-dark(rgb(60 40 20 / 0.12), rgb(0 0 0 / 0.6));
+  --md-sys-shadow-penumbra: light-dark(rgb(60 40 20 / 0.08), rgb(0 0 0 / 0.7));
   --md-sys-elevation-0: none;
   --md-sys-elevation-1: 0 1px 3px 1px color-mix(in srgb, var(--md-sys-shadow-umbra) 50%, transparent),
     0 1px 2px 0 color-mix(in srgb, var(--md-sys-shadow-penumbra) 50%, transparent);
@@ -214,19 +210,32 @@
   --md-comp-button-radius: var(--md-sys-shape-corner-full);
   --md-comp-button-font-size: 0.9375rem;
 
-  /* Cards are square hairline frames. Hover fills the cell and draws a signal bar. */
-  --md-comp-card-radius: var(--md-sys-shape-corner-none);
-  --md-comp-card-bg: var(--md-sys-color-surface);
-  --md-comp-card-bg-hover: var(--md-sys-color-surface-container);
+  /* Cards are soft hairline frames. Hover fills the card and draws a signal bar.
+     Square corners and corner ticks are reserved for .is-instrument panels:
+     the ones that show measurements (stats, post metadata). */
+  --md-comp-card-radius: var(--md-sys-shape-corner-large);
+  --md-comp-card-bg: var(--md-sys-color-surface-container-lowest);
+  --md-comp-card-bg-hover: var(--md-sys-color-surface-container-low);
   --md-comp-card-border: var(--md-sys-color-outline-variant);
   --md-comp-card-shadow: none;
   --md-comp-card-bar-height: 2px;
+  --md-comp-media-radius: var(--md-sys-shape-corner-medium);
+  --md-comp-portrait-radius: var(--md-sys-shape-corner-extra-large);
 
   --md-comp-tick-size: 7px;
 
   --md-comp-chip-radius: var(--md-sys-shape-corner-small);
   --md-comp-chip-bg: var(--md-sys-color-surface);
   --md-comp-chip-border: var(--md-sys-color-outline-variant);
+
+  /* Status pill: what state a product is in. Live = sage ("it works"). */
+  --md-comp-status-dot-size: 0.5rem;
+
+  /* Proof quote: words from other people, set in the voice face */
+  --md-comp-quote-mark-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+
+  /* Avatar used in bylines and proof attributions */
+  --md-comp-avatar-size: 2.75rem;
 }
 
 /* ---------------------------------------------------------------------------
@@ -278,6 +287,8 @@
 --------------------------------------------------------------------------- */
 @theme {
   --font-sans: 'Roboto Flex Variable', 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Voice: headlines, articles, quotes. Interface: everything you click. Data: numbers and labels. */
+  --font-serif: 'Newsreader Variable', 'Iowan Old Style', 'Charter', Georgia, serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Colour roles → bg-*, text-*, border-*, ring-*, fill-* … */

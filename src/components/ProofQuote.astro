@@ -1,0 +1,24 @@
+---
+/** Words from someone I've worked with: verbatim, attributed, and linked to the original. */
+import type { Quote } from '~/data/proof';
+
+const { quote, class: className } = Astro.props as { quote: Quote; class?: string };
+---
+
+<figure class:list={['proof-quote', className]}>
+  <blockquote class="space-y-4">
+    {quote.paragraphs.map((p) => <p>{p}</p>)}
+  </blockquote>
+  <figcaption class="flex-wrap justify-between">
+    <span class="flex items-center gap-3.5">
+      <span class="avatar" aria-hidden="true">{quote.initials}</span>
+      <span>
+        <span class="block text-body-sm font-semibold text-on-surface">{quote.name}</span>
+        <span class="block text-caption text-on-surface-variant">{quote.relationship} · {quote.role}</span>
+      </span>
+    </span>
+    <a href={quote.source.href} class="receipt-source inline-flex min-h-11 items-center" rel="noopener">
+      {quote.source.label} →
+    </a>
+  </figcaption>
+</figure>
