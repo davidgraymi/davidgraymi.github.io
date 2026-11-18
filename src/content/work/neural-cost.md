@@ -9,6 +9,8 @@ highlight: JAX won 4 of 5 architectures on the M3 CPU, then 1 of 5 on its GPU
 featured: true
 order: -3
 links:
+  - label: neural-cost on PyPI
+    href: https://pypi.org/project/neural-cost/
   - label: Source on GitHub
     href: https://github.com/davidgraymi/neural-cost
   - label: CPU benchmark repository

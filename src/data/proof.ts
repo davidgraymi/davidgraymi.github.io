@@ -8,6 +8,10 @@
  * - Link to where the reader can see the original.
  */
 
+import { socials } from '~/site.config';
+
+const scholar = socials.find((s) => s.icon === 'scholar')!;
+
 export type Quote = {
   /** Verbatim paragraphs, in order. */
   paragraphs: string[];
@@ -43,6 +47,6 @@ export const receipts: Receipt[] = [
   {
     value: '11 citations',
     label: 'for an undergraduate sign-language project, years after it shipped',
-    source: { label: 'The story', href: '/blog/an-unexpected-email-and-11-citations' },
+    source: { label: 'Google Scholar', href: scholar.href },
   },
 ];

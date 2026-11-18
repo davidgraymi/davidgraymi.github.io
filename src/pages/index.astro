@@ -161,7 +161,7 @@ const hobbies = offTheClock.map((item) =>
             <p class="kicker">On the record</p>
             <p class="receipt-value mt-6">{r.value}</p>
             <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{r.label}</p>
-            <a href={r.source.href} class="receipt-source mt-auto inline-flex min-h-11 items-center pt-4">
+            <a href={r.source.href} class="receipt-source mt-auto inline-flex min-h-11 items-center pt-4" rel={r.source.href.startsWith('http') ? 'noopener' : undefined}>
               {r.source.label} →
             </a>
           </div>

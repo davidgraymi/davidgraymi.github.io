@@ -35,12 +35,12 @@ export const products: Product[] = [
   {
     slug: 'neural-cost',
     name: 'neural-cost',
-    status: 'beta',
+    status: 'live',
     problem: "A timer tells you how fast a model runs. It doesn't tell you whether that's good.",
     summary:
       'A Python library that works out how fast a neural network should run: FLOPs, tensor traffic and a roofline model across PyTorch, JAX and TensorFlow.',
-    meta: 'Python · free on GitHub',
-    action: { label: 'View on GitHub', href: 'https://github.com/davidgraymi/neural-cost' },
+    meta: 'pip install neural-cost',
+    action: { label: 'Get it on PyPI', href: 'https://pypi.org/project/neural-cost/' },
   },
 ];
 
