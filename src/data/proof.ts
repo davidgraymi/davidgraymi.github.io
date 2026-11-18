@@ -8,10 +8,6 @@
  * - Link to where the reader can see the original.
  */
 
-import { socials } from '~/site.config';
-
-const scholar = socials.find((s) => s.icon === 'scholar')!;
-
 export type Quote = {
   /** Verbatim paragraphs, in order. */
   paragraphs: string[];
@@ -32,7 +28,7 @@ export const quotes: Quote[] = [
     ],
     name: 'Jonathan McCluskey',
     role: 'Continuously Growing into a Master Craftsman',
-    relationship: 'Senior teammate for two years',
+    relationship: 'Senior teammate at Boeing for 4 years',
     initials: 'JM',
     source: {
       label: 'Full recommendation on LinkedIn',
@@ -47,6 +43,6 @@ export const receipts: Receipt[] = [
   {
     value: '11 citations',
     label: 'for an undergraduate sign-language project, years after it shipped',
-    source: { label: 'Google Scholar', href: scholar.href },
+    source: { label: 'The story', href: '/blog/an-unexpected-email-and-11-citations' },
   },
 ];
