@@ -25,6 +25,29 @@
     U+FEFF, U+FFFD;
 }
 
+/* Newsreader: the voice face. The wght-only build (58 KB) rather than opsz (132 KB):
+   the optical-size axis is nice, but not worth doubling the bytes. */
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
 @font-face {
   font-family: 'JetBrains Mono Variable';
   font-style: normal;
@@ -187,24 +210,40 @@
   }
 
   /* -------------------------------------------------------------------------
-     Ruled panel: hairline cells with corner ticks (instrument-panel layout).
+     Ruled panel: hairline cells in one soft frame.
      .ruled-panel > (.tick ×4) + .ruled-grid > .ruled-cell
+     Add .is-instrument when the panel shows measurements (stats, metadata):
+     it goes square and shows its corner ticks. Ticks mean "this is data".
   ------------------------------------------------------------------------- */
   .ruled-panel,
   .ticked-frame {
     position: relative;
     border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-comp-card-bg);
+    border-radius: var(--md-comp-card-radius);
+  }
+  .ruled-panel.is-instrument {
+    border-radius: 0;
     background: var(--md-sys-color-surface);
   }
+  .ruled-panel:not(.is-instrument) > .tick { display: none; }
+
+  /* Portrait frame: a soft mat around a photo of a person */
   .ticked-frame {
     padding: 0.5rem;
+    border-radius: var(--md-comp-portrait-radius);
+  }
+  .ticked-frame > .tick { display: none; }
+  .ticked-frame > :not(.tick) {
+    border-radius: calc(var(--md-comp-portrait-radius) - 0.5rem);
+    overflow: hidden;
   }
   :is(.ruled-panel, .ticked-frame) > .tick {
     position: absolute;
     width: var(--md-comp-tick-size);
     height: var(--md-comp-tick-size);
     background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--md-sys-color-outline);
     z-index: 1;
   }
   :is(.ruled-panel, .ticked-frame) > .tick-tl { top: -4px; left: -4px; }
@@ -215,7 +254,10 @@
   .ruled-grid {
     display: grid;
     overflow: hidden;
+    border-radius: inherit;
   }
+  .ruled-panel > .ruled-grid { border-radius: calc(var(--md-comp-card-radius) - 1px); }
+  .ruled-panel.is-instrument > .ruled-grid { border-radius: 0; }
   .ruled-cell {
     position: relative;
     box-shadow: 1px 0 0 var(--md-sys-color-rule-soft), 0 1px 0 var(--md-sys-color-rule-soft);
@@ -226,8 +268,8 @@
     background: var(--md-comp-card-bg-hover);
   }
   .ruled-cell .cell-index {
-    background: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface-variant);
     transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
                 color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
   }
@@ -517,22 +559,27 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
    Long-form Article Styling (Blog Posts and Case Studies)
 -------------------------------------------------------------------------- */
 .prose {
-  font-size: 1.0625rem;
-  line-height: 1.8;
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.7;
+  font-optical-sizing: auto;
   color: var(--md-sys-color-on-surface);
 }
 .prose > * + * { margin-top: 1.35em; }
 .prose h2 {
-  font-size: 1.55rem;
-  font-weight: 650;
+  font-size: 1.75rem;
+  font-weight: 550;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   margin-top: 2.6em;
   margin-bottom: 0.25em;
   scroll-margin-top: 6rem;
   color: var(--md-sys-color-on-surface);
 }
 .prose h3 {
-  font-size: 1.25rem;
-  font-weight: 650;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.3;
   margin-top: 2.1em;
   margin-bottom: 0.15em;
   scroll-margin-top: 6rem;
@@ -557,22 +604,24 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 .prose li::marker { color: var(--md-sys-color-primary); }
 .prose li + li { margin-top: 0.45em; }
 .prose blockquote {
-  border-left: 3px solid var(--md-sys-color-primary);
+  border-left: 2px solid var(--md-sys-color-primary);
   padding-left: 1.25em;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-sys-color-on-surface);
   font-style: italic;
-  background: var(--md-sys-color-surface-container);
-  padding-block: 0.6em;
+  font-size: 1.25em;
+  line-height: 1.5;
 }
 /* Figures sit in the same square hairline frame as everything else */
 .prose img, .prose video {
   border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-comp-media-radius);
 }
 /* Built by src/lib/rehype-prose.mjs from a lone image with a title */
 .prose .prose-figure { margin-block: 2.2em; }
 .prose-figure-media {
   overflow-x: auto;
   border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-comp-media-radius);
   background: var(--md-sys-color-surface);
 }
 .prose-figure-media a { display: block; }
@@ -581,6 +630,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   width: 100%;
   height: auto;
   border: 0;
+  border-radius: 0;
 }
 /* Charts stay legible on phones: scroll sideways rather than shrink to 6px text */
 @media (max-width: 39.99rem) {
@@ -630,7 +680,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   font-size: 0.875rem;
   line-height: 1.65;
   padding: 1.2rem 1.4rem;
-  border-radius: var(--md-sys-shape-corner-none);
+  border-radius: var(--md-comp-media-radius);
   border: 1px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container-low) !important;
   overflow-x: auto;
@@ -643,6 +693,8 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 }
 /* Wide tables scroll inside their own region instead of widening the page */
 .prose .table-scroll { overflow-x: auto; }
+/* Data and captions stay in the interface face: the serif is for sentences. */
+.prose table, .prose figcaption { font-family: var(--font-sans); }
 .prose table {
   width: 100%;
   font-size: 0.9375rem;
@@ -720,4 +772,156 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   .site-header { view-transition-name: site-header; }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation-duration: 180ms; }
+}
+
+/* ---------------------------------------------------------------------------
+   Workbench components: trust, products, authorship
+--------------------------------------------------------------------------- */
+@layer components {
+  /* Status pill: the state of a thing I've made.
+     data-status = live | beta | research | archived */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.65rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--md-sys-color-on-surface-variant);
+    background: var(--md-sys-color-surface);
+    --status-color: var(--md-sys-color-outline);
+  }
+  .status-pill::before {
+    content: '';
+    width: var(--md-comp-status-dot-size);
+    height: var(--md-comp-status-dot-size);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--status-color);
+    flex: none;
+  }
+  .status-pill[data-status='live'] {
+    --status-color: var(--md-sys-color-secondary);
+    color: var(--md-sys-color-on-secondary-container);
+    background: var(--md-sys-color-secondary-container);
+    border-color: transparent;
+  }
+  .status-pill[data-status='beta'] { --status-color: var(--md-sys-color-primary); }
+  .status-pill[data-status='research'] { --status-color: var(--md-sys-color-tertiary); }
+  .status-pill[data-status='archived']::before { background: transparent; border: 1px solid var(--status-color); }
+
+  /* Product card: something people can use today. Leads with the problem it
+     solves, then the thing, then one action. */
+  .product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem;
+    border: 1px solid var(--md-comp-card-border);
+    border-radius: var(--md-comp-card-radius);
+    background: var(--md-comp-card-bg);
+    transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+                box-shadow var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+  }
+  .product-card:hover,
+  .product-card:focus-within {
+    border-color: var(--md-sys-color-outline);
+    box-shadow: var(--md-sys-elevation-2);
+  }
+  .product-card .product-problem {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--text-body-lg);
+    line-height: 1.5;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* Proof quote: what someone else said. Name, role, and how they know me are
+     required; an anonymous quote is not proof. */
+  .proof-quote {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1.75rem 1.75rem;
+    border: 1px solid var(--md-comp-card-border);
+    border-radius: var(--md-comp-card-radius);
+    background: var(--md-comp-card-bg);
+  }
+  .proof-quote blockquote {
+    font-family: var(--font-serif);
+    font-size: var(--text-title);
+    line-height: 1.5;
+    color: var(--md-sys-color-on-surface);
+  }
+  .proof-quote blockquote::before {
+    content: '\201C';
+    display: block;
+    height: 2.25rem;
+    font-family: var(--font-serif);
+    font-size: 4.5rem;
+    line-height: 1;
+    color: var(--md-comp-quote-mark-color);
+  }
+  .proof-quote figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: auto;
+  }
+
+  /* Avatar: a person, round. Initials fallback uses the container colours. */
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: var(--md-comp-avatar-size);
+    height: var(--md-comp-avatar-size);
+    border-radius: var(--md-sys-shape-corner-full);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Receipt: a claim with its source. Big number, plain label, a link to check it. */
+  .receipt-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-headline);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--md-sys-color-primary);
+  }
+  .receipt-source {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: underline;
+    text-decoration-color: var(--md-sys-color-outline-variant);
+    text-underline-offset: 0.25em;
+  }
+  .receipt-source:hover { color: var(--md-sys-color-primary); text-decoration-color: currentColor; }
+
+  /* Author card: the end of every post. A face, a sentence, a way to keep reading. */
+  .author-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding: 1.5rem;
+    border: 1px solid var(--md-comp-card-border);
+    border-radius: var(--md-comp-card-radius);
+    background: var(--md-sys-color-surface-container-low);
+  }
+  .author-card .avatar { --md-comp-avatar-size: 4rem; }
 }

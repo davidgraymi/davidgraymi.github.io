@@ -4,7 +4,7 @@ import satori from 'satori';
 import sharp from 'sharp';
 
 /**
- * Social cards (1200×630) drawn at build time: the dark Instrument Panel theme,
+ * Social cards (1200×630) drawn at build time: the dark Workbench theme,
  * one per post, project and top-level page. Satori lays out the text as paths,
  * sharp rasterises it, so the PNG never depends on fonts installed on the machine.
  */
@@ -26,12 +26,13 @@ export type Card = {
   portrait?: boolean;
 };
 
-// Dark-theme values from tokens.css. Satori can't read CSS custom properties.
+// Dark-theme values from tokens.css (charcoal + stone). Satori can't read CSS custom properties.
 const C = {
-  ground: '#06090e',
-  rule: '#1e283b',
-  text: '#f1f5f9',
-  muted: '#94a3b8',
+  ground: '#14120f',
+  panel: '#1a1714',
+  rule: '#36312b',
+  text: '#f6f2ec',
+  muted: '#b3aa9e',
   amber: '#f59e0b',
   amberInk: '#1a1200',
 };
@@ -39,11 +40,13 @@ const C = {
 const require = createRequire(import.meta.url);
 const font = (pkg: string, file: string) => readFile(require.resolve(`${pkg}/files/${file}`));
 
-let fonts: Promise<{ name: string; data: Buffer; weight: 400 | 600 | 700; style: 'normal' }[]> | undefined;
+let fonts: Promise<{ name: string; data: Buffer; weight: 400 | 500 | 600 | 700; style: 'normal' }[]> | undefined;
 const loadFonts = () =>
   (fonts ??= Promise.all([
     font('@fontsource/inter', 'inter-latin-400-normal.woff').then((data) => ({ name: 'Inter', data, weight: 400 as const, style: 'normal' as const })),
     font('@fontsource/inter', 'inter-latin-700-normal.woff').then((data) => ({ name: 'Inter', data, weight: 700 as const, style: 'normal' as const })),
+    // Newsreader is the voice face: titles and headlines, as on the site.
+    font('@fontsource/newsreader', 'newsreader-latin-500-normal.woff').then((data) => ({ name: 'Serif', data, weight: 500 as const, style: 'normal' as const })),
     font('@fontsource/jetbrains-mono', 'jetbrains-mono-latin-600-normal.woff').then((data) => ({ name: 'Mono', data, weight: 600 as const, style: 'normal' as const })),
   ]));
 
@@ -58,20 +61,14 @@ export const headshot = (w: number, h: number) =>
   sharp(headshotPath).resize(w, h, { fit: 'cover', position: 'top' }).jpeg({ quality: 88, mozjpeg: true }).toBuffer();
 const headshotUri = async (w: number, h: number) => `data:image/jpeg;base64,${(await headshot(w * 2, h * 2)).toString('base64')}`;
 
+// The site's .dot-field texture: a quiet dot grid rather than ruled lines.
 const grid = {
-  backgroundImage: `linear-gradient(${C.rule}55 1px, transparent 1px), linear-gradient(90deg, ${C.rule}55 1px, transparent 1px)`,
-  backgroundSize: '64px 64px',
+  backgroundImage: `radial-gradient(circle, ${C.rule} 1.5px, transparent 1.5px)`,
+  backgroundSize: '28px 28px',
 };
 
-const tick = (pos: Record<string, number>) =>
-  h('div', { position: 'absolute', width: 9, height: 9, background: C.ground, border: `1.5px solid ${C.muted}`, ...pos });
-
-const ticks = () => [
-  tick({ top: -5, left: -5 }),
-  tick({ top: -5, right: -5 }),
-  tick({ bottom: -5, left: -5 }),
-  tick({ bottom: -5, right: -5 }),
-];
+// Cards and portraits are soft frames, as on the site. Square corners mean data.
+const RADIUS = 22;
 
 const badge = (size: number) =>
   h(
@@ -112,11 +109,10 @@ async function renderPortraitCard({ title, description, path }: Card): Promise<B
       color: C.text,
     },
     [
-      h('div', { position: 'relative', display: 'flex', padding: 10, border: `1.5px solid ${C.rule}`, background: C.ground }, [
-        ...ticks(),
-        { type: 'img', props: { src: await headshotUri(244, 244), style: { width: 244, height: 244 } } },
+      h('div', { display: 'flex', padding: 10, border: `1.5px solid ${C.rule}`, borderRadius: RADIUS + 10, background: C.panel }, [
+        { type: 'img', props: { src: await headshotUri(244, 244), style: { width: 244, height: 244, borderRadius: RADIUS } } },
       ]),
-      h('div', { fontSize: 76, fontWeight: 700, letterSpacing: -2, marginTop: 32 }, title),
+      h('div', { fontFamily: 'Serif', fontSize: 80, fontWeight: 500, letterSpacing: -1, marginTop: 32 }, title),
       description ? h('div', { fontSize: 28, color: C.muted, marginTop: 10 }, clip(description, 60)) : null,
       h('div', { display: 'flex', alignItems: 'center', gap: 12, marginTop: 28, fontFamily: 'Mono', fontSize: 20, letterSpacing: 2, color: C.amber }, [
         badge(30),
@@ -156,10 +152,10 @@ export async function renderCard(card: Card): Promise<Buffer> {
           margin: '44px 56px 48px',
           padding: '40px 44px 32px',
           border: `1.5px solid ${C.rule}`,
-          background: `${C.ground}e6`,
+          borderRadius: RADIUS,
+          background: `${C.panel}f0`,
         },
         [
-          ...ticks(),
           h('div', { display: 'flex', alignItems: 'center', justifyContent: 'space-between' }, [
             h('div', { display: 'flex', alignItems: 'center', gap: 16 }, [
               badge(44),
@@ -175,7 +171,7 @@ export async function renderCard(card: Card): Promise<Buffer> {
             'div',
             { display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, gap: 20 },
             [
-              h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.08, letterSpacing: -1.5 }, clip(title, 110)),
+              h('div', { fontFamily: 'Serif', fontSize: titleSize, fontWeight: 500, lineHeight: 1.1, letterSpacing: -0.5 }, clip(title, 110)),
               description
                 ? h('div', { fontSize: 27, lineHeight: 1.4, color: C.muted }, clip(description, 150))
                 : null,
@@ -268,7 +264,7 @@ export async function renderBanner({ width, height, headline, line }: Banner): P
           gap: Math.round(height * 0.05),
         },
         [
-          h('div', { fontSize: Math.round(height * 0.13), fontWeight: 700, letterSpacing: -1.5, textAlign: 'right' }, headline),
+          h('div', { fontFamily: 'Serif', fontSize: Math.round(height * 0.14), fontWeight: 500, letterSpacing: -1, textAlign: 'right' }, headline),
           h('div', { fontSize: Math.round(height * 0.06), color: C.muted, textAlign: 'right' }, line),
           h('div', { display: 'flex', alignItems: 'center', gap: 12, fontFamily: 'Mono', fontSize: Math.round(height * 0.05), letterSpacing: 2, color: C.amber }, [
             badge(Math.round(height * 0.075)),

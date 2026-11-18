@@ -1,0 +1,27 @@
+---
+/** A thing people can use today: status → problem → name → what it does → one action. */
+import Icon from '~/components/Icon.astro';
+import { statusLabel, type Product } from '~/data/products';
+
+const { product } = Astro.props as { product: Product };
+const external = product.action.href.startsWith('http');
+---
+
+<article class="product-card">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <span class="status-pill" data-status={product.status}>{statusLabel[product.status]}</span>
+    <span class="font-mono text-label text-on-surface-variant">{product.meta}</span>
+  </div>
+  <p class="product-problem">{product.problem}</p>
+  <div>
+    <h3 class="font-serif text-headline-sm font-medium text-on-surface">{product.name}</h3>
+    <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{product.summary}</p>
+  </div>
+  <div class="mt-auto flex flex-wrap gap-3 pt-2">
+    <a href={product.action.href} class="btn btn-primary" rel={external ? 'noopener' : undefined}>
+      {product.action.label}
+      <Icon name="arrow" size={15} />
+    </a>
+    <a href={`/work/${product.slug}`} class="btn btn-ghost">How I built it</a>
+  </div>
+</article>
