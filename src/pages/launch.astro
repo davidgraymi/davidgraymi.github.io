@@ -50,6 +50,12 @@ const phoneAlt = 'Bindersnap on a phone: a change needs one more approval, with 
 
 const headline = ['Engineer.', 'Scientist.'];
 
+// The glass filter for the stat numbers, full size and half size for phones.
+const glassFilters = [
+  { id: 'glass', k: 1 },
+  { id: 'glass-sm', k: 0.5 },
+];
+
 // Fine print. Each stat gets the note at the same index; the LaCAM tile gets the last.
 const footnotes = [
   'Software Engineer, then Product Security Engineer, at Boeing since June 2021.',
@@ -121,6 +127,65 @@ const hobbies = offTheClock.slice(1);
 
   {/* ------------------------------------------------ 2 · the numbers */}
   <section class="stage numbers" aria-labelledby="numbers-title">
+    {/* Black glass with a spectral rim, after the iPad Pro wallpaper's lettering.
+        The numbers are painted in a spectral gradient. The filter keeps that
+        colour only in a band along each glyph's top and bottom edges, where the
+        light catches, lets it glow, draws a faint hairline everywhere else, and
+        fills the glyph with glossy near-black. Sizes are in CSS px, so phones
+        get a half-scale copy. */}
+    <svg class="glass-defs" width="0" height="0" aria-hidden="true" focusable="false">
+      {glassFilters.map(({ id, k }) => (
+        <filter id={id} x="-15%" y="-30%" width="130%" height="160%" color-interpolation-filters="sRGB">
+          <feMorphology in="SourceAlpha" operator="erode" radius={1.2 * k} result="inner" />
+          <feComposite in="SourceAlpha" in2="inner" operator="out" result="hairA" />
+          <feFlood flood-color="#fff" flood-opacity="0.4" />
+          <feComposite in2="hairA" operator="in" result="hair" />
+
+          <feOffset in="SourceAlpha" dy={12 * k} result="down" />
+          <feComposite in="SourceAlpha" in2="down" operator="out" />
+          <feGaussianBlur stdDeviation={1.4 * k} result="topA" />
+          <feComposite in="SourceGraphic" in2="topA" operator="in" result="topRim" />
+          <feOffset in="SourceAlpha" dy={-8 * k} result="up" />
+          <feComposite in="SourceAlpha" in2="up" operator="out" />
+          <feGaussianBlur stdDeviation={1.4 * k} result="botA" />
+          <feComposite in="SourceGraphic" in2="botA" operator="in" />
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.75 0" result="botRim" />
+          <feOffset in="SourceAlpha" dy={3 * k} result="down3" />
+          <feComposite in="SourceAlpha" in2="down3" operator="out" />
+          <feGaussianBlur stdDeviation={0.8 * k} result="coreA" />
+          <feFlood flood-color="#fff" flood-opacity="0.7" />
+          <feComposite in2="coreA" operator="in" result="core" />
+          <feMerge result="rims"><feMergeNode in="topRim" /><feMergeNode in="botRim" /></feMerge>
+          <feGaussianBlur in="rims" stdDeviation={16 * k} result="glow" />
+          <feGaussianBlur in="rims" stdDeviation={3.5 * k} result="glowTight" />
+
+          <feGaussianBlur in="SourceAlpha" stdDeviation={24 * k} result="hazeA" />
+          <feFlood flood-color="#fff" flood-opacity="0.16" />
+          <feComposite in2="hazeA" operator="in" result="haze" />
+
+          <feFlood flood-color="#020202" />
+          <feComposite in2="inner" operator="in" result="body" />
+          <feGaussianBlur in="inner" stdDeviation={8 * k} result="bump" />
+          <feSpecularLighting in="bump" surfaceScale={10 * k} specularConstant="0.75" specularExponent="22" lighting-color="#fff">
+            <feDistantLight azimuth="250" elevation="32" />
+          </feSpecularLighting>
+          <feComposite in2="inner" operator="in" />
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.28 0" result="sheen" />
+
+          <feMerge>
+            <feMergeNode in="haze" />
+            <feMergeNode in="glow" />
+            <feMergeNode in="glowTight" />
+            <feMergeNode in="body" />
+            <feMergeNode in="sheen" />
+            <feMergeNode in="hair" />
+            <feMergeNode in="topRim" />
+            <feMergeNode in="botRim" />
+            <feMergeNode in="core" />
+          </feMerge>
+        </filter>
+      ))}
+    </svg>
     <h2 id="numbers-title" class="numbers-intro">Five years of software that had to work.<br /><span>Here's what that adds up to.</span></h2>
     {
       stats.map((s, i) => (
@@ -619,16 +684,25 @@ const hobbies = offTheClock.slice(1);
     font-weight: 700;
     letter-spacing: -0.065em;
     font-variant-numeric: tabular-nums;
-    background: linear-gradient(180deg, var(--md-ref-amber-200), var(--md-ref-amber-500) 55%, var(--md-ref-amber-600));
+    /* The spectrum the rim is cut from: warm on the left, white-hot in the
+       middle, cold on the right. Wider than the box so it can drift. */
+    background: linear-gradient(
+      100deg,
+      #ff4d1a 0%, #ff9d00 12%, #ffe066 22%, #fff 30%, #6fe3ff 40%,
+      #2f6bff 52%, #7a3cff 62%, #ff4d1a 74%, #ffb000 86%, #fff 100%
+    ) 0% 0% / 150% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    filter: url(#glass);
     /* The gradient only paints inside the box. Tight tracking pulls the box in
        past the last glyph's edge, and the 0.85 line height cuts off descenders
        (the y in "yrs"), so pad it out. The negative margin keeps the spacing. */
     padding: 0 0.08em 0.22em;
     margin-bottom: -0.14em;
   }
+  .glass-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+  @media (max-width: 640px) { .stat-value { filter: url(#glass-sm); } }
   .stat-label {
     max-width: 24rem;
     font-size: clamp(1.125rem, 2.2vw, 1.5rem);
@@ -669,11 +743,21 @@ const hobbies = offTheClock.slice(1);
         animation-timeline: view();
         animation-range: cover 10% cover 90%;
       }
+      /* The light slides along the rim as the number passes. */
+      .stat-value {
+        animation: rim-drift linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
     }
   }
   @keyframes rise {
     from { opacity: 0; transform: translateY(6svh); }
     to { opacity: 1; transform: none; }
+  }
+  @keyframes rim-drift {
+    from { background-position: 0% 0%; }
+    to { background-position: 100% 0%; }
   }
   @keyframes stat-moment {
     0% { opacity: 0; transform: translateY(10svh) scale(0.86); filter: blur(10px); }
