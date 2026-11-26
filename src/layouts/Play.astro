@@ -51,7 +51,7 @@ const widths: Record<Game['width'], string> = {
           <span data-fs-enter><Icon name="expand" size={16} /></span>
           <span data-fs-exit hidden><Icon name="shrink" size={16} /></span>
         </button>
-        <span class="play-theme"><ThemeToggle /></span>
+        <ThemeToggle />
       </div>
     </header>
 
@@ -133,26 +133,6 @@ const widths: Record<Game['width'], string> = {
   .play-back:hover {
     opacity: 0.75;
   }
-  /* The shared theme toggle, dressed as a round toolbar button. */
-  .play-theme .theme-btn {
-    width: 44px;
-    height: 44px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--g-fill);
-    color: var(--md-sys-color-on-surface);
-    transition: background-color 220ms var(--g-ease);
-  }
-  .play-theme .theme-btn.theme-btn:hover {
-    background: var(--g-fill-strong);
-  }
-  @media (pointer: fine) {
-    .play-theme .theme-btn {
-      width: 36px;
-      height: 36px;
-    }
-  }
-
   /* How to play: a sheet that rises and settles over a dimmed, blurred stage.
      Entry only: closing is instant, which also avoids top-layer exit quirks. */
   .play-sheet {

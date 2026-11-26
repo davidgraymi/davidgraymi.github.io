@@ -6,16 +6,20 @@
    of hairline grids, pill controls, one springy ease, sans everywhere and
    tabular numerals for anything that counts. See DESIGN.md › Games.
 --------------------------------------------------------------------------- */
+/* The fills and ease are global: the site chrome (header, theme toggle) uses them too. */
+:root {
+  --g-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --g-hair: color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent);
+  --g-fill: color-mix(in srgb, var(--md-sys-color-on-surface) 7%, transparent);
+  --g-fill-strong: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+  --g-lift:
+    0 0 0 0.5px var(--g-hair),
+    0 24px 48px -24px rgb(0 0 0 / 0.35),
+    0 2px 6px rgb(0 0 0 / 0.08);
+}
+
 @layer components {
   .g-root {
-    --g-ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --g-hair: color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent);
-    --g-fill: color-mix(in srgb, var(--md-sys-color-on-surface) 7%, transparent);
-    --g-fill-strong: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
-    --g-lift:
-      0 0 0 0.5px var(--g-hair),
-      0 24px 48px -24px rgb(0 0 0 / 0.35),
-      0 2px 6px rgb(0 0 0 / 0.08);
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.5;

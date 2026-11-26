@@ -101,7 +101,7 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 
 ## Shape, elevation, motion
 
-- **Radius:** cards and panels are soft (`rounded-card` = 14px). Portraits sit in a 20px mat; figures, code blocks and images in prose use 10px. Buttons are `full` pills. **Square corners mean data:** a `.ruled-panel.is-instrument` (stats strip, post and project metadata) goes square and shows its corner ticks. The header is a full-width bar; icon buttons and the search field in it are square. Small chips and index tags use `rounded-md`.
+- **Radius:** cards and panels are soft (`rounded-card` = 14px). Portraits sit in a 20px mat; figures, code blocks and images in prose use 10px. Buttons are `full` pills. **Square corners mean data:** a `.ruled-panel.is-instrument` (stats strip, post and project metadata) goes square and shows its corner ticks. The header is a frosted full-width bar with round icon buttons and a pill search field. Small chips and index tags use `rounded-md`.
 - **Elevation:** cards are flat; depth comes from hairlines. A `.product-card` lifts to 2 on hover. 2 for floating chrome, 3–5 for overlays (command palette, menus). No glows. Light-mode shadows are tinted warm brown, not black.
 - **Motion:** 140ms for state changes, 220ms for reveals, 320ms for page-level movement; `ease-standard` by default. Everything collapses to instant under `prefers-reduced-motion`.
 
@@ -109,7 +109,7 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 
 | Class | What it is | Notes |
 | --- | --- | --- |
-| `Header` component | Sticky ruled bar: square brand mark, divider, left-aligned links | Active link draws a 2px signal bar on the bottom rule; hover draws it in `outline`. Mobile menu is a full-width `.ruled-list` sheet with mono indices |
+| `Header` component | Sticky frosted bar (`saturate(180%) blur(20px)`): squircle brand mark, centred links, pill search, round icon buttons | Hairline appears only once the page scrolls. Active link sits on a soft pill. Mobile menu is a solid full-height sheet of large links that settle in one by one; the two-line menu icon folds into an X. Uses the global `--g-*` fills and ease from `games.css` |
 | `.wrap` | Page gutter + 76rem max width | 20px gutter on mobile, 32px from `md` |
 | `.kicker` | Mono uppercase eyebrow with amber rule | One per section, above the heading |
 | `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px buttons | One primary per view; `disabled` / `aria-disabled` supported |
