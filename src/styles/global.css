@@ -86,7 +86,9 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden makes body a scroll box once the open menu sets
+       overflow: hidden on html, and the sticky header then scrolls away. */
+    overflow-x: clip;
   }
 
   ::selection {

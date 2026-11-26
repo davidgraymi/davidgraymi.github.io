@@ -14,7 +14,6 @@
  *
  * PLACEHOLDERS to swap for real assets:
  *  - avatar.png → a portrait on a plain dark background with headroom
- *  - stats link to /resume → each to its own source
  *  - the underwater scene is drawn in CSS → a dive photo or short muted loop
  */
 import { Image } from 'astro:assets';
@@ -50,6 +49,16 @@ const features = [
 const phoneAlt = 'Bindersnap on a phone: a change needs one more approval, with Approve and Ask for changes buttons';
 
 const headline = ['Engineer.', 'Scientist.'];
+
+// Fine print. Each stat gets the note at the same index; the LaCAM tile gets the last.
+const footnotes = [
+  'Software Engineer, then Product Security Engineer, at Boeing since June 2021.',
+  "As Product Security Engineer at Boeing: a live demo of three software toolchain applications migrated to the cloud contributed to securing the company's share of a $90M contract award. $90M is the award's total value.",
+  'Integration testing time, before and after a Go HTTPS test server I built as a Software Engineer at Boeing.',
+  'Engineering hours to port to a new OS or bare-metal target, before and after a portable system library (C++, Docker, Bazel, GitLab CI) I built at Boeing.',
+  'Routes in this animation are planned when the site is built, by prioritized space-time A* that never lets two robots share a cell or swap places. The build fails if any two would touch.',
+];
+const lacamNote = footnotes.length;
 
 const neuralCost = products.find((p) => p.slug === 'neural-cost')!;
 
@@ -114,12 +123,14 @@ const hobbies = offTheClock.slice(1);
   <section class="stage numbers" aria-labelledby="numbers-title">
     <h2 id="numbers-title" class="numbers-intro">Five years of software that had to work.<br /><span>Here's what that adds up to.</span></h2>
     {
-      stats.map((s) => (
+      stats.map((s, i) => (
         <div class="stat">
           <p class="stat-inner">
             <span class="stat-value">{s.value}</span>
-            <span class="stat-label">{s.label}</span>
-            <a class="stat-source" href="/resume">Source →</a>
+            <span class="stat-label">
+              {s.label}
+              <sup><a id={`fnref-${i + 1}`} href={`#fn-${i + 1}`} class="fn-mark" aria-label={`Footnote ${i + 1}`}>{i + 1}</a></sup>
+            </span>
           </p>
         </div>
       ))
@@ -128,7 +139,7 @@ const hobbies = offTheClock.slice(1);
   <div class="stage-fade" aria-hidden="true"></div>
 
   {/* ------------------------------------------------ 3 · Bindersnap */}
-  <section class="product" aria-labelledby="bs-title">
+  <section id="bindersnap" class="product" aria-labelledby="bs-title">
     <div class="wrap product-head">
       <p class="product-eyebrow">
         <span class="live-dot" aria-hidden="true"></span>
@@ -191,7 +202,7 @@ const hobbies = offTheClock.slice(1);
   </section>
 
   {/* ------------------------------------------------ 4 · neural-cost */}
-  <section class="stage nc" aria-labelledby="nc-title">
+  <section id="neural-cost" class="stage nc" aria-labelledby="nc-title">
     <div class="wrap">
       <div class="nc-head">
         <p class="nc-eyebrow"><span class="live-dot" aria-hidden="true"></span>{neuralCost.name} · Open source</p>
@@ -247,14 +258,14 @@ const hobbies = offTheClock.slice(1);
   <div class="stage-fade" aria-hidden="true"></div>
 
   {/* ------------------------------------------------ 5 · selected work */}
-  <section class="wrap work" aria-labelledby="work-title">
+  <section id="work" class="wrap work" aria-labelledby="work-title">
     <h2 id="work-title" class="chapter-title">Some of it runs on hardware<br /><span>I'll never see again.</span></h2>
 
     <div class="bento">
       <a href={`/work/${bento.lacam.id}`} class="tile tile-hero" style="--i:0">
         <div class="tile-copy">
           <p class="tile-kicker">Research · {bento.lacam.title}</p>
-          <h3>Eight robots. One warehouse.<br /><span>No collisions.</span></h3>
+          <h3>Eight robots. One warehouse.<br /><span>No collisions.<sup class="fn-mark fn-plain">{lacamNote}</sup></span></h3>
         </div>
         <div class="lacam-art" aria-hidden="true"><LacamHero /></div>
         <p class="tile-foot">{bento.lacam.highlight}</p>
@@ -308,7 +319,7 @@ const hobbies = offTheClock.slice(1);
   </section>
 
   {/* ------------------------------------------------ 7 · off the clock */}
-  <section class="sea" aria-labelledby="sea-title">
+  <section id="off-the-clock" class="sea" aria-labelledby="sea-title">
     {/* Placeholder: drawn in CSS until there's a dive photo or a short muted loop. */}
     <div class="sea-art" aria-hidden="true">
       <span class="rays"></span>
@@ -351,6 +362,22 @@ const hobbies = offTheClock.slice(1);
       </ul>
     </div>
   </section>
+
+  {/* ------------------------------------------------ fine print */}
+  <section class="fineprint" aria-labelledby="fineprint-title">
+    <div class="wrap">
+      <h2 id="fineprint-title" class="sr-only">Footnotes</h2>
+      <ol>
+        {footnotes.map((note, i) => (
+          <li id={`fn-${i + 1}`}>
+            {note}
+            {i < stats.length && <a href={`#fnref-${i + 1}`} class="fn-back" aria-label={`Back to footnote ${i + 1}`}>↩</a>}
+          </li>
+        ))}
+      </ol>
+      <p>This page is a prototype. Bindersnap screens are from its demo workspace, with made-up people and documents.</p>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -361,6 +388,31 @@ const hobbies = offTheClock.slice(1);
     color: var(--md-sys-color-on-surface);
     position: relative;
     isolation: isolate;
+  }
+
+  /* ============================================================ fine print */
+  .fineprint { padding-block: 3rem 4rem; }
+  .fineprint ol {
+    display: grid;
+    gap: 0.625rem;
+    padding-left: 1.25rem;
+    list-style: decimal;
+  }
+  .fineprint li,
+  .fineprint p {
+    max-width: 60rem;
+    font-size: 0.75rem;
+    line-height: 1.55;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .fineprint li::marker { font-variant-numeric: tabular-nums; }
+  .fineprint li:target { color: var(--md-sys-color-on-surface); }
+  .fineprint p { margin-top: 1.5rem; }
+  .fn-back {
+    display: inline-block;
+    margin-left: 0.25rem;
+    padding: 0.25rem;
+    color: var(--md-sys-color-primary);
   }
 
   /* ============================================================ 1 · open */
@@ -571,7 +623,11 @@ const hobbies = offTheClock.slice(1);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    padding-bottom: 0.08em;
+    /* The gradient only paints inside the box. Tight tracking pulls the box in
+       past the last glyph's edge, and the 0.85 line height cuts off descenders
+       (the y in "yrs"), so pad it out. The negative margin keeps the spacing. */
+    padding: 0 0.08em 0.22em;
+    margin-bottom: -0.14em;
   }
   .stat-label {
     max-width: 24rem;
@@ -580,18 +636,20 @@ const hobbies = offTheClock.slice(1);
     color: var(--md-ref-stone-300);
     text-wrap: balance;
   }
-  .stat-source {
-    min-height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.875rem;
+  /* Footnote marks: small, but with a tappable box around the digit. */
+  .fn-mark {
+    display: inline-block;
+    padding: 0.35em 0.35em;
+    margin-left: 0.05em;
+    font-size: 0.6em;
+    font-weight: 600;
+    line-height: 1;
     color: var(--md-ref-stone-500);
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 4px;
-    transition: color 200ms, text-decoration-color 200ms;
+    text-decoration: none;
+    transition: color 200ms;
   }
-  .stat-source:hover { color: var(--md-ref-amber-500); text-decoration-color: currentColor; }
+  a.fn-mark:hover { color: var(--md-ref-amber-500); }
+  .fn-plain { padding: 0; color: inherit; }
 
   /* Sits outside the stage, so it fades into whatever the page surface is. */
   .stage-fade {
