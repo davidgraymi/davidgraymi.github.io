@@ -61,6 +61,7 @@
   /* Red — errors */
   --md-ref-red-100: #fee2e2;
   --md-ref-red-200: #fecaca;
+  --md-ref-red-400: #f87171;
   --md-ref-red-500: #ef4444;
   --md-ref-red-600: #dc2626;
   --md-ref-red-900: #7f1d1d;
@@ -105,7 +106,7 @@
   --md-sys-color-tertiary-container: light-dark(var(--md-ref-paper-0), var(--md-ref-char-500));
   --md-sys-color-on-tertiary-container: light-dark(var(--md-ref-stone-950), var(--md-ref-stone-200));
 
-  --md-sys-color-error: light-dark(var(--md-ref-red-600), var(--md-ref-red-500));
+  --md-sys-color-error: light-dark(var(--md-ref-red-600), var(--md-ref-red-400)); /* dark: red-500 was 4.29:1 under on-error */
   --md-sys-color-on-error: light-dark(var(--md-ref-paper-0), var(--md-ref-red-950));
   --md-sys-color-error-container: light-dark(var(--md-ref-red-100), var(--md-ref-red-900));
   --md-sys-color-on-error-container: light-dark(var(--md-ref-red-950), var(--md-ref-red-200));

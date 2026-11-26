@@ -955,11 +955,17 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
     color: var(--md-sys-color-primary);
   }
   .receipt-source {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--md-sys-color-primary);
   }
   .receipt-source:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  @media (pointer: coarse) {
+    .receipt-source { min-height: 44px; }
+  }
 
   /* Author card: the end of every post. A face, a sentence, a way to keep reading. */
   .author-card {
