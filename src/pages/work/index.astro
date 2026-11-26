@@ -89,14 +89,14 @@ const filters = [
                   href={`/work/${entry.id}`}
                   class="group grid gap-x-6 gap-y-1 py-4 sm:grid-cols-[4rem_1fr_auto] sm:items-baseline"
                 >
-                  <span class="font-mono text-label text-on-surface-variant">{entry.data.year}</span>
+                  <span class="text-[0.875rem] tabular-nums text-on-surface-variant">{entry.data.year}</span>
                   <span>
                     <span class="font-semibold text-on-surface transition-colors group-hover:text-primary">
                       {entry.data.title}
                     </span>
                     <span class="block text-body-sm text-on-surface-variant">{entry.data.blurb}</span>
                   </span>
-                  <span class="font-mono text-label text-on-surface-variant">
+                  <span class="text-[0.8125rem] text-on-surface-variant">
                     {entry.data.stack.slice(0, 2).join(' · ')}
                   </span>
                 </a>

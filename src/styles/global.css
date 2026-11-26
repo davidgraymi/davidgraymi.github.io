@@ -141,6 +141,14 @@
     .wrap { padding-inline: var(--md-sys-layout-gutter-wide); }
   }
 
+  /* Quiet label for a value in a metadata row (Type, Year, Published…). */
+  .meta-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
   /* Eyebrow above a heading: short, sentence case, in the signal colour. */
   .kicker {
     display: inline-block;
@@ -828,16 +836,12 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.2rem 0.65rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    padding: 0.2rem 0.7rem;
     border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     color: var(--md-sys-color-on-surface-variant);
-    background: var(--md-sys-color-surface);
+    background: var(--g-fill);
     --status-color: var(--md-sys-color-outline);
   }
   .status-pill::before {
@@ -934,7 +938,6 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
     height: var(--md-comp-avatar-size);
     border-radius: var(--md-sys-shape-corner-full);
     overflow: hidden;
-    font-family: var(--font-mono);
     font-size: var(--text-caption);
     font-weight: 600;
     background: var(--md-sys-color-primary-container);
@@ -944,22 +947,19 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 
   /* Receipt: a claim with its source. Big number, plain label, a link to check it. */
   .receipt-value {
-    font-family: var(--font-mono);
-    font-size: var(--text-headline);
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 650;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
     line-height: 1.1;
     color: var(--md-sys-color-primary);
   }
   .receipt-source {
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
-    color: var(--md-sys-color-on-surface-variant);
-    text-decoration: underline;
-    text-decoration-color: var(--md-sys-color-outline-variant);
-    text-underline-offset: 0.25em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
   }
-  .receipt-source:hover { color: var(--md-sys-color-primary); text-decoration-color: currentColor; }
+  .receipt-source:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 
   /* Author card: the end of every post. A face, a sentence, a way to keep reading. */
   .author-card {

@@ -27,8 +27,8 @@ const ticker = [
 
 <section class="signal-block mt-20 md:mt-28">
   <div class="wrap relative py-16 text-center md:py-24">
-    <p class="font-mono text-label font-semibold uppercase tracking-[0.14em]">Let's connect</p>
-    <h2 class="mx-auto mt-5 max-w-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-h2">{title}</h2>
+    <p class="text-[0.9375rem] font-semibold">Let's connect</p>
+    <h2 class="mx-auto mt-2 max-w-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-h2">{title}</h2>
     <p class="mx-auto mt-4 max-w-xl text-body-lg leading-relaxed text-on-signal-block/80">
       {body}
     </p>
@@ -41,12 +41,12 @@ const ticker = [
       <CopyEmail class="w-full sm:w-auto" />
     </div>
 
-    <p class="mt-6 font-mono text-label text-on-signal-block/75">
+    <p class="mt-6 text-[0.8125rem] text-on-signal-block/75">
       Usually replies within a day or two · {site.location}
     </p>
   </div>
 
-  <div class="ticker relative font-mono text-caption" aria-hidden="true">
+  <div class="ticker relative text-[0.875rem] font-medium" aria-hidden="true">
     {
       [0, 1].map(() => (
         <div class="ticker-track">

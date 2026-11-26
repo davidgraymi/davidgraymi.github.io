@@ -10,12 +10,8 @@ const { href, label } = Astro.props;
 
 <a
   href={href}
-  class="group inline-flex min-h-11 items-center gap-2.5 font-mono text-label font-semibold uppercase tracking-[0.12em] text-on-surface-variant transition-colors duration-200 hover:text-on-surface"
+  class="group -ml-1 inline-flex min-h-11 items-center gap-0.5 text-[0.9375rem] font-medium text-primary transition-opacity duration-200 hover:opacity-75"
 >
-  <span
-    class="grid h-7 w-7 place-items-center border border-outline-variant transition-colors duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-on-primary"
-  >
-    <span class="rotate-180 leading-none transition-transform duration-200 group-hover:translate-x-0.5"><Icon name="arrow" size={13} /></span>
-  </span>
+  <span class="transition-transform duration-200 group-hover:-translate-x-0.5"><Icon name="chevronLeft" size={18} /></span>
   {label}
 </a>

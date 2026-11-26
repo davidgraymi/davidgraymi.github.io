@@ -122,13 +122,13 @@ Page and section titles are sans: `font-semibold` with tight tracking (`-0.03em`
 | `.ruled-list` | Rows split by hairlines, soft fill on hover | Post lists |
 | `.ticked-frame` | Soft 20px mat around a portrait | The hero photo |
 | `TableOfContents` component | "On this page" map for long posts | Shown when a post has 3+ `h2`s. Collapsible `.glass-panel` below `xl`; sticky rail with a left signal bar on the current section from `xl` |
-| `BackLink` component | Mono label with a square arrow box | Top of every detail page (work, post, album) instead of a pill |
+| `BackLink` component | Amber "‹ Label" link, like an app's back button | Top of every detail page (work, post, album) |
 | `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock), key-metric aside, empty states |
 | `.signal-block` + `.btn-ink`, `.ticker` | Full-bleed amber CTA with dot texture and scrolling ticker | `CallToAction`; the footer sits flush after it |
 | `.chip` / `.chip-accent` | Soft sans pills for tags and tech stack | Accent for at most one chip per card. Linked chips stretch their hit area to 44pt on touch |
 | `.seg` > `.filter-tab` (+ `.active` / `aria-pressed`) | Segmented control: the selected segment lifts on a white pill and turns semibold | Work index. Same control as the games' `.g-seg` |
 | `.link-underline` | Inline link outside prose | |
-| `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | Page headers. `DotField.astro` enhances the first one on idle (pointer repel, hidden Game of Life); keep the CSS as the no-JS rendering |
+| `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | The homepage hero and the 404 page only. `DotField.astro` enhances the first one on idle (pointer repel, hidden Game of Life); keep the CSS as the no-JS rendering |
 | `.prose` | Long-form article styles | Blog posts, case studies. Newsreader 19px / 1.7 body, sans headings. Figures and code blocks sit on 16px corners with a hairline ring; captions are centred sans. Tables use horizontal hairlines only. Quotes are larger italic serif with a thin amber rule and no box |
 | `CommandPalette` component | Spotlight-style search | Frosted panel high on the screen; the selected row fills with the signal colour. A combobox + listbox, so screen readers follow the arrow keys |
 
@@ -138,7 +138,7 @@ These do the persuading, so they only work with real content. Never ship placeho
 
 | Class / component | What it is | Rules |
 | --- | --- | --- |
-| `.status-pill[data-status]` | Mono pill with a state dot: `live`, `beta`, `research`, `archived` | Only `live` is sage. Put one on every product card |
+| `.status-pill[data-status]` | Soft sans pill with a state dot: `live`, `beta`, `research`, `archived` | Only `live` is sage. Put one on every product card |
 | `ProductCard` component (`.product-card` + `.product-problem`) | A thing people can use today | Order: status → the problem, in italic serif → name → one-sentence what → one primary action + one ghost link ("How I built it") |
 | `ProofQuote` component (`.proof-quote` + `.avatar`) | What someone else said | Verbatim; trim whole sentences only. Requires name, role, how you worked together, and a link to the original. An anonymous quote is not proof |
 | `.receipt-value` + `.receipt-source` | A number and a link to check it | Every headline number on the site should be able to carry a source link |

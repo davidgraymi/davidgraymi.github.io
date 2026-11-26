@@ -56,6 +56,15 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
   .toc-chevron { transition: transform var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard); }
   .toc-inline summary::-webkit-details-marker { display: none; }
 
+  /* Touch: each entry is a 44pt row. */
+  @media (pointer: coarse) {
+    .toc-link {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+
   .toc-rail .toc-link[aria-current='true'] {
     border-left-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-surface);
