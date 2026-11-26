@@ -240,8 +240,16 @@ const { attributes, tree, trainedOn, trainingErrors } = model as unknown as Mode
     });
 
     // Shortcuts only while focus is inside the game, so the page keeps its own keys.
-    root.addEventListener('keydown', (ev) => {
-      if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    // Keys reach the game when focus is inside it, or, in the full-screen
+    // player (where nothing else is on the page), when focus is on the page
+    // itself. In a write-up a stray E while reading shouldn't count as a guess.
+    const fullScreen = document.documentElement.classList.contains('play-shell');
+    document.addEventListener('keydown', (ev) => {
+      if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      const t = ev.target as HTMLElement | null;
+      if (t?.closest('input, textarea, select, [contenteditable], dialog[open]')) return;
+      const onPage = !t || t === document.body;
+      if (!(root.contains(t) || (fullScreen && onPage))) return;
       const k = ev.key.toLowerCase();
       if (!answered && (k === 'e' || k === 'p')) {
         ev.preventDefault();
