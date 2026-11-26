@@ -38,6 +38,13 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Upload built site for the browser checks
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
+
       - name: Check links and security.txt
         run: npm run check:site
 
@@ -50,4 +57,45 @@ jobs:
         with:
           name: lighthouse
           path: .lighthouseci/reports
+          if-no-files-found: ignore
+
+  browsers:
+    name: Every page in ${{ matrix.browser }}
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Install ${{ matrix.browser }}
+        run: npx playwright-core install --with-deps ${{ matrix.browser }}
+
+      - name: Load every page at desktop and phone sizes
+        run: npm run check:browsers -- ${{ matrix.browser }}
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.browser }}
+          path: .github/screenshots/browsers
           if-no-files-found: ignore
