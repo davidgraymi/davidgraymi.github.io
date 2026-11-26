@@ -396,6 +396,9 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
     });
   }
 
+  // Buttons elsewhere (the footer) open it without an inline onclick, which the CSP blocks.
+  document.querySelectorAll('[data-open-palette]').forEach((el) => el.addEventListener('click', () => openPalette()));
+
   // Expose global trigger for other components (like header button)
   (window as any).openCommandPalette = openPalette;
 </script>

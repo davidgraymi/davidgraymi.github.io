@@ -63,7 +63,7 @@ const year = new Date().getFullYear();
       <p>© {year} {site.name} · {site.location}</p>
       <button
         type="button"
-        onclick="if(window.openCommandPalette) window.openCommandPalette()"
+        data-open-palette
         class="foot-link -mx-1 px-1 text-left pointer-coarse:hidden"
       >
         <span>Press <kbd data-shortcut class="g-kbd">⌘K</kbd> to search</span>

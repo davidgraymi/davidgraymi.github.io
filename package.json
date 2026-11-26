@@ -11,6 +11,7 @@
     "check": "astro check",
     "resume:pdf": "node scripts/resume-pdf.mjs",
     "check:site": "node scripts/check-site.mjs",
+    "check:browsers": "node scripts/check-browsers.mjs",
     "games:thumbnails": "node scripts/game-thumbnails.mjs",
     "brand": "node scripts/brand-assets.mjs",
     "models": "node scripts/models/hub.mjs"
