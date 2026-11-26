@@ -251,14 +251,29 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
   const isOpen = () => !!menu && !menu.classList.contains('hidden');
 
+  // The open menu covers the page, so it behaves like a modal: everything
+  // outside the header goes inert (no Tab, no screen-reader browsing) and
+  // focus moves to the first link; closing hands focus back to the toggle.
+  const outside = () => {
+    const els: Element[] = [];
+    for (let node: Element | null = header; node && node !== document.body; node = node.parentElement) {
+      for (const sib of node.parentElement?.children ?? []) if (sib !== node && !sib.matches('script, style')) els.push(sib);
+    }
+    return els;
+  };
+
   function setMenu(open: boolean) {
     if (!menu || !toggle) return;
+    if (open === isOpen()) return;
     menu.classList.toggle('hidden', !open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     header?.toggleAttribute('data-menu-open', open);
     // The menu floats over the page, so stop the page scrolling underneath it.
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    outside().forEach((el) => el.toggleAttribute('inert', open));
+    if (open) menu.querySelector<HTMLElement>('a, button')?.focus({ preventScroll: true });
+    else if (menu.contains(document.activeElement)) toggle.focus({ preventScroll: true });
   }
 
   toggle?.addEventListener('click', () => setMenu(!isOpen()));

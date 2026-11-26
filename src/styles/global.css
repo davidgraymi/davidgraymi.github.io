@@ -73,6 +73,8 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* Keep keyboard focus and in-page jumps clear of the 56px sticky header. */
+    scroll-padding-top: 4.5rem;
   }
 
   body {
