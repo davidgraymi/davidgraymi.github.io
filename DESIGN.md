@@ -142,6 +142,25 @@ These do the persuading, so they only work with real content. Never ship placeho
 | `.receipt-value` + `.receipt-source` | A number and a link to check it | Every headline number on the site should be able to carry a source link |
 | `AuthorCard` component | Photo, name, one sentence, RSS / About / Contact | End of every blog post. Already wired into `blog/[...slug].astro` |
 
+## Games
+
+The games are the one place that leaves Workbench on purpose. They should feel like a native app: an object you touch, not a page of instruments. Their primitives live in [`src/styles/games.css`](src/styles/games.css) as `.g-*` classes, and every game root carries `.g-root`, which sets the sans face, the ease (`--g-ease`, `cubic-bezier(0.22, 1, 0.36, 1)`) and the fills.
+
+| Class | What it is | Use |
+| --- | --- | --- |
+| `.g-tray` | 28px radius, soft vertical gradient, 0.5px ring and a long soft shadow | The thing you play on: the board, the pad, the trait grid. One per game |
+| `.g-card` | 20px grouped surface, hairline ring | Controls, stats, results, `details` |
+| `.g-well` | Recessed inset surface | Canvases and drawing pads |
+| `.g-veil` | Frosted glass (`saturate(180%) blur(20px)`) | Start, pause and game-over overlays |
+| `.g-btn` (+ `-tonal`, `-plain`, `-sm`, `-block`) | 44px pill that presses down to 96% | One filled button per state; the others tonal or plain |
+| `.g-seg` > `.g-seg-btn` | Segmented control; the pressed segment lifts on a white pill | Any either/or choice. Works with `aria-pressed` or `.active` |
+| `.g-icon-btn`, `.g-key` | Round toolbar button; keycap for on-screen pads | |
+| `.g-range`, `.g-switch` | iOS slider and switch | Set `--g-range-pct` for the WebKit fill |
+| `.g-stats` > `.g-stat-value` / `.g-stat-label` | Big tabular number over a small label | Scores, clocks, solver stats |
+| `.g-title`, `.g-eyebrow`, `.g-status`, `.g-note`, `.g-spec`, `.g-kbd`, `.g-tag` | Type and small parts | `.g-status` is the one live sentence under the board |
+
+Rules: no mono kickers, corner ticks or ruled grids inside a game; mono only on genuine data views (the ID3 tree). Numbers use `.g-num` (tabular). Text comes in with `.g-appear`. The player (`layouts/Play.astro`) has a frosted toolbar with a centred title, and "How to play" is a sheet that rises over a blurred stage.
+
 ## Page patterns
 
 Homepage section order follows a trust-then-ask sequence: **who I am (hero) → proof (stats with sources, quotes) → what I make (products, then selected work) → how I think (writing) → who I am off the clock → one clear ask (signal block)**. Each section ends with one link onward, not a wall of buttons.

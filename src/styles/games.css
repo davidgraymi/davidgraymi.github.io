@@ -1,0 +1,445 @@
+/* ---------------------------------------------------------------------------
+   Game primitives (.g-*): the quiet, tactile look the games share.
+
+   The rest of the site is "Workbench" (ruled cells, ticks, mono kickers). The
+   games deliberately aren't: they read like a native app. Soft depth instead
+   of hairline grids, pill controls, one springy ease, sans everywhere and
+   tabular numerals for anything that counts. See DESIGN.md › Games.
+--------------------------------------------------------------------------- */
+@layer components {
+  .g-root {
+    --g-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --g-hair: color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent);
+    --g-fill: color-mix(in srgb, var(--md-sys-color-on-surface) 7%, transparent);
+    --g-fill-strong: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+    --g-lift:
+      0 0 0 0.5px var(--g-hair),
+      0 24px 48px -24px rgb(0 0 0 / 0.35),
+      0 2px 6px rgb(0 0 0 / 0.08);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--md-sys-color-on-surface);
+    -webkit-font-smoothing: antialiased;
+  }
+  .g-root :is(button, input, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ---- surfaces ---- */
+
+  /* The hero object: a board, a pad, the thing you play on. */
+  .g-tray {
+    border-radius: 1.75rem;
+    background: linear-gradient(
+      180deg,
+      var(--md-sys-color-surface-container-high),
+      var(--md-sys-color-surface-container)
+    );
+    box-shadow: var(--g-lift);
+  }
+  /* A grouped surface around controls or results (iOS inset-grouped list). */
+  .g-card {
+    border-radius: 1.25rem;
+    background: var(--md-sys-color-surface-container-low);
+    box-shadow:
+      0 0 0 0.5px var(--g-hair),
+      0 1px 2px rgb(0 0 0 / 0.05);
+  }
+  /* Recessed into a tray or card: canvases, drawing pads. */
+  .g-well {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: var(--md-sys-color-surface-container-lowest);
+    box-shadow:
+      inset 0 1px 3px rgb(0 0 0 / 0.16),
+      inset 0 0 0 0.5px var(--g-hair);
+  }
+  /* Frosted glass over a playing surface: start screens, pause, game over. */
+  .g-veil {
+    background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+  /* Hairline between rows inside a card. */
+  .g-sep > * + * {
+    border-top: 0.5px solid var(--g-hair);
+  }
+
+  /* ---- type ---- */
+  .g-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--md-sys-color-on-surface);
+  }
+  .g-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .g-status {
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--md-sys-color-on-surface);
+  }
+  .g-note {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .g-num {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  /* A centred footnote line with dots between its spans. */
+  .g-spec {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.8125rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .g-spec > * + *::before {
+    content: '·';
+    margin-right: 0.6rem;
+    opacity: 0.6;
+  }
+  .g-kbd {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4em;
+    padding: 0 0.35em;
+    border-radius: 0.375rem;
+    background: var(--g-fill);
+    box-shadow: inset 0 -1px 0 var(--g-hair);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* ---- stats: big tabular number over a small label ---- */
+  .g-stats {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .g-stat-value {
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    color: var(--md-sys-color-on-surface);
+  }
+  .g-stat-label {
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* ---- buttons ---- */
+  .g-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      transform 160ms var(--g-ease),
+      background-color 220ms var(--g-ease),
+      filter 220ms var(--g-ease),
+      opacity 220ms var(--g-ease);
+  }
+  .g-btn:hover {
+    filter: brightness(1.06);
+  }
+  .g-btn:active {
+    transform: scale(0.96);
+  }
+  .g-btn:disabled,
+  .g-btn[aria-disabled='true'] {
+    opacity: 0.4;
+    cursor: default;
+    transform: none;
+    filter: none;
+  }
+  .g-btn-tonal {
+    background: var(--g-fill);
+    color: var(--md-sys-color-on-surface);
+  }
+  .g-btn-tonal:hover {
+    background: var(--g-fill-strong);
+    filter: none;
+  }
+  .g-btn-plain {
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    padding-inline: 0.5rem;
+  }
+  .g-btn-plain:hover {
+    filter: none;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .g-btn-sm {
+    min-height: 36px;
+    padding-inline: 0.9rem;
+    font-size: 0.875rem;
+  }
+  .g-btn-block {
+    width: 100%;
+  }
+  /* Round icon button (toolbars, close). 44px touch, 36px with a fine pointer. */
+  .g-icon-btn {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--g-fill);
+    color: var(--md-sys-color-on-surface);
+    cursor: pointer;
+    transition:
+      background-color 220ms var(--g-ease),
+      transform 160ms var(--g-ease);
+  }
+  .g-icon-btn:hover {
+    background: var(--g-fill-strong);
+  }
+  .g-icon-btn:active {
+    transform: scale(0.92);
+  }
+  @media (pointer: fine) {
+    .g-icon-btn {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  /* Keycaps for on-screen pads and keyboards. */
+  .g-key {
+    display: grid;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: var(--g-fill);
+    color: var(--md-sys-color-on-surface);
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition:
+      background-color 220ms var(--g-ease),
+      color 220ms var(--g-ease),
+      transform 120ms var(--g-ease);
+  }
+  .g-key:not(:disabled):hover {
+    background: var(--g-fill-strong);
+  }
+  .g-key:not(:disabled):active {
+    transform: scale(0.94);
+  }
+  .g-key:disabled {
+    cursor: default;
+  }
+
+  /* ---- segmented control: pass aria-pressed (or .active) on the buttons ---- */
+  .g-seg {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 3px;
+    border-radius: 999px;
+    background: var(--g-fill);
+  }
+  .g-seg-btn {
+    min-height: 34px;
+    padding: 0 0.95rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 220ms var(--g-ease),
+      color 220ms var(--g-ease),
+      box-shadow 220ms var(--g-ease);
+  }
+  .g-seg-btn:hover {
+    color: var(--md-sys-color-on-surface);
+  }
+  .g-seg-btn:is([aria-pressed='true'], .active) {
+    background: var(--md-sys-color-surface-container-lowest);
+    color: var(--md-sys-color-on-surface);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.12),
+      0 0 0 0.5px rgb(0 0 0 / 0.06);
+  }
+  @media (pointer: coarse) {
+    .g-seg-btn {
+      min-height: 40px;
+    }
+  }
+
+  /* ---- tags: a result, a verdict ---- */
+  .g-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--g-fill);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+    white-space: nowrap;
+  }
+  .g-tag-accent {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+    color: var(--md-sys-color-primary);
+  }
+  .g-tag-good {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+  .g-tag-bad {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+
+  /* ---- iOS-style slider ---- */
+  .g-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 44px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .g-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--md-sys-color-primary) var(--g-range-pct, 0%),
+      var(--g-fill-strong) var(--g-range-pct, 0%)
+    );
+  }
+  .g-range::-moz-range-track {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--g-fill-strong);
+  }
+  .g-range::-moz-range-progress {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--md-sys-color-primary);
+  }
+  .g-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.08),
+      0 2px 6px rgb(0 0 0 / 0.22);
+    transition: transform 160ms var(--g-ease);
+  }
+  .g-range:active::-webkit-slider-thumb {
+    transform: scale(1.1);
+  }
+  .g-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.08),
+      0 2px 6px rgb(0 0 0 / 0.22);
+  }
+
+  /* ---- iOS-style switch (on an <input type="checkbox">) ---- */
+  .g-switch {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    flex: none;
+    width: 2.75rem;
+    height: 1.625rem;
+    border-radius: 999px;
+    background: var(--g-fill-strong);
+    cursor: pointer;
+    transition: background-color 260ms var(--g-ease);
+  }
+  .g-switch::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(1.625rem - 4px);
+    height: calc(1.625rem - 4px);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.04),
+      0 2px 4px rgb(0 0 0 / 0.2);
+    transition: transform 260ms var(--g-ease);
+  }
+  .g-switch:checked {
+    background: var(--md-sys-color-primary);
+  }
+  .g-switch:checked::before {
+    transform: translateX(1.125rem);
+  }
+
+  /* ---- motion ---- */
+  .g-appear {
+    animation: g-appear 420ms var(--g-ease, cubic-bezier(0.22, 1, 0.36, 1)) both;
+  }
+  @keyframes g-appear {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .g-root *,
+    .g-appear {
+      animation-duration: 1ms !important;
+      transition-duration: 1ms !important;
+    }
+  }
+}
+
+/* Embedded in an article, .prose (unlayered) indents and bullets lists. Undo
+   exactly what it sets, unlayered and doubled up so it wins, without touching
+   margins that utilities on the lists themselves should control. */
+.g-root.g-root :is(ol, ul) {
+  padding-left: 0;
+  list-style: none;
+}
+.g-root.g-root li + li {
+  margin-top: 0;
+}

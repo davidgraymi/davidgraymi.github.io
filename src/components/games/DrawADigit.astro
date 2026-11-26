@@ -8,13 +8,10 @@ const K_DEFAULT = 5;
 const digits = Array.from({ length: 10 }, (_, d) => d);
 ---
 
-<figure class="knn-game not-prose ruled-panel my-10" data-knn-game data-k={K_DEFAULT}>
-  <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
-
-  <div class="grid sm:grid-cols-2">
-    <div class="border-b border-rule-soft p-5 sm:border-r sm:border-b-0">
-      <p class="kicker" id="knn-pad-label">Draw a digit</p>
-      <div class="relative mt-4 aspect-square w-full border border-outline-variant bg-surface-container-low">
+<figure class="knn-game g-root not-prose my-10" data-knn-game data-k={K_DEFAULT}>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <div class="g-well aspect-square w-full rounded-[1.75rem] shadow-[var(--g-lift)]">
         <canvas
           data-knn-pad
           width="280"
@@ -22,7 +19,7 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
           tabindex="0"
           role="application"
           aria-roledescription="drawing pad"
-          aria-labelledby="knn-pad-label"
+          aria-label="Draw a digit"
           aria-describedby="knn-pad-help"
           class="peer block size-full cursor-crosshair touch-none text-primary"></canvas>
         <span
@@ -33,7 +30,7 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
         <p
           data-knn-hint
           aria-hidden="true"
-          class="pointer-events-none absolute inset-0 grid place-items-center p-6 text-center font-mono text-caption text-on-surface-variant"
+          class="pointer-events-none absolute inset-0 grid place-items-center p-6 text-center text-[1.0625rem] font-medium text-on-surface-variant"
         >
           Draw 0 to 9, large and centred
         </p>
@@ -42,46 +39,43 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
         Draw with a mouse, finger or pen. With the keyboard: arrow keys move the pen, Space puts it down or lifts it,
         Delete clears.
       </p>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <button type="button" class="btn btn-ghost" data-knn-clear>Clear</button>
-        <button type="button" class="btn btn-tonal" data-knn-example disabled>Try a test digit</button>
+      <div class="mt-4 flex flex-wrap justify-center gap-2">
+        <button type="button" class="g-btn g-btn-tonal" data-knn-clear>Clear</button>
+        <button type="button" class="g-btn g-btn-tonal" data-knn-example disabled>Try a test digit</button>
       </div>
     </div>
 
-    <div class="flex flex-col gap-5 p-5">
-      <div>
-        <p class="kicker">Prediction</p>
-        <div class="mt-4 flex items-center gap-5">
-          <output
-            data-knn-guess
-            for="knn-k"
-            class="w-16 text-center font-mono text-display leading-none font-semibold text-primary">–</output>
-          <div class="min-w-0 flex-1">
-            <p data-knn-confidence class="font-mono text-body-sm text-on-surface">Waiting for ink</p>
-            <p class="mt-1 text-caption text-on-surface-variant">Share of the weighted vote</p>
-          </div>
-          <div class="flex flex-col items-center gap-1">
-            <canvas
-              data-knn-seen
-              width="28"
-              height="28"
-              class="knn-pixelated size-14 border border-outline-variant bg-surface-container-low text-primary"
-              aria-hidden="true"></canvas>
-            <span class="font-mono text-label text-on-surface-variant">28×28</span>
-          </div>
+    <div class="g-card flex flex-col gap-6 p-6">
+      <div class="flex items-center gap-5">
+        <output
+          data-knn-guess
+          for="knn-k"
+          class="g-num w-20 text-center text-[4.5rem] leading-none font-semibold tracking-[-0.04em] text-primary">–</output>
+        <div class="min-w-0 flex-1">
+          <p class="g-eyebrow">Prediction</p>
+          <p data-knn-confidence class="g-status g-num mt-0.5">Waiting for ink</p>
+        </div>
+        <div class="flex flex-col items-center gap-1">
+          <canvas
+            data-knn-seen
+            width="28"
+            height="28"
+            class="knn-pixelated size-14 rounded-lg bg-surface-container-lowest text-primary shadow-[inset_0_0_0_0.5px_var(--g-hair)]"
+            aria-hidden="true"></canvas>
+          <span class="g-num text-[0.6875rem] text-on-surface-variant">28×28</span>
         </div>
       </div>
 
       <div>
-        <p class="font-mono text-label text-on-surface-variant">Votes</p>
-        <ol class="mt-2 grid grid-cols-10 gap-1" data-knn-votes aria-label="Weighted vote per digit">
+        <p class="g-eyebrow">Weighted vote</p>
+        <ol class="mt-2 grid grid-cols-10 gap-1.5" data-knn-votes aria-label="Weighted vote per digit">
           {
             digits.map((d) => (
-              <li class="flex flex-col items-center gap-1" data-digit={d}>
-                <span class="flex h-14 w-full items-end bg-surface-container">
-                  <span class="knn-bar block w-full bg-outline-variant" data-bar />
+              <li class="flex flex-col items-center gap-1.5" data-digit={d}>
+                <span class="knn-track flex h-16 w-full items-end overflow-hidden rounded-full">
+                  <span class="knn-bar block w-full rounded-full bg-outline-variant" data-bar />
                 </span>
-                <span class="font-mono text-label text-on-surface-variant" data-digit-label>
+                <span class="g-num text-[0.8125rem] font-medium text-on-surface-variant" data-digit-label>
                   {d}
                 </span>
               </li>
@@ -90,39 +84,30 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
         </ol>
       </div>
 
-      <div>
-        <label for="knn-k" class="flex items-baseline justify-between font-mono text-label text-on-surface-variant">
-          <span>Neighbours</span>
-          <span>k = <span data-knn-k-value>{K_DEFAULT}</span></span>
+      <div class="mt-auto">
+        <label for="knn-k" class="flex items-baseline justify-between">
+          <span class="g-eyebrow">Neighbours</span>
+          <span class="g-num text-[0.875rem] font-semibold text-on-surface">k = <span data-knn-k-value>{K_DEFAULT}</span></span>
         </label>
-        <input
-          id="knn-k"
-          type="range"
-          min="1"
-          max="15"
-          step="1"
-          value={K_DEFAULT}
-          data-knn-k
-          class="mt-2 h-11 w-full cursor-pointer accent-primary"
-        />
+        <input id="knn-k" type="range" min="1" max="15" step="1" value={K_DEFAULT} data-knn-k class="g-range" />
       </div>
     </div>
   </div>
 
-  <div class="border-t border-rule-soft p-5">
-    <p class="kicker">Nearest training digits</p>
+  <div class="g-card mt-5 p-6">
+    <p class="g-eyebrow">Nearest training digits, closest first</p>
     <ol
       data-knn-neighbours
-      class="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-8"
+      class="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-8"
       aria-label="Nearest training digits, closest first"
     >
     </ol>
-    <p data-knn-empty class="mt-1 text-body-sm text-on-surface-variant">
-      The closest matches from the training set appear here, closest first.
+    <p data-knn-empty class="g-note mt-1">
+      The closest matches from the training set appear here.
     </p>
   </div>
 
-  <figcaption class="border-t border-rule-soft px-5 py-4 text-caption text-on-surface-variant">
+  <figcaption class="g-note mx-auto mt-5 max-w-2xl text-center">
     <span data-knn-status>Loading 750 MNIST training digits…</span>{' '}Everything runs in your browser: your drawing is cropped, scaled to 20px and centred by mass on a 28×28 grid, the
     same way MNIST was prepared, then compared pixel by pixel against every training digit.
   </figcaption>
@@ -135,14 +120,20 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
     <canvas
       width="28"
       height="28"
-      class="knn-pixelated aspect-square w-full border border-outline-variant bg-surface-container-low text-on-surface"
+      class="knn-pixelated aspect-square w-full rounded-lg bg-surface-container-lowest text-on-surface shadow-[inset_0_0_0_0.5px_var(--g-hair)]"
     ></canvas>
-    <span class="font-mono text-label text-on-surface-variant" data-label></span>
+    <span class="g-num text-[0.75rem] font-medium text-on-surface-variant" data-label></span>
   </li>
 </template>
 
 <script>
   const roots = document.querySelectorAll<HTMLElement>('[data-knn-game]');
+  // Slider fill (WebKit has no ::range-progress).
+  document.querySelectorAll<HTMLInputElement>('[data-knn-game] .g-range').forEach((r) => {
+    const sync = () => r.style.setProperty('--g-range-pct', `${((+r.value - +r.min) / (+r.max - +r.min)) * 100}%`);
+    r.addEventListener('input', sync);
+    sync();
+  });
   if (roots.length) {
     const start = (root: HTMLElement) =>
       import('~/lib/games/knn-digits/game').then(({ mount }) => mount(root));
@@ -165,24 +156,16 @@ const digits = Array.from({ length: 10 }, (_, d) => d);
 </script>
 
 <style>
-  /* The game sits inside .prose on work pages; undo its list styling. */
-  .knn-game ol {
-    padding: 0;
-    list-style: none;
-  }
-  .knn-game li {
-    margin: 0;
-  }
   .knn-pixelated {
     image-rendering: pixelated;
   }
+  .knn-track {
+    background: var(--g-fill);
+  }
   .knn-bar {
     height: 0;
-    transition: height var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .knn-bar {
-      transition: none;
-    }
+    transition:
+      height 320ms var(--g-ease),
+      background-color 220ms var(--g-ease);
   }
 </style>

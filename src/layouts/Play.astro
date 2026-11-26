@@ -25,8 +25,6 @@ const widths: Record<Game['width'], string> = {
   lg: 'max-w-4xl',
   xl: 'max-w-6xl',
 };
-const iconBtn =
-  'grid h-11 w-11 shrink-0 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface md:h-9 md:w-9';
 ---
 
 <!doctype html>
@@ -35,66 +33,63 @@ const iconBtn =
     <BaseHead title={game.title} description={game.blurb} image={`/og/play/${game.slug}.png`} jsonLd={jsonLd} />
     <ThemeInit />
   </head>
-  <body class="flex h-dvh flex-col overflow-hidden">
-    <header class="flex h-14 shrink-0 items-center gap-2 border-b border-outline-variant bg-surface px-3 md:h-12 md:px-4">
-      <a href="/play" class={iconBtn} aria-label="All games" title="All games">
-        <Icon name="arrowLeft" size={16} />
+  <body class="g-root flex h-dvh flex-col overflow-hidden bg-surface">
+    <header class="play-bar g-veil relative z-10 grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 md:h-13 md:px-4">
+      <a href="/play" class="play-back justify-self-start" aria-label="All games" title="All games">
+        <Icon name="chevronLeft" size={20} />
+        <span class="max-sm:sr-only">Games</span>
       </a>
-      <div class="ml-1 min-w-0 flex-1 truncate">
-        <h1 class="inline text-body font-semibold text-on-surface">{game.title}</h1>
-        <span class="ml-2 hidden font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant sm:inline">
-          vs. {game.opponent}
-        </span>
+      <div class="min-w-0 text-center leading-tight">
+        <h1 class="truncate text-[0.9375rem] font-semibold tracking-[-0.01em] text-on-surface">{game.title}</h1>
+        <p class="truncate text-[0.75rem] text-on-surface-variant max-sm:hidden">vs. {game.opponent}</p>
       </div>
-      <button type="button" class={iconBtn} data-howto-open aria-label="How to play" title="How to play">
-        <Icon name="info" size={16} />
-      </button>
-      <button type="button" class={iconBtn} data-fullscreen hidden aria-label="Full screen" title="Full screen">
-        <span data-fs-enter><Icon name="expand" size={16} /></span>
-        <span data-fs-exit hidden><Icon name="shrink" size={16} /></span>
-      </button>
-      <ThemeToggle />
+      <div class="flex items-center gap-2 justify-self-end">
+        <button type="button" class="g-icon-btn" data-howto-open aria-label="How to play" title="How to play">
+          <Icon name="info" size={17} />
+        </button>
+        <button type="button" class="g-icon-btn" data-fullscreen hidden aria-label="Full screen" title="Full screen">
+          <span data-fs-enter><Icon name="expand" size={16} /></span>
+          <span data-fs-exit hidden><Icon name="shrink" size={16} /></span>
+        </button>
+        <span class="play-theme"><ThemeToggle /></span>
+      </div>
     </header>
 
     <main id="main" class="play-stage flex-1 overflow-y-auto overscroll-contain">
-      <div class="grid min-h-full place-items-center p-3 sm:p-6">
-        <div class:list={['play-game w-full', widths[game.width]]}>
+      <div class="grid min-h-full place-items-center px-3 py-6 sm:px-6 sm:py-10">
+        <div class:list={['play-game g-appear w-full', widths[game.width]]}>
           <slot />
         </div>
       </div>
     </main>
 
-    <dialog
-      data-howto
-      aria-labelledby="howto-title"
-      class="m-auto w-[92vw] max-w-lg border border-outline-variant bg-surface-container-high p-0 text-on-surface shadow-elevation-4 backdrop:bg-black/60 backdrop:backdrop-blur-sm"
-    >
-      <div class="flex items-center justify-between gap-4 border-b border-outline-variant px-5 py-3">
-        <p id="howto-title" class="kicker">How to play</p>
-        <form method="dialog">
-          <button class={iconBtn} aria-label="Close">
-            <Icon name="close" size={16} />
-          </button>
-        </form>
-      </div>
-      <div class="space-y-3 px-5 py-5 text-body leading-relaxed text-on-surface-variant">
-        {game.howTo.map((p) => <p>{p}</p>)}
-      </div>
-      <div class="flex flex-wrap items-center gap-3 border-t border-outline-variant px-5 py-4">
-        <form method="dialog">
-          <button class="btn btn-primary" autofocus>
-            <Icon name="play" size={14} />
-            Play
-          </button>
-        </form>
-        {
-          game.story && (
-            <a href={game.story.href} class="btn btn-ghost">
-              How it works
-              <Icon name="arrow" size={14} />
-            </a>
-          )
-        }
+    <dialog data-howto aria-labelledby="howto-title" class="play-sheet m-auto w-[92vw] max-w-md p-0 text-on-surface">
+      <form method="dialog" class="absolute top-4 right-4">
+        <button class="g-icon-btn" aria-label="Close">
+          <Icon name="close" size={15} />
+        </button>
+      </form>
+      <div class="px-7 pt-8 pb-7">
+        <p class="g-eyebrow">How to play</p>
+        <h2 id="howto-title" class="mt-1 pr-10 text-[1.75rem] leading-tight font-semibold tracking-[-0.025em]">{game.title}</h2>
+        <div class="mt-4 space-y-3 text-[0.9375rem] leading-relaxed text-on-surface-variant">
+          {game.howTo.map((p) => <p>{p}</p>)}
+        </div>
+        <div class="mt-7 grid gap-2">
+          <form method="dialog">
+            <button class="g-btn g-btn-block" autofocus>
+              <Icon name="play" size={13} />
+              Play
+            </button>
+          </form>
+          {
+            game.story && (
+              <a href={game.story.href} class="g-btn g-btn-plain g-btn-block">
+                How it works
+              </a>
+            )
+          }
+        </div>
       </div>
     </dialog>
   </body>
@@ -114,6 +109,90 @@ const iconBtn =
   .play-game > * {
     margin-block: 0;
   }
+
+  /* Toolbar: frosted, with a hairline only once the stage scrolls under it. */
+  .play-bar {
+    box-shadow: 0 0.5px 0 transparent;
+    transition: box-shadow 220ms var(--g-ease);
+  }
+  .play-bar[data-scrolled] {
+    box-shadow: 0 0.5px 0 var(--g-hair);
+  }
+  .play-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1rem;
+    min-height: 44px;
+    padding-right: 0.5rem;
+    margin-left: -0.35rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    transition: opacity 160ms var(--g-ease);
+  }
+  .play-back:hover {
+    opacity: 0.75;
+  }
+  /* The shared theme toggle, dressed as a round toolbar button. */
+  .play-theme .theme-btn {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--g-fill);
+    color: var(--md-sys-color-on-surface);
+    transition: background-color 220ms var(--g-ease);
+  }
+  .play-theme .theme-btn.theme-btn:hover {
+    background: var(--g-fill-strong);
+  }
+  @media (pointer: fine) {
+    .play-theme .theme-btn {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  /* How to play: a sheet that rises and settles over a dimmed, blurred stage.
+     Entry only: closing is instant, which also avoids top-layer exit quirks. */
+  .play-sheet {
+    position: fixed;
+    overflow: visible;
+    border-radius: 1.75rem;
+    background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 94%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
+    backdrop-filter: saturate(180%) blur(30px);
+    box-shadow:
+      0 0 0 0.5px var(--g-hair),
+      0 40px 80px -20px rgb(0 0 0 / 0.45),
+      0 4px 12px rgb(0 0 0 / 0.1);
+  }
+  .play-sheet[open] {
+    animation: play-sheet-in 460ms var(--g-ease) both;
+  }
+  .play-sheet[open]::backdrop {
+    background: rgb(0 0 0 / 0.5);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    animation: play-fade-in 320ms var(--g-ease) both;
+  }
+  @keyframes play-sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+    }
+  }
+  @keyframes play-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .play-sheet[open],
+    .play-sheet[open]::backdrop {
+      animation: none;
+    }
+  }
 </style>
 
 <script>
@@ -129,6 +208,11 @@ const iconBtn =
   } catch {
     /* storage blocked: skip the auto-open rather than show it every time */
   }
+
+  // ---- Toolbar hairline once the stage scrolls under it ----
+  const bar = document.querySelector<HTMLElement>('.play-bar')!;
+  const stage = document.querySelector<HTMLElement>('.play-stage')!;
+  stage.addEventListener('scroll', () => bar.toggleAttribute('data-scrolled', stage.scrollTop > 2), { passive: true });
 
   // ---- Full screen, where the browser allows it (not iPhone Safari) ----
   const fsBtn = document.querySelector<HTMLButtonElement>('[data-fullscreen]')!;
