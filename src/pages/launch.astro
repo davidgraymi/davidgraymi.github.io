@@ -29,7 +29,7 @@ import { quotes } from '~/data/proof';
 import { offTheClock } from '~/data/resume';
 import { site, socials } from '~/site.config';
 import { getCollection } from 'astro:content';
-import LacamFlipbook from '~/components/LacamFlipbook.astro';
+import LacamHero from '~/components/LacamHero.astro';
 
 const bindersnap = products.find((p) => p.slug === 'bindersnap')!;
 
@@ -233,12 +233,12 @@ const hobbies = offTheClock.slice(1);
 
     <div class="bento">
       <a href={`/work/${bento.lacam.id}`} class="tile tile-hero" style="--i:0">
-        <div class="tile-art lacam-art" aria-hidden="true"><LacamFlipbook /></div>
         <div class="tile-copy">
-          <p class="tile-kicker">Research · live replay</p>
-          <h3>{bento.lacam.title}</h3>
-          <p>{bento.lacam.highlight}</p>
+          <p class="tile-kicker">Research · {bento.lacam.title}</p>
+          <h3>Eight robots. One warehouse.<br /><span>No collisions.</span></h3>
         </div>
+        <div class="lacam-art" aria-hidden="true"><LacamHero /></div>
+        <p class="tile-foot">{bento.lacam.highlight}</p>
       </a>
 
       <a href={`/work/${bento.sign.id}`} class="tile tile-stat" style="--i:1">
@@ -907,10 +907,30 @@ const hobbies = offTheClock.slice(1);
   }
   .tile p { line-height: 1.5; }
 
-  .tile-hero { padding: 0; }
-  .lacam-art { flex: 1; display: grid; place-items: center; padding: 1.5rem 1.5rem 0; min-height: 15rem; }
-  .lacam-art :global(.lacam) { width: 100%; margin: 0; }
-  .tile-hero .tile-copy { padding: 1.75rem; display: grid; gap: 0.5rem; }
+  /* LaCAM: a dark stage tile with one big picture, like a product shot. */
+  .tile-hero {
+    color-scheme: dark;
+    padding: 2rem 2rem 1.75rem;
+    gap: 0;
+    box-shadow: none;
+    background:
+      radial-gradient(70% 60% at 50% 58%, rgb(245 158 11 / 0.14), transparent 70%),
+      radial-gradient(50% 50% at 80% 30%, rgb(56 189 248 / 0.1), transparent 70%),
+      var(--md-ref-char-0);
+    color: var(--md-ref-stone-400);
+  }
+  .tile-hero .tile-kicker { color: var(--md-ref-amber-500); }
+  .tile-hero h3 {
+    margin-top: 0.5rem;
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--md-ref-paper-25);
+  }
+  .tile-hero h3 span { color: var(--md-ref-stone-500); }
+  .lacam-art { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem 0 1rem; margin-inline: -1rem; }
+  .lacam-art > :global(svg) { max-width: 46rem; }
+  .tile-foot { font-size: 0.9375rem; color: var(--md-ref-stone-400); }
 
   .tile-stat { justify-content: flex-end; }
   .tile-stat .tile-kicker { margin-bottom: auto; }

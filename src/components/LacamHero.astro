@@ -1,0 +1,422 @@
+---
+/**
+ * Multi-agent path finding as a product shot, for the /launch work tile.
+ *
+ * Eight robots in a small warehouse each swap places with the robot opposite.
+ * One loop, about seven seconds:
+ *   1. think:  a glow ripples out from the robots through the aisles, and
+ *              each robot's naive route (ignoring everyone else) sketches in
+ *   2. plan:   the naive routes give way to the real, collision-free ones
+ *   3. move:   the robots run their plans; nobody touches
+ *   4. arrive: each goal confirms, then the loop fades and restarts
+ *
+ * The plan is computed at build time: prioritized planning with a space-time
+ * A* per robot (vertex and swap conflicts, parked robots block their goals).
+ * A final check throws if any two robots would ever collide, so a bad map
+ * fails the build instead of shipping a crash on screen.
+ *
+ * Drawn in isometric projection as plain SVG with SMIL motion: no script and
+ * no layout measurement. Reduced motion shows the finished routes, still.
+ */
+
+type Cell = [number, number]; // [row, col]
+
+// ---------------------------------------------------------------- the warehouse
+const ROWS = 7;
+const COLS = 10;
+// Three columns of 2×2 shelf blocks, two rows of them, aisles between.
+const shelfBlocks: Cell[] = [1, 4].flatMap((r) => [1, 4, 7].map((c) => [r, c] as Cell));
+const isShelf = (r: number, c: number) => shelfBlocks.some(([br, bc]) => r >= br && r < br + 2 && c >= bc && c < bc + 2);
+const open = (r: number, c: number) => r >= 0 && r < ROWS && c >= 0 && c < COLS && !isShelf(r, c);
+
+const starts: Cell[] = [
+  [0, 0], [6, 0], [0, 9], [6, 9],
+  [0, 3], [6, 3], [0, 6], [6, 6],
+];
+// Everyone heads for the spot opposite, through the middle of the warehouse.
+const goals: Cell[] = starts.map(([r, c]) => [ROWS - 1 - r, COLS - 1 - c]);
+
+const k = (r: number, c: number) => `${r},${c}`;
+const STEPS = [[0, 1], [0, -1], [1, 0], [-1, 0]] as const;
+const around = ([r, c]: Cell): Cell[] =>
+  STEPS.map(([dr, dc]) => [r + dr, c + dc] as Cell).filter(([rr, cc]) => open(rr, cc));
+
+function distancesFrom(src: Cell[]) {
+  const d = new Map<string, number>(src.map((s) => [k(...s), 0]));
+  const q = [...src];
+  while (q.length) {
+    const p = q.shift()!;
+    for (const n of around(p)) if (!d.has(k(...n))) (d.set(k(...n), d.get(k(...p))! + 1), q.push(n));
+  }
+  return d;
+}
+
+/** Each robot's route if it were alone: the "naive" sketch. */
+function naiveRoute(from: Cell, to: Cell): Cell[] {
+  const d = distancesFrom([to]);
+  const path: Cell[] = [from];
+  let p = from;
+  while (p[0] !== to[0] || p[1] !== to[1]) {
+    p = around(p).sort((a, b) => d.get(k(...a))! - d.get(k(...b))!)[0];
+    path.push(p);
+  }
+  return path;
+}
+
+// ---------------------------------------------------------------- the planner
+const HORIZON = 64;
+
+function plan(order: number[]): Cell[][] | null {
+  const busy = new Set<string>(); // `${r},${c}@${t}`
+  const moved = new Set<string>(); // `${from}>${to}@${t}`
+  const parked = new Map<string, number>(); // cell -> parked from t onwards
+  const lastUse = new Map<string, number>(); // cell -> last t anyone passes through
+  const out: Cell[][] = [];
+
+  const free = (cell: Cell, t: number) => {
+    const p = parked.get(k(...cell));
+    return !busy.has(`${k(...cell)}@${t}`) && !(p !== undefined && t >= p);
+  };
+
+  for (const a of order) {
+    const goal = goals[a];
+    const h = distancesFrom([goal]);
+    type N = { cell: Cell; t: number; f: number; prev: N | null };
+    const openList: N[] = [{ cell: starts[a], t: 0, f: h.get(k(...starts[a]))!, prev: null }];
+    const seen = new Set<string>([`${k(...starts[a])}@0`]);
+    let found: N | null = null;
+
+    while (openList.length) {
+      openList.sort((x, y) => x.f - y.f || y.t - x.t);
+      const n = openList.shift()!;
+      const atGoal = n.cell[0] === goal[0] && n.cell[1] === goal[1];
+      if (atGoal && (lastUse.get(k(...goal)) ?? -1) < n.t) {
+        found = n;
+        break;
+      }
+      if (n.t >= HORIZON) continue;
+      for (const nx of [n.cell, ...around(n.cell)]) {
+        const t = n.t + 1;
+        const key = `${k(...nx)}@${t}`;
+        if (seen.has(key) || !free(nx, t)) continue;
+        if (moved.has(`${k(...nx)}>${k(...n.cell)}@${n.t}`)) continue; // swap
+        seen.add(key);
+        openList.push({ cell: nx, t, f: t + h.get(k(...nx))!, prev: n });
+      }
+    }
+    if (!found) return null;
+
+    const path: Cell[] = [];
+    for (let n: N | null = found; n; n = n.prev) path.unshift(n.cell);
+    path.forEach((cell, t) => {
+      busy.add(`${k(...cell)}@${t}`);
+      lastUse.set(k(...cell), Math.max(lastUse.get(k(...cell)) ?? -1, t));
+      if (t > 0) moved.add(`${k(...path[t - 1])}>${k(...cell)}@${t - 1}`);
+    });
+    parked.set(k(...goal), path.length - 1);
+    out[a] = path;
+  }
+  return out;
+}
+
+function solve(): Cell[][] {
+  // Longest trips first, then fall back to rotations of that order.
+  const base = starts
+    .map((_, i) => i)
+    .sort((a, b) => naiveRoute(starts[b], goals[b]).length - naiveRoute(starts[a], goals[a]).length);
+  for (let r = 0; r < base.length; r++) {
+    const result = plan([...base.slice(r), ...base.slice(0, r)]);
+    if (result) return result;
+  }
+  throw new Error('LacamHero: no plan for this warehouse');
+}
+
+const paths = solve();
+const T = Math.max(...paths.map((p) => p.length)) - 1;
+const at = (p: Cell[], t: number) => p[Math.min(t, p.length - 1)];
+// Proof, at build time: nobody shares a cell or swaps through each other.
+for (let t = 0; t <= T; t++) {
+  for (let i = 0; i < paths.length; i++) {
+    for (let j = i + 1; j < paths.length; j++) {
+      const [a, b] = [at(paths[i], t), at(paths[j], t)];
+      if (a[0] === b[0] && a[1] === b[1]) throw new Error(`LacamHero: collision ${i}/${j} at t=${t}`);
+      if (t > 0 && k(...at(paths[i], t - 1)) === k(...b) && k(...at(paths[j], t - 1)) === k(...a)) {
+        throw new Error(`LacamHero: swap ${i}/${j} at t=${t}`);
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- projection
+const TW = 56; // tile width
+const TH = 28; // tile height
+const SHELF = 16; // shelf height
+const SLAB = 12; // board thickness
+const PAD = 14;
+const OX = PAD + ROWS * (TW / 2);
+const OY = PAD + SHELF;
+const iso = (u: number, v: number) => [OX + (u - v) * (TW / 2), OY + (u + v) * (TH / 2)] as const;
+const centre = ([r, c]: Cell) => iso(c + 0.5, r + 0.5);
+type P = readonly [number, number];
+const pts = (list: P[]) => list.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+const diamond = (r: number, c: number, w = 1, h = 1, lift = 0) =>
+  pts([iso(c, r), iso(c + w, r), iso(c + w, r + h), iso(c, r + h)].map(([x, y]) => [x, y - lift] as const));
+const down = ([x, y]: P, d: number): P => [x, y + d];
+const VW = (ROWS + COLS) * (TW / 2) + PAD * 2;
+const VH = (ROWS + COLS) * (TH / 2) + SHELF + SLAB + PAD * 2;
+
+const floorCells: Cell[] = [];
+for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (open(r, c)) floorCells.push([r, c]);
+
+// The board: top face plus its two visible edges.
+const [bSW, bSE, bNE] = [iso(0, ROWS), iso(COLS, ROWS), iso(COLS, 0)];
+const board = {
+  south: pts([bSW, bSE, down(bSE, SLAB), down(bSW, SLAB)]),
+  east: pts([bNE, bSE, down(bSE, SLAB), down(bNE, SLAB)]),
+  top: diamond(0, 0, COLS, ROWS),
+};
+
+// Shelves as 2×2 boxes, painted back to front.
+const shelves = [...shelfBlocks]
+  .sort((a, b) => a[0] + a[1] - (b[0] + b[1]))
+  .map(([r, c]) => {
+    const sw = iso(c, r + 2);
+    const se = iso(c + 2, r + 2);
+    const ne = iso(c + 2, r);
+    return {
+      top: diamond(r, c, 2, 2, SHELF),
+      south: pts([down(sw, -SHELF), down(se, -SHELF), se, sw]),
+      east: pts([down(ne, -SHELF), down(se, -SHELF), se, ne]),
+    };
+  });
+
+// ---------------------------------------------------------------- timeline (s)
+const RIPPLE0 = 0.35; // ripple starts
+const RIPPLE_STEP = 0.07; // per aisle cell of distance
+const SKETCH = [0.55, 1.45]; // naive routes draw in
+const LOCK = [1.55, 2.15]; // real routes replace them
+const MOVE0 = 2.25;
+const STEP = 0.19;
+const MOVE1 = MOVE0 + T * STEP;
+const HOLD = 1.4;
+const DUR = MOVE1 + HOLD;
+const f = (t: number) => (Math.min(Math.max(t, 0), DUR) / DUR).toFixed(4);
+const dur = `${DUR.toFixed(2)}s`;
+const EASE = '0.45 0 0.2 1';
+
+const colors = ['#f59e0b', '#38bdf8', '#34d399', '#fb7185', '#a78bfa', '#a3e635', '#fb923c', '#22d3ee'];
+
+// Ripple: each aisle cell lights in the colour of its nearest robot.
+const nearest = new Map<string, { d: number; a: number }>();
+starts.forEach((s, a) => {
+  for (const [cell, d] of distancesFrom([s])) {
+    const cur = nearest.get(cell);
+    if (!cur || d < cur.d) nearest.set(cell, { d, a });
+  }
+});
+const ripple = floorCells.map(([r, c]) => {
+  const { d, a } = nearest.get(k(r, c))!;
+  const t0 = RIPPLE0 + d * RIPPLE_STEP;
+  return { poly: diamond(r, c), color: colors[a], keyTimes: `0;${f(t0)};${f(t0 + 0.12)};${f(t0 + 0.55)};1` };
+});
+
+const lineD = (list: P[]) => list.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join('');
+const lineLen = (list: P[]) => list.reduce((s, p, i) => (i ? s + Math.hypot(p[0] - list[i - 1][0], p[1] - list[i - 1][1]) : 0), 0);
+
+const robots = paths.map((path, a) => {
+  const xy = path.map(centre);
+  const drawn = xy.filter((p, i) => i === 0 || p[0] !== xy[i - 1][0] || p[1] !== xy[i - 1][1]);
+  const naive = naiveRoute(starts[a], goals[a]).map(centre);
+
+  // Motion through every step, waits included.
+  const times = [0, ...xy.map((_, i) => MOVE0 + i * STEP), DUR];
+  const pos = [xy[0], ...xy, xy[xy.length - 1]];
+  const cum = [0];
+  for (let i = 1; i < xy.length; i++) cum.push(cum[i - 1] + Math.hypot(xy[i][0] - xy[i - 1][0], xy[i][1] - xy[i - 1][1]));
+  const len = cum[cum.length - 1];
+  const arrive = MOVE0 + (path.length - 1) * STEP;
+  const [gx, gy] = centre(goals[a]);
+
+  return {
+    color: colors[a],
+    route: lineD(drawn),
+    naiveD: lineD(naive),
+    len: len.toFixed(1),
+    naiveLen: lineLen(naive).toFixed(1),
+    keyTimes: times.map(f).join(';'),
+    splines: times.slice(1).map(() => EASE).join(';'),
+    translate: pos.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(';'),
+    trail: [len, ...cum.map((d) => len - d), 0].map((d) => d.toFixed(1)).join(';'),
+    start: xy[0],
+    end: xy[xy.length - 1],
+    gx,
+    gy,
+    arrive,
+  };
+});
+---
+
+<svg class="lh" viewBox={`0 0 ${VW.toFixed(0)} ${VH.toFixed(0)}`} role="img" aria-label="Eight robots in a warehouse plan their routes, then each swaps places with the robot opposite without any two colliding">
+  <defs>
+    <filter id="lh-glow" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur stdDeviation="4" />
+    </filter>
+    <filter id="lh-soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" />
+    </filter>
+    <filter id="lh-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.6" />
+    </filter>
+    <radialGradient id="lh-shade" cx="38%" cy="32%" r="70%">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.95" />
+      <stop offset="0.28" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.75" stop-color="#000" stop-opacity="0" />
+      <stop offset="1" stop-color="#000" stop-opacity="0.45" />
+    </radialGradient>
+    <linearGradient id="lh-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.16" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0.07" />
+    </linearGradient>
+  </defs>
+
+  {/* The camera drifts gently for the whole loop. */}
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,3;0,-3;0,3" keyTimes="0;0.5;1" dur="14s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" />
+
+    {/* Board */}
+    <ellipse cx={VW / 2} cy={VH - PAD} rx={VW * 0.42} ry={PAD} class="lh-ground" filter="url(#lh-glow)" />
+    <polygon points={board.south} class="lh-slab-s" />
+    <polygon points={board.east} class="lh-slab-e" />
+    <polygon points={board.top} class="lh-slab-top" />
+    <g class="lh-tiles">{floorCells.map(([r, c]) => <polygon points={diamond(r, c)} />)}</g>
+
+    {/* 1 · think: a glow ripples through the aisles from every robot. */}
+    <g class="lh-motion">
+      {
+        ripple.map((cell) => (
+          <polygon points={cell.poly} fill={cell.color} opacity="0">
+            <animate attributeName="opacity" values="0;0;0.42;0;0" keyTimes={cell.keyTimes} dur={dur} repeatCount="indefinite" />
+          </polygon>
+        ))
+      }
+    </g>
+
+    {/* Goals: small rings on the floor. */}
+    {robots.map((r) => <ellipse cx={r.gx} cy={r.gy} rx="9" ry="4.5" class="lh-goal" stroke={r.color} />)}
+
+    {/* Still version: finished routes. */}
+    <g class="lh-still">
+      {robots.map((r) => <path d={r.route} class="lh-route" stroke={r.color} />)}
+    </g>
+
+    <g class="lh-motion">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes={`0;${f(0.25)};${f(DUR - 0.3)};1`} dur={dur} repeatCount="indefinite" />
+      {
+        robots.map((r) => (
+          <>
+            {/* 1 · think: the naive route, as if alone. */}
+            <path d={r.naiveD} class="lh-naive" stroke={r.color} stroke-dasharray={r.naiveLen} stroke-dashoffset={r.naiveLen}>
+              <animate attributeName="stroke-dashoffset" values={`${r.naiveLen};${r.naiveLen};0;0`} keyTimes={`0;${f(SKETCH[0])};${f(SKETCH[1])};1`} calcMode="spline" keySplines={`0 0 1 1;${EASE};0 0 1 1`} dur={dur} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.6;0.6;0;0" keyTimes={`0;${f(LOCK[0])};${f(LOCK[1])};1`} dur={dur} repeatCount="indefinite" />
+            </path>
+            {/* 2 · plan: the real route locks in. */}
+            <path d={r.route} class="lh-route" stroke={r.color} stroke-dasharray={r.len} stroke-dashoffset={r.len}>
+              <animate attributeName="stroke-dashoffset" values={`${r.len};${r.len};0;0`} keyTimes={`0;${f(LOCK[0])};${f(LOCK[1])};1`} calcMode="spline" keySplines={`0 0 1 1;${EASE};0 0 1 1`} dur={dur} repeatCount="indefinite" />
+            </path>
+            {/* 3 · move: a bright trail grows behind the robot. */}
+            <path d={r.route} class="lh-trail" stroke={r.color} stroke-dasharray={r.len} filter="url(#lh-soft)">
+              <animate attributeName="stroke-dashoffset" values={r.trail} keyTimes={r.keyTimes} calcMode="spline" keySplines={r.splines} dur={dur} repeatCount="indefinite" />
+            </path>
+            {/* 4 · arrive: the goal flashes. */}
+            <ellipse cx={r.gx} cy={r.gy} rx="9" ry="4.5" fill="none" stroke={r.color} stroke-width="1.5" opacity="0">
+              <animate attributeName="rx" values="9;9;22;22" keyTimes={`0;${f(r.arrive)};${f(r.arrive + 0.6)};1`} dur={dur} repeatCount="indefinite" />
+              <animate attributeName="ry" values="4.5;4.5;11;11" keyTimes={`0;${f(r.arrive)};${f(r.arrive + 0.6)};1`} dur={dur} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;0;0.9;0;0" keyTimes={`0;${f(r.arrive)};${f(r.arrive + 0.05)};${f(r.arrive + 0.6)};1`} dur={dur} repeatCount="indefinite" />
+            </ellipse>
+          </>
+        ))
+      }
+    </g>
+
+    {/* Shelves, back to front. */}
+    {
+      shelves.map((s) => (
+        <g>
+          <polygon points={s.south} class="lh-shelf-s" />
+          <polygon points={s.east} class="lh-shelf-e" />
+          <polygon points={s.top} class="lh-shelf-top" />
+        </g>
+      ))
+    }
+
+    {/* Robots: a glossy sphere floating over its shadow. */}
+    <g class="lh-still">
+      {
+        robots.map((r) => (
+          <g transform={`translate(${r.end[0].toFixed(1)},${r.end[1].toFixed(1)})`}>
+            <ellipse cx="0" cy="1" rx="8" ry="4" class="lh-shadow" filter="url(#lh-shadow)" />
+            <circle cx="0" cy="-10" r="7.5" fill={r.color} />
+            <circle cx="0" cy="-10" r="7.5" fill="url(#lh-shade)" />
+          </g>
+        ))
+      }
+    </g>
+    <g class="lh-motion">
+      {
+        robots.map((r) => (
+          <g transform={`translate(${r.start[0].toFixed(1)},${r.start[1].toFixed(1)})`}>
+            <animateTransform attributeName="transform" type="translate" values={r.translate} keyTimes={r.keyTimes} calcMode="spline" keySplines={r.splines} dur={dur} repeatCount="indefinite" />
+            <ellipse cx="0" cy="1" rx="8" ry="4" class="lh-shadow" filter="url(#lh-shadow)" />
+            <circle cx="0" cy="-10" r="11" fill={r.color} opacity="0.45" filter="url(#lh-glow)" />
+            <circle cx="0" cy="-10" r="7.5" fill={r.color} />
+            <circle cx="0" cy="-10" r="7.5" fill="url(#lh-shade)" />
+          </g>
+        ))
+      }
+    </g>
+  </g>
+</svg>
+
+<style>
+  .lh {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .lh-ground { fill: #000; opacity: 0.55; }
+  .lh-slab-top { fill: rgb(255 255 255 / 0.03); }
+  .lh-slab-s { fill: rgb(255 255 255 / 0.07); }
+  .lh-slab-e { fill: rgb(255 255 255 / 0.04); }
+  .lh-tiles polygon {
+    fill: rgb(255 255 255 / 0.035);
+    stroke: rgb(255 255 255 / 0.08);
+    stroke-width: 0.75;
+  }
+  .lh-shelf-top { fill: url(#lh-top); stroke: rgb(255 255 255 / 0.22); stroke-width: 0.75; }
+  .lh-shelf-s { fill: rgb(255 255 255 / 0.09); stroke: rgb(255 255 255 / 0.1); stroke-width: 0.5; }
+  .lh-shelf-e { fill: rgb(255 255 255 / 0.05); stroke: rgb(255 255 255 / 0.1); stroke-width: 0.5; }
+  .lh-goal { fill: none; stroke-width: 1.25; stroke-dasharray: 2.5 2.5; opacity: 0.7; }
+  .lh-naive { fill: none; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+  .lh-route {
+    fill: none;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.5;
+  }
+  .lh-trail {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.85;
+  }
+  .lh-shadow { fill: #000; opacity: 0.55; }
+  .lh-still { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lh-motion { display: none; }
+    .lh-still { display: inline; }
+  }
+</style>
