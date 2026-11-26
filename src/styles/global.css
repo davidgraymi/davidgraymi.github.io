@@ -633,18 +633,20 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   font-size: 1.25em;
   line-height: 1.5;
 }
-/* Figures sit in the same square hairline frame as everything else */
+/* Media sits on soft 16px corners with a hairline ring, like the cards. */
 .prose img, .prose video {
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-comp-media-radius);
+  border-radius: 1rem;
+  box-shadow: 0 0 0 0.5px var(--g-hair);
 }
 /* Built by src/lib/rehype-prose.mjs from a lone image with a title */
 .prose .prose-figure { margin-block: 2.2em; }
 .prose-figure-media {
   overflow-x: auto;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-comp-media-radius);
+  border-radius: 1rem;
   background: var(--md-sys-color-surface);
+  box-shadow:
+    0 0 0 0.5px var(--g-hair),
+    0 12px 32px -18px rgb(0 0 0 / 0.25);
 }
 .prose-figure-media a { display: block; }
 .prose .prose-figure-media img {
@@ -659,19 +661,16 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   .prose .prose-figure-media img { min-width: 34rem; }
 }
 .prose figcaption {
-  margin-top: 0.75rem;
+  margin-top: 0.85rem;
+  text-align: center;
   font-size: var(--text-body-sm);
   line-height: 1.55;
   color: var(--md-sys-color-on-surface-variant);
 }
 .prose figcaption .figure-label {
   margin-right: 0.35em;
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
 }
 /* Light/dark chart variants follow the theme toggle, then the OS */
 .fig-dark { display: none !important; }
@@ -682,15 +681,14 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   :root:not([data-theme='light']) .fig-dark { display: block !important; }
 }
 .prose hr {
-  border-top: 1px solid var(--md-sys-color-outline-variant);
+  border-top: 1px solid var(--md-comp-card-border);
   margin-block: 2.6em;
 }
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background: var(--md-sys-color-surface-container-high);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-sys-shape-corner-extra-small);
+  background: var(--g-fill);
+  border-radius: 0.375rem;
   padding: 0.15em 0.4em;
   color: var(--md-sys-color-on-surface);
 }
@@ -701,10 +699,10 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
 .prose pre {
   font-size: 0.875rem;
   line-height: 1.65;
-  padding: 1.2rem 1.4rem;
-  border-radius: var(--md-comp-media-radius);
-  border: 1px solid var(--md-sys-color-outline-variant);
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
   background: var(--md-sys-color-surface-container-low) !important;
+  box-shadow: 0 0 0 0.5px var(--g-hair);
   overflow-x: auto;
 }
 .prose pre code {
@@ -721,17 +719,19 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   width: 100%;
   font-size: 0.9375rem;
   border-collapse: collapse;
-  border: 1px solid var(--md-sys-color-outline-variant);
   font-variant-numeric: tabular-nums;
 }
+/* Tables: horizontal hairlines only, a quiet header row. */
 .prose th, .prose td {
-  border: 1px solid var(--md-sys-color-rule-soft);
-  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--md-comp-card-border);
+  padding: 0.65rem 0.85rem;
   text-align: left;
 }
 .prose th {
-  background: var(--md-sys-color-surface-container);
+  font-size: 0.8125rem;
   font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  border-bottom-color: color-mix(in srgb, var(--md-sys-color-on-surface) 20%, transparent);
 }
 .prose th.num, .prose td.num { text-align: right; }
 

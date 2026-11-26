@@ -129,7 +129,8 @@ Page and section titles are sans: `font-semibold` with tight tracking (`-0.03em`
 | `.seg` > `.filter-tab` (+ `.active` / `aria-pressed`) | Segmented control: the selected segment lifts on a white pill and turns semibold | Work index. Same control as the games' `.g-seg` |
 | `.link-underline` | Inline link outside prose | |
 | `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | Page headers. `DotField.astro` enhances the first one on idle (pointer repel, hidden Game of Life); keep the CSS as the no-JS rendering |
-| `.prose` | Long-form article styles | Blog posts, case studies. Newsreader 19px / 1.7. Quotes are larger italic serif with a thin amber rule and no box. Tables and captions switch back to sans |
+| `.prose` | Long-form article styles | Blog posts, case studies. Newsreader 19px / 1.7 body, sans headings. Figures and code blocks sit on 16px corners with a hairline ring; captions are centred sans. Tables use horizontal hairlines only. Quotes are larger italic serif with a thin amber rule and no box |
+| `CommandPalette` component | Spotlight-style search | Frosted panel high on the screen; the selected row fills with the signal colour. A combobox + listbox, so screen readers follow the arrow keys |
 
 ### Trust & product components
 

@@ -60,38 +60,38 @@ const actions = [
 const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
 ---
 
-<dialog
-  id="command-palette"
-  class="fixed inset-0 z-[100] m-auto w-[92vw] max-w-2xl overflow-hidden rounded-2xl border p-0 shadow-elevation-4 backdrop:bg-black/60 backdrop:backdrop-blur-md bg-surface-container-high border-outline-variant"
->
+<dialog id="command-palette" class="spotlight z-[100] w-[92vw] max-w-[40rem] p-0 text-on-surface" aria-label="Search the site">
   <div class="flex flex-col">
-    {/* Header Search Bar */}
-    <div
-      class="flex items-center gap-3 border-b px-5 py-4 border-outline-variant bg-surface-container-highest"
-    >
-      <span class="text-primary">
-        <Icon name="search" size={20} />
+    {/* Search field */}
+    <div class="flex items-center gap-3 px-5 py-4">
+      <span class="text-on-surface-variant">
+        <Icon name="search" size={22} />
       </span>
       <input
         id="command-search"
         type="text"
-        placeholder="Search pages, projects, posts… (try RTOS, Kubernetes, theme)"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="command-results"
+        aria-autocomplete="list"
+        placeholder="Search pages, projects and posts"
         aria-label="Search the site"
         autocomplete="off"
         spellcheck="false"
-        class="w-full bg-transparent text-body font-medium outline-none placeholder:text-on-surface-variant text-on-surface"
+        class="w-full bg-transparent text-[1.375rem] font-normal tracking-[-0.015em] outline-none placeholder:text-on-surface-variant/70 text-on-surface"
       />
-      <div class="flex items-center gap-1.5 font-mono text-label text-on-surface-variant">
-        <kbd class="rounded border px-2 py-0.5 bg-surface-container border-outline-variant">ESC</kbd>
-      </div>
+      <kbd class="g-kbd pointer-coarse:hidden">esc</kbd>
     </div>
 
-    {/* Results List */}
-    <div id="command-results" class="max-h-[60vh] overflow-y-auto p-2.5">
+    {/* Results */}
+    <div id="command-results" role="listbox" aria-label="Results" class="spotlight-results max-h-[min(60vh,28rem)] overflow-y-auto p-2">
       {
         allItems.map((item, index) => (
           <div
-            class="command-item group flex cursor-pointer items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-150"
+            id={`command-item-${index}`}
+            role="option"
+            aria-selected="false"
+            class="command-item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3.5 py-2.5"
             data-index={index}
             data-title={item.title.toLowerCase()}
             data-subtitle={item.subtitle.toLowerCase()}
@@ -99,82 +99,115 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
             data-stack={(item as any).stack?.toLowerCase() || ''}
             data-href={(item as any).href || ''}
             data-action={(item as any).action || ''}
-            tabindex="0"
+            tabindex="-1"
           >
-            <div class="min-w-0 pr-3">
-              <p class="truncate text-body font-medium transition-colors group-hover:text-primary">
-                {item.title}
-              </p>
-              <p class="truncate text-caption text-on-surface-variant">
-                {item.subtitle}
-              </p>
+            <div class="min-w-0">
+              <p class="command-title truncate text-[0.9375rem] font-medium">{item.title}</p>
+              <p class="command-sub truncate text-[0.8125rem] text-on-surface-variant">{item.subtitle}</p>
             </div>
-            <div class="flex shrink-0 items-center gap-2">
-              <span
-                class="rounded-md border px-2 py-0.5 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container border-outline-variant text-on-surface-variant"
-              >
-                {item.badge}
-              </span>
-              <span
-                class="grid h-6 w-6 place-items-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 text-on-primary bg-primary"
-              >
-                <Icon name="arrow" size={13} />
-              </span>
-            </div>
+            <span class="command-badge shrink-0 rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium">{item.badge}</span>
           </div>
         ))
       }
-      <div id="command-empty" class="hidden py-14 text-center text-body text-on-surface-variant">
-        No matching commands or projects found.
+      <div id="command-empty" class="hidden py-14 text-center text-[0.9375rem] text-on-surface-variant">
+        No results. Try a project, a post or “theme”.
       </div>
     </div>
 
-    {/* Footer Shortcuts Hint */}
-    <div
-      class="flex items-center justify-between border-t px-5 py-3 font-mono text-label border-outline-variant bg-surface-container text-on-surface-variant"
-    >
-      <div class="flex items-center gap-3">
-        <span><kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">↑</kbd> <kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">↓</kbd> to navigate</span>
-        <span><kbd class="rounded border px-2 py-0.5 text-label border-outline-variant">↵</kbd> to select</span>
-      </div>
-      <span><kbd class="rounded border px-1.5 py-0.5 text-label border-outline-variant">esc</kbd> to close</span>
+    {/* Shortcuts */}
+    <div class="spotlight-foot flex items-center justify-between px-5 py-2.5 text-[0.75rem] text-on-surface-variant pointer-coarse:hidden">
+      <span class="flex items-center gap-3">
+        <span><kbd class="g-kbd">↑</kbd> <kbd class="g-kbd">↓</kbd> to move</span>
+        <span><kbd class="g-kbd">↵</kbd> to open</span>
+      </span>
+      <span><kbd class="g-kbd">esc</kbd> to close</span>
     </div>
   </div>
 </dialog>
 
-<style>
-  dialog[open] {
-    animation: dialogIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+<p id="command-toast" class="command-toast" role="status" aria-live="polite"></p>
 
-  @keyframes dialogIn {
+<style>
+  /* Spotlight: a frosted panel that drops in high on the screen. */
+  .spotlight {
+    position: fixed;
+    inset: 14vh 0 auto;
+    margin-inline: auto;
+    overflow: hidden;
+    border-radius: 1.375rem;
+    background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 86%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
+    backdrop-filter: saturate(180%) blur(30px);
+    box-shadow:
+      0 0 0 0.5px var(--g-hair),
+      0 40px 80px -20px rgb(0 0 0 / 0.45),
+      0 4px 12px rgb(0 0 0 / 0.1);
+  }
+  .spotlight[open] {
+    animation: spotlight-in 360ms var(--g-ease) both;
+  }
+  .spotlight::backdrop {
+    background: rgb(0 0 0 / 0.28);
+  }
+  @keyframes spotlight-in {
     from {
       opacity: 0;
-      transform: scale(0.95) translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
+      transform: translateY(-10px) scale(0.98);
     }
   }
-
-  .command-item.active {
-    background: var(--md-sys-color-surface-container-high);
-    color: var(--md-sys-color-on-surface);
+  .spotlight-results {
+    box-shadow: inset 0 0.5px 0 var(--g-hair);
+  }
+  .spotlight-foot {
+    box-shadow: inset 0 0.5px 0 var(--g-hair);
   }
 
-  .command-item.active p:first-child {
-    color: var(--md-sys-color-on-surface);
-    font-weight: 600;
+  .command-item {
+    transition: background-color 120ms var(--g-ease);
   }
-
-  .command-item.active p:last-child {
+  .command-item:hover {
+    background: var(--g-fill);
+  }
+  .command-badge {
+    background: var(--g-fill);
     color: var(--md-sys-color-on-surface-variant);
-    opacity: 0.85;
+  }
+  /* The selected row fills with the signal colour, like Spotlight's. */
+  .command-item.active {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+  .command-item.active .command-sub,
+  .command-item.active .command-badge {
+    color: color-mix(in srgb, var(--md-sys-color-on-primary) 80%, transparent);
+  }
+  .command-item.active .command-badge {
+    background: color-mix(in srgb, var(--md-sys-color-on-primary) 14%, transparent);
   }
 
-  .command-item.active span:last-child {
+  /* Small confirmation that floats up from the bottom (replaces alert()). */
+  .command-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    z-index: 110;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--md-sys-color-inverse-surface, var(--md-sys-color-on-surface)) 92%, transparent);
+    color: var(--md-sys-color-inverse-on-surface, var(--md-sys-color-surface));
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.4);
+    opacity: 0;
+    transform: translate(-50%, 12px);
+    pointer-events: none;
+    transition:
+      opacity 260ms var(--g-ease),
+      transform 360ms var(--g-ease);
+  }
+  .command-toast[data-show] {
     opacity: 1;
+    transform: translate(-50%, 0);
   }
 </style>
 
@@ -210,11 +243,16 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
   function setActive(newIndex: number) {
     const visible = getVisibleItems();
     if (visible.length === 0) return;
-    visible.forEach((item) => item.classList.remove('active'));
+    visible.forEach((item) => {
+      item.classList.remove('active');
+      item.setAttribute('aria-selected', 'false');
+    });
     activeIndex = Math.max(0, Math.min(newIndex, visible.length - 1));
     const activeItem = visible[activeIndex];
     if (activeItem) {
       activeItem.classList.add('active');
+      activeItem.setAttribute('aria-selected', 'true');
+      searchInput?.setAttribute('aria-activedescendant', activeItem.id);
       activeItem.scrollIntoView({ block: 'nearest' });
     }
   }
@@ -231,7 +269,12 @@ const allItems = [...pages, ...actions, ...gameItems, ...projects, ...posts];
     if (action === 'copy-email') {
       track('contact_email', { method: 'palette' });
       navigator.clipboard.writeText('davidgraymi@gmail.com');
-      alert('Email copied to clipboard: davidgraymi@gmail.com');
+      const toast = document.getElementById('command-toast');
+      if (toast) {
+        toast.textContent = 'Email address copied';
+        toast.setAttribute('data-show', '');
+        setTimeout(() => toast.removeAttribute('data-show'), 2400);
+      }
       return;
     }
 
