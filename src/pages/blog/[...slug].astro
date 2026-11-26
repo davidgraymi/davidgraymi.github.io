@@ -60,8 +60,7 @@ const jsonLd = {
         <h1 class="mt-6 font-semibold tracking-[-0.03em] text-h1 text-on-surface">{title}</h1>
         <p class="mt-4 max-w-2xl text-title-sm leading-relaxed text-on-surface-variant">{description}</p>
 
-        <div class="ruled-panel is-instrument mt-10">
-          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+        <div class="ruled-panel mt-10">
           <dl class="ruled-grid sm:grid-cols-[auto_auto_1fr]">
             <div class="ruled-cell p-5 sm:pr-10">
               <dt class="meta-label">Published</dt>
@@ -154,7 +153,6 @@ const jsonLd = {
         {
           (newer || older) && (
             <nav class="ruled-panel mt-16" aria-label="More posts">
-              <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
               <div class="ruled-grid sm:grid-cols-2">
                 {newer ? (
                   <a href={`/blog/${newer.id}`} class="ruled-cell is-interactive block p-5.5">

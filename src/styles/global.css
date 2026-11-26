@@ -219,9 +219,7 @@
 
   /* -------------------------------------------------------------------------
      Ruled panel: hairline cells in one soft frame.
-     .ruled-panel > (.tick ×4) + .ruled-grid > .ruled-cell
-     Add .is-instrument when the panel shows measurements (stats, metadata):
-     it goes square and shows its corner ticks. Ticks mean "this is data".
+     .ruled-panel > .ruled-grid > .ruled-cell
   ------------------------------------------------------------------------- */
   .ruled-panel,
   .ticked-frame {
@@ -230,10 +228,7 @@
     background: var(--md-comp-card-bg);
     border-radius: var(--md-comp-card-radius);
   }
-  /* Ticks are retired: every panel is a soft grouped surface now, measurements included. */
-  .ruled-panel > .tick { display: none; }
 
-  /* Portrait frame: a soft mat around a photo of a person */
   /* Portrait: the photo itself, rounded and lifted, no mat. */
   .ticked-frame {
     padding: 0;
@@ -241,24 +236,10 @@
     border-radius: 1.75rem;
     box-shadow: var(--g-lift);
   }
-  .ticked-frame > .tick { display: none; }
-  .ticked-frame > :not(.tick) {
+  .ticked-frame > * {
     border-radius: inherit;
     overflow: hidden;
   }
-  :is(.ruled-panel, .ticked-frame) > .tick {
-    position: absolute;
-    width: var(--md-comp-tick-size);
-    height: var(--md-comp-tick-size);
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline);
-    z-index: 1;
-  }
-  :is(.ruled-panel, .ticked-frame) > .tick-tl { top: -4px; left: -4px; }
-  :is(.ruled-panel, .ticked-frame) > .tick-tr { top: -4px; right: -4px; }
-  :is(.ruled-panel, .ticked-frame) > .tick-bl { bottom: -4px; left: -4px; }
-  :is(.ruled-panel, .ticked-frame) > .tick-br { bottom: -4px; right: -4px; }
-
   .ruled-grid {
     display: grid;
     overflow: hidden;
@@ -273,16 +254,6 @@
   .ruled-cell.is-interactive:hover,
   .ruled-cell.is-interactive:focus-within {
     background: var(--md-comp-card-bg-hover);
-  }
-  .ruled-cell .cell-index {
-    background: var(--md-sys-color-surface-container-high);
-    color: var(--md-sys-color-on-surface-variant);
-    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
-                color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
-  }
-  .ruled-cell.is-interactive:hover .cell-index {
-    background: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
   }
 
   /* Ruled list: rows separated by hairlines; hover draws a bar down the left */
@@ -776,8 +747,7 @@ main:has(> .signal-block:last-child) + footer { margin-top: 0; }
   @page { size: letter; margin: 0.55in 0.6in; }
 
   body > :not(main),
-  .no-print,
-  .tick { display: none !important; }
+  .no-print { display: none !important; }
 
   body { background: #fff; font-size: 10pt; }
   main > * { padding: 0 !important; max-width: none !important; }

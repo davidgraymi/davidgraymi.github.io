@@ -211,9 +211,7 @@
   --md-comp-button-radius: var(--md-sys-shape-corner-full);
   --md-comp-button-font-size: 0.9375rem;
 
-  /* Cards are soft hairline frames. Hover fills the card and draws a signal bar.
-     Square corners and corner ticks are reserved for .is-instrument panels:
-     the ones that show measurements (stats, post metadata). */
+  /* Cards are soft hairline frames with 20px corners. Interactive ones lift on hover. */
   --md-comp-card-radius: 1.25rem; /* 20px: soft, app-like */
   --md-comp-card-bg: var(--md-sys-color-surface-container-lowest);
   --md-comp-card-bg-hover: var(--md-sys-color-surface-container-low);
@@ -222,8 +220,6 @@
   --md-comp-card-bar-height: 0px; /* the old signal bars are retired; cards lift instead */
   --md-comp-media-radius: var(--md-sys-shape-corner-medium);
   --md-comp-portrait-radius: var(--md-sys-shape-corner-extra-large);
-
-  --md-comp-tick-size: 7px;
 
   --md-comp-chip-radius: var(--md-sys-shape-corner-small);
   --md-comp-chip-bg: var(--md-sys-color-surface);
@@ -349,11 +345,6 @@
   --shadow-elevation-3: var(--md-sys-elevation-3);
   --shadow-elevation-4: var(--md-sys-elevation-4);
   --shadow-elevation-5: var(--md-sys-elevation-5);
-
-  /* Signal glow → shadow-glow-sm (status dots), shadow-glow (filled controls), shadow-glow-lg (hero frame) */
-  --shadow-glow-sm: 0 0 8px var(--md-sys-color-primary);
-  --shadow-glow: 0 0 16px -2px var(--md-sys-color-glow);
-  --shadow-glow-lg: 0 0 35px -6px var(--md-sys-color-glow);
 
   /* Motion → ease-*, duration via Tailwind defaults */
   --ease-standard: var(--md-sys-motion-easing-standard);

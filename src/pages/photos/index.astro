@@ -28,7 +28,6 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
     {
       albums.length === 0 ? (
         <div class="ruled-panel dot-reveal max-w-2xl">
-          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
           <div class="flex flex-col items-start p-8 md:p-10">
             <span class="grid h-12 w-12 place-items-center border border-outline-variant text-primary">
               <Icon name="camera" size={24} />
@@ -47,7 +46,6 @@ const coverOf = (album: (typeof albums)[number]) => album.data.cover ?? album.da
         </div>
       ) : (
         <div class="ruled-panel">
-          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
           <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-3">
           {albums.map((album) => {
             const cover = coverOf(album);
