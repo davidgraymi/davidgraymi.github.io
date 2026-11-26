@@ -5,6 +5,7 @@ import { games, type Game } from '~/data/games';
 import { site } from '~/site.config';
 import BotOrHuman from '~/components/games/BotOrHuman.astro';
 import DrawADigit from '~/components/games/DrawADigit.astro';
+import FourInARow from '~/components/games/FourInARow.astro';
 import IsItPoisonous from '~/components/games/IsItPoisonous.astro';
 import LostSignal from '~/components/games/LostSignal.astro';
 import ReactionTest from '~/components/games/ReactionTest.astro';
@@ -16,6 +17,7 @@ import Wordlet from '~/components/games/Wordlet.astro';
 const components = {
   'beat-the-bot': TetrisVsBot,
   'draw-a-digit': DrawADigit,
+  'four-in-a-row': FourInARow,
   'is-it-poisonous': IsItPoisonous,
   'route-the-robots': RouteTheRobots,
   wordlet: Wordlet,

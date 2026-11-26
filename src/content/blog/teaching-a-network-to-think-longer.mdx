@@ -1,0 +1,189 @@
+---
+title: Teaching a network to think longer
+seoTitle: Teaching a network to think longer (and playing it at Connect Four)
+description: My CS440 project asked whether a recursive network can stand in for search. It learned to think in steps. It did not learn when to stop. You can play it below.
+pubDate: 2026-11-25
+tags: ['machine-learning', 'research', 'pytorch', 'games']
+---
+
+import FourInARow from '~/components/games/FourInARow.astro';
+
+The model you can play at the bottom of this post thinks before it moves. Each
+step it refines its answer, and a small head decides when the answer is good
+enough. How long it thinks is its own call.
+
+Getting it to use those steps at all took three attempts. Getting it to spend
+*more* of them on harder positions is the part I haven't solved.
+
+This was my final project for CS440. The code, the data and every number below
+are in [CS440-Final-Project](https://github.com/davidgraymi/CS440-Final-Project).
+
+## The question
+
+Game-playing agents like AlphaZero pair a neural network with tree search. The
+network says which moves look good; the search checks by playing them out. The
+search is what makes them strong, and it's also what makes them expensive.
+
+A transformer already looks at every square of the board at once, so it has
+*breadth* for free. What a fixed stack of layers doesn't have is *depth*: it can
+only take as many dependent reasoning steps as it has layers. Search supplies
+that depth by going one move further down the tree, then another.
+
+Recursive models like [TRM](https://arxiv.org/abs/2510.04871) take a different
+route. They reuse one small network over and over, updating a latent state of
+the whole board each time. Each pass is something like one round of value
+iteration over every square at once. So the hypothesis was:
+
+> A weight-tied recursive network does something like search in latent space,
+> and the number of steps it needs grows with how far ahead the position
+> requires you to look.
+
+## Why Connect Four
+
+Because it's solved. [Pascal Pons' solver](https://github.com/PascalPons/connect4)
+gives the exact value of every move in every position, so I never have to guess
+whether the model was right.
+
+From the solver's scores I built a label for how hard a position is: **r, the
+required lookahead**. It is the smallest search depth that proves the best move
+beats every other move. A position with r = 1 is "win now". A position with
+r = 9 needs nine plies of lookahead before the winning move separates from the
+rest. The label is checked against a brute-force search in the tests: a depth-k
+search goes from chance to 100% exactly at k = r.
+
+The test set is 12,991 positions from solver-played games, each with exactly one
+winning move, balanced by r and by game stage so that "hard" doesn't just mean
+"late in the game". I'll call it the tactical set.
+
+## Attempt one: it answered in one step
+
+The first models were TRMs trained the standard way: each step runs the network
+42 times, gets graded on its own, and hands its state to the next step with the
+gradient cut. They were good. The best one picked the optimal move 89.7% of the
+time, with a quarter of the parameters of a plain 8-layer transformer that
+scored 84.1%.
+
+But it got 89.8% after one step and 89.7% after sixteen. The learned stop head
+stopped at step 1 on almost every position. Running extra recursion at test
+time moved accuracy by about a point, the same at every depth. A run that forced
+32 steps on every position learned too slowly to pass its go/no-go check and
+was stopped at 60,000 updates.
+
+The models that learned well did it in one step. Looking back, the training
+made that the only sensible thing to do:
+
+| What the training did | Effect |
+| --- | --- |
+| Each step was 42 layer passes deep | One step already solved what the model could solve |
+| The gradient was cut between steps | A step was never rewarded for setting up a later one |
+| Only the single best move counted | Half-finished lookahead earned nothing |
+
+## Attempt two: put the thinking in the outer loop
+
+So I changed all three.
+
+- **Shallow steps.** One step is now 4 layer passes, not 42. The model gets up to
+  24 of them, 96 passes in all.
+- **Credit across steps.** The state is never detached, so the learning signal
+  flows back through every step. A step can be rewarded for helping a later one.
+- **A halting-weighted loss**, after [PonderNet](https://arxiv.org/abs/2107.05407).
+  The stop head gives the chance of stopping at each step. The loss grades each
+  step's answer weighted by the chance the model stops there, plus a penalty
+  that keeps the expected number of steps near 6.
+- **Partial credit.** A new head predicts, for every column, what playing it
+  leads to: win or loss, and roughly how soon. The model can get the easy
+  columns right before the hard ones.
+
+Running the gradient through 24 steps would need about 870 MB per step on a
+batch of 128. Recomputing each step on the backward pass instead of storing it
+brought that to 13 MB, so memory stopped deciding the design. `torch.compile`
+plus fp16 made training 1.57× faster, measured with
+[neural-cost](/blog/neural-cost-honest-roofline). Every run trained for 22,000
+updates of 128 positions on two Macs at home.
+
+## It learned to think
+
+![Accuracy rises from 51–75% at step 1 to 79–100% by step 9, for every lookahead bucket](/images/thinking/accuracy-by-step.webp "Figure 1 — Optimal-move accuracy at each outer step for the best model, by required lookahead r. Tactical set, 12,991 positions.")
+
+This is the curve that had been flat in every earlier model. The best model gets
+57.9% at step 1 and 88.1% at the step it chooses to stop on, about step 9.5.
+On the hardest positions, r = 9 and up, it goes from 50% to 78%. The steps are
+now doing real work.
+
+![The adaptive model with full credit and the per-column target scores 88.1%, ahead of every fixed-step control](/images/thinking/ablation.webp "Figure 2 — Tactical-set accuracy and mean steps for each training setup. Same architecture, same data, same number of updates.")
+
+The ablations say which change mattered. Cutting the gradient between steps
+(the old setup, with everything else new) gives 79.1%, worse than a model
+trained to answer in a single step. Letting credit flow across steps gives
+86.4%. The per-column target adds another 1.7 points. Models trained to always
+take a fixed number of steps top out at 86.0%, and that one needs all 24.
+
+In a round-robin of 101,880 games from 1,415 openings, this model finished top
+of the field at 1546 Elo. The perfect solver sat at 1726, and the model took
+23% of the points against it.
+
+## It didn't learn when to stop
+
+Here is the part that didn't work.
+
+If the network were doing something like search, positions that need more
+lookahead should get more steps. They barely do:
+
+![The model stops around step 8.5 to 9.9 at every depth, while its answer settles by step 1 to 3](/images/thinking/stop-vs-settle.webp "Figure 3 — When the model stops vs. when its answer stops changing, by required lookahead r.")
+
+It stops at step 8.5 on r = 1 positions and about 9.8 on everything from r = 5
+to r = 16. The correlation between stopping step and r, measured within each
+game stage, is 0.25. That clears the bar I set for the pilot (0.1) and misses
+the one I set for success before running anything (0.3 in every stage).
+
+The blue line is the giveaway. On a typical position the model's answer has
+settled by step 1, 2 or 3, and then it keeps thinking for another six or seven
+steps anyway. It overthinks easy positions and leaves almost no slack on the hardest ones.
+
+A model that always stopped at step 9 would score 87.8%, 0.3 points behind
+the adaptive one. On the second training seed the difference is zero. If you
+could stop each position at its best step, you'd get 94.8%. That gap of 6.7
+points is what a good stop rule is worth, and this one isn't capturing it.
+
+So the honest summary: **the network learned to use thinking steps, and they
+buy a lot of accuracy. It did not learn to spend them where they're needed.**
+The depth hypothesis is still neither confirmed nor ruled out.
+
+## Play it
+
+This is the same checkpoint, running in your browser.
+
+<FourInARow />
+
+[Play it full screen →](/play/four-in-a-row)
+
+What you're looking at:
+
+- **The bars over the board** are its move head after each step: how much it
+  likes each column right now. Early steps are often wrong; watch for the step
+  where it changes its mind.
+- **The ring** fills with its readiness to stop. It plays when the ring closes,
+  and the number inside is the step it's on. It tends to think longest in the
+  middle of the game, about 10.4 steps around move 24 against 8 on the first.
+- **The dots** mark the empty holes where its internal state moved most in that
+  step. It's a rough picture of where the update is happening, not an
+  explanation of why.
+
+There is no ML runtime here. The network is 1.25M parameters, exported to a
+2.5 MB file of 16-bit floats and run in about 250 lines of TypeScript in a Web
+Worker. Rounding the weights to fp16 changed none of its moves on 2,000 tactical
+positions, and a check script compares the browser port's outputs to PyTorch's
+at every step; they agree to within 0.000003. One step takes about a tenth of a
+second on a laptop, so a move takes about a second, and what you see is the
+real pace.
+
+It's a strong player for a model that never looks a single move ahead, and a
+weak one next to the solver. You can beat it.
+
+## What I'd try next
+
+The stop head is trained only through the halting-weighted loss, which pays it
+for stopping when the answer is good but doesn't make stopping later costly
+enough on easy positions. The next thing I'd try is giving it a direct target:
+the first step after which the answer stops changing. Then I'd run more seeds,
+because a 0.3-point edge on one seed and zero on the other isn't a result yet.
