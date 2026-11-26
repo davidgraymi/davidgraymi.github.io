@@ -44,7 +44,7 @@ const { entry } = Astro.props;
         entry.data.tags.length > 0 && (
           <div class="mt-4 flex flex-wrap gap-1.5 font-mono text-label">
             {entry.data.tags.slice(0, 3).map((tag) => (
-              <a href={tagHref(tag)} class="chip relative z-10 transition-colors hover:border-primary hover:text-primary">
+              <a href={tagHref(tag)} class="chip relative z-10">
                 #{tag}
               </a>
             ))}

@@ -34,17 +34,18 @@ const filters = [
   <div class="wrap py-12 md:py-16">
     {/* Filter pills */}
     <div class="flex flex-wrap items-center justify-between gap-4">
-      <div id="filter-tabs" class="flex flex-wrap items-center gap-2">
+      <div id="filter-tabs" class="seg" role="group" aria-label="Filter projects">
         <button
           type="button"
           data-filter="all"
           class="filter-tab active"
+          aria-pressed="true"
         >
           All ({entries.length})
         </button>
         {
           filters.map((f) => (
-            <button type="button" data-filter={f.key} class="filter-tab">
+            <button type="button" data-filter={f.key} class="filter-tab" aria-pressed="false">
               {f.label}
             </button>
           ))
@@ -120,8 +121,10 @@ const filters = [
 
   filterTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      filterTabs.forEach((t) => t.classList.remove('active'));
-      tab.classList.add('active');
+      filterTabs.forEach((t) => {
+        t.classList.toggle('active', t === tab);
+        t.setAttribute('aria-pressed', String(t === tab));
+      });
 
       const filter = tab.dataset.filter ?? 'all';
       let visibleCount = 0;

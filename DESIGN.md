@@ -81,7 +81,7 @@ Three faces, three jobs. **12px is the floor.**
 | --- | --- | --- | --- |
 | Newsreader | `font-serif` | **Voice**: how David talks | `text-display`, `text-h1`, `text-h2`, `.prose`, quotes, the author's name |
 | Roboto Flex | `font-sans` (default) | **Interface**: what you click | Nav, buttons, card titles and copy, forms, tables, captions |
-| JetBrains Mono | `font-mono` | **Evidence**: numbers and labels | Stats, dates, kickers, chips, status pills, code |
+| JetBrains Mono | `font-mono` | **Evidence**: numbers and labels | Stats, dates, kickers, status pills, code |
 
 Page and section titles are `font-serif font-medium tracking-tight`. Card titles stay sans: they're interface. Newsreader loads as the 58 KB weight-only build, not the 132 KB optical-size build.
 
@@ -97,7 +97,7 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 | `text-body` | 15px | Default UI copy |
 | `text-body-sm` | 14px | Secondary copy, nav |
 | `text-caption` | 13px | Metadata, filters |
-| `text-label` | 12px | Mono labels, chips, kickers |
+| `text-label` | 12px | Mono labels, kickers |
 
 ## Shape, elevation, motion
 
@@ -112,7 +112,7 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 | `Header` component | Sticky frosted bar (`saturate(180%) blur(20px)`): squircle brand mark, centred links, pill search, round icon buttons | Hairline appears only once the page scrolls. Active link sits on a soft pill. Mobile menu is a solid full-height sheet of large links that settle in one by one; the two-line menu icon folds into an X. Uses the global `--g-*` fills and ease from `games.css` |
 | `.wrap` | Page gutter + 76rem max width | 20px gutter on mobile, 32px from `md` |
 | `.kicker` | Mono uppercase eyebrow with amber rule | One per section, above the heading |
-| `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px buttons | One primary per view; `disabled` / `aria-disabled` supported |
+| `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px pills; borderless, filled by emphasis (amber / 12% ink / 7% ink) | One primary per view. They press down to 96% instead of lifting; `disabled` / `aria-disabled` supported |
 | `.surface` | Static card | `--md-comp-card-*` tokens |
 | `.spotlight-card` | Interactive card: fills and draws a signal bar on hover | Anything that navigates |
 | `.glass-panel` | Static callout frame | Asides, mobile menu |
@@ -124,8 +124,8 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 | `BackLink` component | Mono label with a square arrow box | Top of every detail page (work, post, album) instead of a pill |
 | `.dot-reveal` | Dot matrix fades in from a cell corner on hover | Playful cells (Off the clock), key-metric aside, empty states |
 | `.signal-block` + `.btn-ink`, `.ticker` | Full-bleed amber CTA with dot texture and scrolling ticker | `CallToAction`; the footer sits flush after it |
-| `.chip` / `.chip-accent` | Tags and tech stack | Accent for at most one chip per card |
-| `.filter-tab` (+ `.active`) | Segmented filter | Work index |
+| `.chip` / `.chip-accent` | Soft sans pills for tags and tech stack | Accent for at most one chip per card. Linked chips stretch their hit area to 44pt on touch |
+| `.seg` > `.filter-tab` (+ `.active` / `aria-pressed`) | Segmented control: the selected segment lifts on a white pill and turns semibold | Work index. Same control as the games' `.g-seg` |
 | `.link-underline` | Inline link outside prose | |
 | `.dot-field` | Ink dot texture fading up into the surface (the `.signal-block` dots, neutral) | Page headers. `DotField.astro` enhances the first one on idle (pointer repel, hidden Game of Life); keep the CSS as the no-JS rendering |
 | `.prose` | Long-form article styles | Blog posts, case studies. Newsreader 19px / 1.7. Quotes are larger italic serif with a thin amber rule and no box. Tables and captions switch back to sans |

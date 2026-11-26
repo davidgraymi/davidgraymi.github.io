@@ -178,9 +178,7 @@ const interests = ['Scuba diving', 'Rock climbing', 'Hiking', 'Making art'];
                 <p class="kicker">{group.group}</p>
                 <div class="mt-3 flex flex-wrap gap-2">
                   {group.items.map((item) => (
-                    <span
-                      class="rounded-lg border px-3 py-1.5 font-mono text-label transition-all hover:border-primary hover:text-primary bg-surface-container border-outline-variant text-on-surface-variant"
-                    >
+                    <span class="chip">
                       {item}
                     </span>
                   ))}

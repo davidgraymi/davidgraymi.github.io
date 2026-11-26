@@ -81,7 +81,7 @@ const jsonLd = {
             <div class="ruled-cell p-5">
               <dt class="kicker">Tags</dt>
               <dd class="mt-2.5 flex flex-wrap gap-1.5 font-mono text-label">
-                {tags.length > 0 ? tags.map((t) => <a href={tagHref(t)} class="chip transition-colors hover:border-primary hover:text-primary">#{t}</a>) : <span class="text-on-surface-variant">—</span>}
+                {tags.length > 0 ? tags.map((t) => <a href={tagHref(t)} class="chip">#{t}</a>) : <span class="text-on-surface-variant">—</span>}
               </dd>
             </div>
           </dl>
