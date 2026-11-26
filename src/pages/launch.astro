@@ -1,0 +1,1158 @@
+---
+/**
+ * Prototype: the homepage told as a product launch. One idea per screen,
+ * motion driven by scroll. Not linked from the nav; noindex.
+ *
+ * Chapters: 1 cold open · 2 the numbers · 3 Bindersnap · 4 neural-cost ·
+ * 5 selected work · 6 the quote · 7 off the clock · 8 the close.
+ *
+ * Motion is CSS only (scroll-driven animations). Browsers without
+ * `animation-timeline`, and anyone with reduced motion, get the same page,
+ * fully visible and static. The dark "stage" is `color-scheme: dark` on the
+ * section, so the existing light-dark() tokens resolve to their dark values
+ * there without a second palette.
+ *
+ * PLACEHOLDERS to swap for real assets:
+ *  - avatar.png → a portrait on a plain dark background with headroom
+ *  - stats link to /resume → each to its own source
+ *  - the underwater scene is drawn in CSS → a dive photo or short muted loop
+ */
+import { Image } from 'astro:assets';
+import Base from '~/layouts/Base.astro';
+import Icon from '~/components/Icon.astro';
+import avatar from '~/assets/avatar.png';
+import shotLight from '~/assets/launch/bindersnap-policy.png';
+import shotDark from '~/assets/launch/bindersnap-policy-dark.png';
+import { stats } from '~/data/resume';
+import { products } from '~/data/products';
+import { quotes } from '~/data/proof';
+import { offTheClock } from '~/data/resume';
+import { site, socials } from '~/site.config';
+import { getCollection } from 'astro:content';
+import LacamFlipbook from '~/components/LacamFlipbook.astro';
+
+const bindersnap = products.find((p) => p.slug === 'bindersnap')!;
+
+const features = [
+  {
+    title: 'Every version, kept.',
+    body: 'Edit in the browser or upload the Word file you already have. Each approved version stays readable forever.',
+  },
+  {
+    title: 'Every sign-off, recorded.',
+    body: 'Who reviewed it, who approved it, and when. Written once and never rewritten.',
+  },
+  {
+    title: 'Ready for the surveyor.',
+    body: 'Export the audit packet in one click, even after a subscription ends.',
+  },
+];
+
+const headline = ['Engineer.', 'Scientist.'];
+
+const neuralCost = products.find((p) => p.slug === 'neural-cost')!;
+
+// Chapter 4: one real report from the "honest roofline" post, revealed line by line.
+const terminal = [
+  { kind: 'cmd', text: 'pip install neural-cost' },
+  { kind: 'out', text: 'Successfully installed neural-cost' },
+  { kind: 'note', text: '# trace, time and bound the pgx-rl ResNet' },
+  { kind: 'out', text: 'observed: 5.7 ms' },
+  { kind: 'out', text: 'bound: 3.9 ms' },
+  { kind: 'hi', text: 'roofline efficiency: 68.9% (memory-bound)' },
+];
+
+// Chapter 5: the bento. Order is layout order; `size` picks the tile shape.
+const work = new Map((await getCollection('work')).map((e) => [e.id, e.data]));
+const w = (id: string) => ({ id, ...work.get(id)! });
+const bento = {
+  lacam: w('lacam-mapf'),
+  sign: w('sign-language-interpreter'),
+  pipeline: w('zero-trust-delivery'),
+  processor: w('real-time-processor'),
+  tetris: w('tetris-rl'),
+};
+
+// Chapter 6: the quote's first sentence, split so each word can light up in turn.
+const quote = quotes[0];
+const [leadSentence] = quote.paragraphs[0].split(/(?<=\.)\s+/);
+const quoteWords = leadSentence.split(' ');
+
+const diving = offTheClock[0];
+const hobbies = offTheClock.slice(1);
+---
+
+<Base title="Launch prototype" description="The homepage, told as a product launch." noindex>
+  {/* ------------------------------------------------ 1 · cold open */}
+  <section class="stage open" aria-labelledby="open-title">
+    <div class="open-pin">
+      <div class="open-portrait" aria-hidden="true">
+        <Image src={avatar} alt="" widths={[480, 720, 960]} sizes="(min-width: 768px) 32rem, 80vw" loading="eager" />
+      </div>
+
+      <div class="open-copy">
+        <h1 id="open-title" class="open-title">
+          {headline.map((w, i) => <><span class="word" style={`--i:${i}`}>{w}</span>{' '}</>)}
+          <span class="word accent" style="--i:2">Occasionally underwater.</span>
+        </h1>
+        <p class="open-sub">Machine learning, the systems it runs on, and the things I build on the side.</p>
+      </div>
+
+      <p class="open-hello">
+        <span>Hi, I'm David.</span>
+        <span class="open-hello-meta">St. Louis · Boeing · M.S. CS at Illinois</span>
+      </p>
+
+      <span class="scroll-cue" aria-hidden="true">
+        <Icon name="arrow" size={16} />
+      </span>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------ 2 · the numbers */}
+  <section class="stage numbers" aria-labelledby="numbers-title">
+    <h2 id="numbers-title" class="numbers-intro">Five years of software that had to work.<br /><span>Here's what that adds up to.</span></h2>
+    {
+      stats.map((s) => (
+        <div class="stat">
+          <p class="stat-inner">
+            <span class="stat-value">{s.value}</span>
+            <span class="stat-label">{s.label}</span>
+            <a class="stat-source" href="/resume">Source →</a>
+          </p>
+        </div>
+      ))
+    }
+  </section>
+  <div class="stage-fade" aria-hidden="true"></div>
+
+  {/* ------------------------------------------------ 3 · Bindersnap */}
+  <section class="product" aria-labelledby="bs-title">
+    <div class="wrap product-head">
+      <p class="product-eyebrow">
+        <span class="live-dot" aria-hidden="true"></span>
+        {bindersnap.name} · Live
+      </p>
+      <h2 id="bs-title" class="product-title">Every version.<br />Signed.</h2>
+      <p class="product-lead">{bindersnap.problem} Bindersnap keeps the proof.</p>
+    </div>
+
+    <div class="laptop-track">
+      <div class="laptop">
+        <div class="laptop-screen">
+          {/* Real app, local demo stack with seeded data (Riverside Health). Dark variant follows the theme. */}
+          <Image src={shotLight} alt="Bindersnap showing an Infection Control Policy: version 1 on record, who signs off on it, and a change waiting on a decision" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-light" />
+          <Image src={shotDark} alt="" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-dark" />
+        </div>
+        <div class="laptop-base" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <ul class="features">
+        {
+          features.map((f, i) => (
+            <li class="feature" style={`--i:${i}`}>
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="product-cta">
+        <a href={bindersnap.action.href} class="btn btn-primary" rel="noopener">
+          {bindersnap.action.label}
+          <Icon name="arrow" size={15} />
+        </a>
+        <a href="/work/bindersnap" class="btn btn-ghost">How I built it</a>
+        <span class="product-meta">{bindersnap.meta} · readers free</span>
+      </div>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------ 4 · neural-cost */}
+  <section class="stage nc" aria-labelledby="nc-title">
+    <div class="wrap">
+      <div class="nc-head">
+        <p class="nc-eyebrow"><span class="live-dot" aria-hidden="true"></span>{neuralCost.name} · Open source</p>
+        <h2 id="nc-title" class="nc-title">A timer says how fast.<br /><span>This says how fast it <em>should</em> be.</span></h2>
+      </div>
+
+      <div class="nc-grid">
+        <figure class="term" aria-label="Terminal session installing neural-cost and reading a roofline report">
+          <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>zsh</span></div>
+          <pre class="term-body">{terminal.map((line, i) => (
+            <span class:list={['term-line', `is-${line.kind}`]} style={`--i:${i}`}>{line.kind === 'cmd' && <b aria-hidden="true">$ </b>}{line.text}</span>
+          ))}</pre>
+        </figure>
+
+        <figure class="roof">
+          <svg viewBox="0 0 600 380" role="img" aria-labelledby="roof-t roof-d">
+            <title id="roof-t">Roofline: the pgx-rl ResNet runs at 68.9% of its memory bound</title>
+            <desc id="roof-d">Log-log chart of throughput against arithmetic intensity. A memory roof rises at 100 GB/s until it meets a 3.6 TFLOP/s compute roof. The measured point sits just under the memory roof.</desc>
+            <g class="roof-grid" aria-hidden="true">
+              <path d="M60 330H570M60 230H570M60 130H570M60 30H570M60 30V330M230 30V330M400 30V330M570 30V330" />
+            </g>
+            <g class="roof-ticks" aria-hidden="true">
+              <text x="52" y="334" text-anchor="end">10</text>
+              <text x="52" y="234" text-anchor="end">100</text>
+              <text x="52" y="134" text-anchor="end">1k</text>
+              <text x="52" y="34" text-anchor="end">10k</text>
+              <text x="60" y="352" text-anchor="middle">1</text>
+              <text x="230" y="352" text-anchor="middle">10</text>
+              <text x="400" y="352" text-anchor="middle">100</text>
+              <text x="570" y="352" text-anchor="middle">1k</text>
+              <text x="315" y="374" text-anchor="middle">FLOPs per byte moved</text>
+              <text x="14" y="180" text-anchor="middle" transform="rotate(-90 14 180)">GFLOP/s</text>
+            </g>
+            <path class="roof-line" pathLength="1" d="M60 230L324.6 74.4H570" />
+            <text class="roof-label" x="150" y="196" transform="rotate(-30.5 150 196)">100 GB/s memory roof</text>
+            <text class="roof-label" x="568" y="64" text-anchor="end">3.6 TFLOP/s compute roof</text>
+            <g class="roof-point">
+              <line x1="230" y1="130" x2="230" y2="146" />
+              <circle cx="230" cy="146.2" r="7" />
+              <text x="244" y="170">observed · 68.9% of bound</text>
+            </g>
+          </svg>
+          <figcaption>Schematic, using the M3 peaks and the measured run from <a href="/blog/neural-cost-honest-roofline">the write-up</a>.</figcaption>
+        </figure>
+      </div>
+
+      <div class="nc-cta">
+        <a href={neuralCost.action.href} class="btn btn-primary" rel="noopener">{neuralCost.action.label}<Icon name="arrow" size={15} /></a>
+        <a href="/blog/neural-cost-honest-roofline" class="btn btn-ghost">Why the number can lie</a>
+      </div>
+    </div>
+  </section>
+  <div class="stage-fade" aria-hidden="true"></div>
+
+  {/* ------------------------------------------------ 5 · selected work */}
+  <section class="wrap work" aria-labelledby="work-title">
+    <h2 id="work-title" class="chapter-title">Some of it runs on hardware<br /><span>I'll never see again.</span></h2>
+
+    <div class="bento">
+      <a href={`/work/${bento.lacam.id}`} class="tile tile-hero" style="--i:0">
+        <div class="tile-art lacam-art" aria-hidden="true"><LacamFlipbook /></div>
+        <div class="tile-copy">
+          <p class="tile-kicker">Research · live replay</p>
+          <h3>{bento.lacam.title}</h3>
+          <p>{bento.lacam.highlight}</p>
+        </div>
+      </a>
+
+      <a href={`/work/${bento.sign.id}`} class="tile tile-stat" style="--i:1">
+        <p class="tile-kicker">Machine learning</p>
+        <p class="tile-number">98.8%</p>
+        <h3>{bento.sign.title}</h3>
+        <p>Accuracy across 14 hand gestures. Cited 11 times, years later.</p>
+      </a>
+
+      <a href={`/work/${bento.processor.id}`} class="tile tile-dark" style="--i:2">
+        <p class="tile-kicker">Embedded · C and Ada</p>
+        <h3>{bento.processor.title}</h3>
+        <p class="tile-big">In production.<br />Globally distributed.</p>
+      </a>
+
+      <a href={`/work/${bento.pipeline.id}`} class="tile" style="--i:3">
+        <p class="tile-kicker">Security</p>
+        <h3>{bento.pipeline.title}</h3>
+        <p>{bento.pipeline.highlight}</p>
+      </a>
+
+      <a href="/play" class="tile tile-play" style="--i:4">
+        <div class="tetris" aria-hidden="true">{Array.from({ length: 4 }, (_, i) => <i style={`--b:${i}`}></i>)}</div>
+        <p class="tile-kicker">{bento.tetris.title}</p>
+        <h3>Play the games</h3>
+      </a>
+    </div>
+
+    <a href="/work" class="btn btn-ghost work-all">All projects<Icon name="arrow" size={15} /></a>
+  </section>
+
+  {/* ------------------------------------------------ 6 · the quote */}
+  <section class="quote" aria-labelledby="quote-title">
+    <h2 id="quote-title" class="sr-only">What it's like to work with me</h2>
+    <figure class="wrap quote-inner">
+      <blockquote>
+        <p class="quote-text">“{quoteWords.map((word, i) => <><span class="qw" style={`--i:${i};--n:${quoteWords.length}`}>{word}</span>{i < quoteWords.length - 1 && ' '}</>)}”</p>
+      </blockquote>
+      <figcaption class="quote-by">
+        <span class="quote-initials" aria-hidden="true">{quote.initials}</span>
+        <span>
+          <b>{quote.name}</b>
+          <span>{quote.relationship}</span>
+        </span>
+        <a href={quote.source.href} rel="noopener">{quote.source.label} →</a>
+      </figcaption>
+    </figure>
+  </section>
+
+  {/* ------------------------------------------------ 7 · off the clock */}
+  <section class="sea" aria-labelledby="sea-title">
+    {/* Placeholder: drawn in CSS until there's a dive photo or a short muted loop. */}
+    <div class="sea-art" aria-hidden="true">
+      <span class="rays"></span>
+      {Array.from({ length: 14 }, (_, i) => <i class="bubble" style={`--x:${(i * 37) % 100}%;--d:${6 + (i % 5) * 1.6}s;--s:${4 + (i % 4) * 3}px;--t:${(i * 0.9) % 7}s`}></i>)}
+    </div>
+    <div class="wrap sea-copy">
+      <p class="sea-eyebrow">{diving.label}</p>
+      <h2 id="sea-title" class="sea-title">Occasionally<br />underwater.</h2>
+      <p class="sea-lead">{diving.body}</p>
+    </div>
+    <span class="placeholder-tag sea-tag">Placeholder for a dive photo or video</span>
+  </section>
+
+  <section class="wrap hobbies" aria-label="Off the clock">
+    {
+      hobbies.map((h, i) => (
+        <div class="hobby" style={`--i:${i}`}>
+          <p class="tile-kicker">{h.label}</p>
+          <h3>{h.title}</h3>
+          <p>{h.body}</p>
+          {h.href && h.href !== '/photos' && <a href={h.href}>{h.cta} →</a>}
+        </div>
+      ))
+    }
+  </section>
+
+  {/* ------------------------------------------------ 8 · the close */}
+  <section class="stage close" aria-labelledby="close-title">
+    <div class="wrap close-inner">
+      <h2 id="close-title" class="close-title">Let's build<br /><span>something.</span></h2>
+      <p class="close-lead">Contract work, a full-time role, or a problem you want a second opinion on. I read every message.</p>
+      <a href="/contact" class="btn btn-primary close-btn">Get in touch<Icon name="arrow" size={16} /></a>
+      {site.availableForWork && (
+        <p class="close-status"><span class="live-dot" aria-hidden="true"></span>{site.availabilityNote}</p>
+      )}
+      <ul class="close-socials">
+        {socials.slice(0, 3).map((s) => (
+          <li><a href={s.href} rel={s.href.startsWith('http') ? 'me noopener' : undefined}><Icon name={s.icon} size={15} />{s.handle}</a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ============================================================ stage */
+  .stage {
+    color-scheme: dark;
+    background: var(--md-ref-char-0);
+    color: var(--md-sys-color-on-surface);
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* ============================================================ 1 · open */
+  .open {
+    height: 220svh;
+    view-timeline: --open block;
+    view-timeline-inset: 0; /* ignore the page's scroll-padding, or the title starts half-faded */
+    margin-top: -3.5rem; /* slide under the sticky header */
+  }
+  .open-pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding-inline: 1.5rem;
+  }
+  .open-pin > * { grid-area: 1 / 1; }
+
+  .open-portrait {
+    width: min(32rem, 78vw);
+    aspect-ratio: 4 / 5;
+    border-radius: 2rem;
+    overflow: hidden;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 55%, transparent 100%);
+    opacity: 0.85;
+  }
+  .open-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .open-copy {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+  }
+  .open-title {
+    font-size: clamp(3rem, 10.5vw, 9rem);
+    line-height: 0.95;
+    font-weight: 650;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+    color: var(--md-ref-paper-25);
+  }
+  .word { display: inline-block; }
+  .accent {
+    display: block;
+    background: linear-gradient(100deg, var(--md-ref-amber-500), var(--md-ref-amber-200) 60%, var(--md-ref-amber-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .open-sub {
+    margin: 1.75rem auto 0;
+    max-width: 34rem;
+    font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
+    line-height: 1.45;
+    color: var(--md-ref-stone-400);
+  }
+
+  .open-hello {
+    align-self: end;
+    margin-bottom: 12svh;
+    text-align: center;
+    display: grid;
+    gap: 0.5rem;
+    font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--md-ref-paper-25);
+    opacity: 0;
+  }
+  .open-hello-meta {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--md-ref-stone-400);
+  }
+
+  .scroll-cue {
+    align-self: end;
+    margin-bottom: 2rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--md-ref-char-600);
+    color: var(--md-ref-stone-400);
+    transform: rotate(90deg);
+  }
+
+  /* No scroll-driven motion: show everything in its resting place. */
+  .open-hello { opacity: 1; position: static; }
+  /* Same stacked layout when the browser can't scrub, or the reader asked for less motion. */
+  @supports not (animation-timeline: view()) {
+    .open { height: auto; }
+    .open-pin { position: relative; height: auto; min-height: 100svh; grid-template-rows: 1fr auto auto; gap: 2rem; padding-block: 6rem 3rem; }
+    .open-pin > * { grid-area: auto; }
+    .open-portrait { width: min(20rem, 60vw); order: -1; }
+    .open-hello { align-self: auto; margin-bottom: 0; }
+    .scroll-cue { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .open { height: auto; }
+    .open-pin { position: relative; height: auto; min-height: 100svh; grid-template-rows: 1fr auto auto; gap: 2rem; padding-block: 6rem 3rem; }
+    .open-pin > * { grid-area: auto; }
+    .open-portrait { width: min(20rem, 60vw); order: -1; }
+    .open-hello { align-self: auto; margin-bottom: 0; }
+    .scroll-cue { display: none; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* On load: the headline arrives word by word, like a keynote title. */
+    .word {
+      animation: word-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(250ms + var(--i) * 420ms);
+    }
+    .open-sub { animation: word-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both; }
+    .scroll-cue { animation: fade-in 1s ease 2.2s both, nudge 2.4s ease-in-out 3.2s infinite; }
+
+    @supports (animation-timeline: view()) {
+      .open-hello { opacity: 0; }
+
+      /* On scroll: the title lifts away and the portrait comes into the light. */
+      .open-copy {
+        animation: lift-away linear both;
+        animation-timeline: --open;
+        animation-range: contain 0% contain 45%;
+      }
+      .open-portrait {
+        animation: portrait-up linear both;
+        animation-timeline: --open;
+        animation-range: contain 0% contain 70%;
+      }
+      .open-hello {
+        animation: hello-in linear both;
+        animation-timeline: --open;
+        animation-range: contain 45% contain 75%;
+      }
+      .scroll-cue {
+        animation: cue-out linear both;
+        animation-timeline: --open;
+        animation-range: contain 0% contain 10%;
+      }
+    }
+  }
+
+  @keyframes word-in {
+    from { opacity: 0; transform: translateY(0.35em); filter: blur(12px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
+  @keyframes fade-in { from { opacity: 0; } }
+  @keyframes nudge { 50% { translate: 0 6px; } }
+  @keyframes lift-away {
+    to { opacity: 0; transform: translateY(-12svh) scale(0.94); filter: blur(6px); }
+  }
+  @keyframes portrait-up {
+    from { opacity: 0.18; transform: scale(1.18); filter: brightness(0.45) saturate(0.6); }
+    to { opacity: 1; transform: scale(1); filter: none; }
+  }
+  @keyframes hello-in {
+    from { opacity: 0; transform: translateY(4svh); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes cue-out { to { opacity: 0; } }
+
+  /* ============================================================ 2 · numbers */
+  .numbers { padding-top: 18svh; }
+  .numbers-intro {
+    max-width: 52rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    text-align: center;
+    font-size: clamp(2rem, 5.2vw, 4rem);
+    line-height: 1.05;
+    font-weight: 650;
+    letter-spacing: -0.045em;
+    color: var(--md-ref-paper-25);
+    text-wrap: balance;
+  }
+  .numbers-intro span { color: var(--md-ref-stone-500); }
+
+  .stat {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 4rem 1.5rem;
+  }
+  .stat-inner {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  .stat-value {
+    font-size: clamp(5.5rem, 22vw, 17rem);
+    line-height: 0.85;
+    font-weight: 700;
+    letter-spacing: -0.065em;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, var(--md-ref-amber-200), var(--md-ref-amber-500) 55%, var(--md-ref-amber-600));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 0.08em;
+  }
+  .stat-label {
+    max-width: 24rem;
+    font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+    line-height: 1.35;
+    color: var(--md-ref-stone-300);
+    text-wrap: balance;
+  }
+  .stat-source {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--md-ref-stone-500);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    transition: color 200ms, text-decoration-color 200ms;
+  }
+  .stat-source:hover { color: var(--md-ref-amber-500); text-decoration-color: currentColor; }
+
+  /* Sits outside the stage, so it fades into whatever the page surface is. */
+  .stage-fade {
+    height: 40svh;
+    background: linear-gradient(to bottom, var(--md-ref-char-0), transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .numbers-intro {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+      .stat-inner {
+        animation: stat-moment linear both;
+        animation-timeline: view();
+        animation-range: cover 10% cover 90%;
+      }
+    }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6svh); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes stat-moment {
+    0% { opacity: 0; transform: translateY(10svh) scale(0.86); filter: blur(10px); }
+    35%, 65% { opacity: 1; transform: none; filter: none; }
+    100% { opacity: 0; transform: translateY(-8svh) scale(1.04); filter: blur(6px); }
+  }
+
+  /* ============================================================ 3 · Bindersnap */
+  .product { padding-block: 10svh 8rem; overflow-x: clip; }
+  .product-head { text-align: center; }
+  .product-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--md-sys-color-secondary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--md-sys-color-secondary) 22%, transparent);
+  }
+  .product-title {
+    margin-top: 1rem;
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 0.95;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    color: var(--md-sys-color-on-surface);
+  }
+  .product-lead {
+    margin: 1.5rem auto 0;
+    max-width: 36rem;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.45;
+    color: var(--md-sys-color-on-surface-variant);
+    text-wrap: balance;
+  }
+
+  /* The laptop */
+  .laptop-track { margin-top: 5rem; perspective: 1800px; padding-inline: 1.5rem; }
+  .laptop { width: min(64rem, 100%); margin-inline: auto; transform-origin: 50% 100%; }
+  /* The screenshot sets the screen's height. A % height inside an aspect-ratio
+     box is unresolved in Safari, which then crops the image's right side. */
+  .laptop-screen {
+    border-radius: 1.25rem 1.25rem 0.5rem 0.5rem;
+    padding: clamp(0.5rem, 1.4vw, 1rem);
+    background: var(--md-ref-char-0);
+    box-shadow:
+      0 0 0 1px var(--md-ref-char-500),
+      0 50px 100px -30px rgb(0 0 0 / 0.45);
+  }
+  .laptop-base {
+    height: clamp(0.75rem, 1.6vw, 1.25rem);
+    margin-inline: -5%;
+    border-radius: 0 0 1.5rem 1.5rem;
+    background: linear-gradient(to bottom, var(--md-ref-stone-300), var(--md-ref-stone-500));
+  }
+
+  .screen-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    border-radius: 0.5rem;
+  }
+  .placeholder-tag {
+    position: absolute;
+    right: 0.75em;
+    bottom: 0.75em;
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    font-size: 0.8em;
+    background: var(--md-ref-amber-100);
+    color: var(--md-ref-amber-950);
+  }
+
+  /* Features */
+  .features {
+    margin-top: 6rem;
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 768px) { .features { grid-template-columns: repeat(3, 1fr); gap: 3rem; } }
+  .feature h3 {
+    font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    color: var(--md-sys-color-on-surface);
+  }
+  .feature p {
+    margin-top: 0.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .product-cta {
+    margin-top: 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+  }
+  .product-meta { width: 100%; text-align: center; font-size: 0.875rem; color: var(--md-sys-color-on-surface-variant); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .product-head {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 35%;
+      }
+      /* The lid opens as it rises into view. */
+      .laptop {
+        animation: lid-open linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 50%;
+      }
+      .feature {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * 12%) cover calc(30% + var(--i) * 6%);
+      }
+    }
+  }
+  @keyframes lid-open {
+    from { transform: rotateX(38deg) scale(0.86) translateY(8%); opacity: 0.3; }
+    to { transform: none; opacity: 1; }
+  }
+
+  /* ============================================================ shared */
+  .chapter-title {
+    text-align: center;
+    font-size: clamp(2.25rem, 6vw, 5rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    color: var(--md-sys-color-on-surface);
+    text-wrap: balance;
+  }
+  .chapter-title span { color: var(--md-sys-color-on-surface-variant); }
+  .tile-kicker {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--md-sys-color-primary);
+  }
+
+  /* ============================================================ 4 · neural-cost */
+  .nc { padding-block: 22svh 8rem; }
+  .nc-head { text-align: center; }
+  .nc-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--md-ref-stone-400);
+  }
+  .nc-title {
+    margin-top: 1rem;
+    font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    color: var(--md-ref-paper-25);
+    text-wrap: balance;
+  }
+  .nc-title span { color: var(--md-ref-stone-500); }
+  .nc-title em { font-style: normal; color: var(--md-ref-amber-500); }
+
+  .nc-grid {
+    margin-top: 5rem;
+    display: grid;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  @media (min-width: 960px) { .nc-grid { grid-template-columns: 0.9fr 1.1fr; } }
+
+  .term {
+    border-radius: 1.25rem;
+    background: var(--md-ref-char-100);
+    box-shadow: 0 0 0 1px var(--md-ref-char-400), 0 40px 80px -40px rgb(0 0 0 / 0.8);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--md-ref-char-400);
+    color: var(--md-ref-stone-500);
+    font-size: 0.75rem;
+  }
+  .term-bar i { width: 0.7rem; height: 0.7rem; border-radius: 999px; background: var(--md-ref-char-500); }
+  .term-bar span { margin-left: auto; margin-right: auto; padding-right: 2.5rem; }
+  .term-body {
+    flex: 1;
+    margin: 0;
+    padding: 1.5rem 1.5rem 2rem;
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8125rem, 1.3vw, 0.9375rem);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: var(--md-ref-stone-300);
+  }
+  .term-line { display: block; }
+  .term-line b { color: var(--md-ref-amber-500); font-weight: 600; }
+  .term-line.is-cmd { color: var(--md-ref-paper-25); }
+  .term-line.is-note { color: var(--md-ref-stone-500); margin-top: 0.75rem; }
+  .term-line.is-hi { color: var(--md-ref-amber-500); font-weight: 600; }
+
+  .roof {
+    margin: 0;
+    padding: 1.5rem 1.5rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--md-ref-char-100);
+    box-shadow: 0 0 0 1px var(--md-ref-char-400);
+  }
+  .roof svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .roof-grid path { fill: none; stroke: var(--md-ref-char-400); stroke-width: 1; }
+  .roof-ticks text { fill: var(--md-ref-stone-500); font-size: 12px; font-family: var(--font-sans); }
+  .roof-line { fill: none; stroke: var(--md-ref-amber-500); stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+  .roof-label { fill: var(--md-ref-stone-300); font-size: 13px; font-weight: 600; font-family: var(--font-sans); }
+  .roof-point line { stroke: var(--md-ref-paper-25); stroke-dasharray: 3 3; }
+  .roof-point circle { fill: var(--md-ref-paper-25); stroke: var(--md-ref-char-100); stroke-width: 3; }
+  .roof-point text { fill: var(--md-ref-paper-25); font-size: 14px; font-weight: 600; font-family: var(--font-sans); }
+  .roof figcaption { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--md-ref-stone-500); }
+  .roof figcaption a { color: var(--md-ref-stone-300); text-decoration: underline; text-underline-offset: 3px; }
+
+  .nc-cta { margin-top: 3.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .nc-head { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+      .nc-grid { view-timeline: --nc block; }
+      /* Each line of the terminal types in as the panel scrolls up. */
+      .term-line {
+        animation: type-in linear both;
+        animation-timeline: --nc;
+        animation-range: entry calc(30% + var(--i) * 9%) entry calc(38% + var(--i) * 9%);
+      }
+      .roof-line {
+        stroke-dasharray: 1;
+        animation: draw linear both;
+        animation-timeline: --nc;
+        animation-range: entry 40% cover 50%;
+      }
+      .roof-point, .roof-label {
+        animation: pop linear both;
+        animation-timeline: --nc;
+        animation-range: cover 45% cover 55%;
+      }
+    }
+  }
+  @keyframes type-in {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ============================================================ 5 · work */
+  .work { padding-block: 6rem 8rem; }
+  .bento {
+    margin-top: 4.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .bento { grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(15rem, auto); }
+    .tile-hero { grid-column: span 4; grid-row: span 2; }
+    .tile-stat { grid-column: span 2; grid-row: span 2; }
+    .tile-dark { grid-column: span 2; }
+    .tile { grid-column: span 2; }
+    .tile-hero { grid-column: span 4; }
+    .tile-play { grid-column: span 2; }
+  }
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.75rem;
+    border-radius: 1.75rem;
+    background: var(--md-sys-color-surface-container-low);
+    box-shadow: 0 0 0 1px var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    overflow: hidden;
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .tile:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px var(--md-sys-color-outline), var(--md-sys-elevation-3); }
+  .tile:focus-visible { outline: 2px solid var(--md-sys-color-primary); outline-offset: 3px; }
+  .tile h3 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.15;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    color: var(--md-sys-color-on-surface);
+    text-wrap: balance;
+  }
+  .tile p { line-height: 1.5; }
+
+  .tile-hero { padding: 0; }
+  .lacam-art { flex: 1; display: grid; place-items: center; padding: 1.5rem 1.5rem 0; min-height: 15rem; }
+  .lacam-art :global(.lacam) { width: 100%; margin: 0; }
+  .tile-hero .tile-copy { padding: 1.75rem; display: grid; gap: 0.5rem; }
+
+  .tile-stat { justify-content: flex-end; }
+  .tile-stat .tile-kicker { margin-bottom: auto; }
+  .tile-number {
+    font-size: clamp(4rem, 8vw, 6.5rem);
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    font-variant-numeric: tabular-nums;
+    color: var(--md-sys-color-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .tile-dark {
+    color-scheme: dark;
+    background: var(--md-ref-char-0);
+    box-shadow: none;
+    color: var(--md-ref-stone-400);
+  }
+  .tile-dark h3 { color: var(--md-ref-stone-300); font-size: 1rem; letter-spacing: -0.01em; }
+  .tile-big {
+    margin-top: auto;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.05 !important;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    color: var(--md-ref-paper-25);
+  }
+
+  .tile-play { justify-content: flex-end; background: var(--md-sys-color-primary-container); box-shadow: none; }
+  .tile-play h3, .tile-play .tile-kicker { color: var(--md-sys-color-on-primary-container); }
+  .tetris {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1.5rem);
+    gap: 3px;
+  }
+  .tetris i { width: 1.5rem; height: 1.5rem; border-radius: 0.3rem; background: var(--md-sys-color-on-primary-container); opacity: 0.85; }
+  .tetris i:nth-child(1) { grid-column: 2; }
+  .tetris i:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .tetris i:nth-child(3) { grid-column: 2; grid-row: 2; }
+  .tetris i:nth-child(4) { grid-column: 3; grid-row: 2; }
+
+  .work-all { margin: 3rem auto 0; display: flex; width: fit-content; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .work .chapter-title { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+      .tile { animation: tile-in linear both; animation-timeline: view(); animation-range: entry calc(var(--i) * 6%) cover calc(25% + var(--i) * 4%); }
+      .tetris { animation: drop 3.2s cubic-bezier(0.5, 0, 0.75, 0) infinite; }
+    }
+  }
+  @keyframes tile-in {
+    from { opacity: 0; transform: translateY(10svh) scale(0.94); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes drop {
+    0% { translate: 0 -140%; opacity: 0; }
+    15% { opacity: 1; }
+    55%, 85% { translate: 0 0; opacity: 1; }
+    100% { translate: 0 0; opacity: 0; }
+  }
+
+  /* ============================================================ 6 · quote */
+  .quote { min-height: 100svh; display: grid; place-items: center; padding-block: 8rem; }
+  .quote-inner { margin: 0 auto; max-width: 62rem; }
+  .quote-text {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4.6vw, 3.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--md-sys-color-on-surface);
+    text-wrap: pretty;
+  }
+  .quote-by {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .quote-by > span:nth-child(2) { display: grid; }
+  .quote-by b { color: var(--md-sys-color-on-surface); font-weight: 600; }
+  .quote-initials {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+  .quote-by a {
+    margin-left: auto;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    color: var(--md-sys-color-primary);
+    font-weight: 500;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .quote { view-timeline: --quote block; }
+      /* The sentence lights up word by word as you read down the page. */
+      .qw {
+        animation: word-light linear both;
+        animation-timeline: --quote;
+        animation-range:
+          cover calc(25% + var(--i) / var(--n) * 30%)
+          cover calc(28% + var(--i) / var(--n) * 30%);
+      }
+    }
+  }
+  @keyframes word-light {
+    from { color: color-mix(in srgb, var(--md-sys-color-on-surface) 18%, transparent); }
+    to { color: var(--md-sys-color-on-surface); }
+  }
+
+  /* ============================================================ 7 · off the clock */
+  .sea {
+    position: relative;
+    min-height: 110svh;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    isolation: isolate;
+    color-scheme: dark;
+    background:
+      radial-gradient(120% 60% at 50% 0%, #2f8fb3 0%, transparent 60%),
+      linear-gradient(to bottom, #12607f 0%, #0a3550 45%, #041726 80%, #020b13 100%);
+  }
+  .sea-art { position: absolute; inset: 0; z-index: -1; }
+  .rays {
+    position: absolute;
+    inset: -20% -10% 30%;
+    background: repeating-linear-gradient(100deg, rgb(255 255 255 / 0) 0 6%, rgb(255 255 255 / 0.07) 7% 9%, rgb(255 255 255 / 0) 11% 17%);
+    mask-image: linear-gradient(to bottom, #000, transparent);
+    filter: blur(6px);
+  }
+  .bubble {
+    position: absolute;
+    left: var(--x);
+    bottom: -2rem;
+    width: var(--s);
+    height: var(--s);
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.45);
+    background: rgb(255 255 255 / 0.08);
+    opacity: 0;
+  }
+  .sea-copy { padding-block: 30svh 14svh; }
+  .sea-eyebrow { font-weight: 600; color: #9fd8ec; }
+  .sea-title {
+    margin-top: 0.75rem;
+    font-size: clamp(3.25rem, 11vw, 9.5rem);
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    color: #f2fbff;
+  }
+  .sea-lead {
+    margin-top: 1.75rem;
+    max-width: 30rem;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.45;
+    color: #bfe3f0;
+  }
+  .sea-tag { right: 1.5rem; bottom: 1.5rem; font-size: 0.75rem; }
+
+  .hobbies {
+    padding-block: 5rem 7rem;
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 768px) { .hobbies { grid-template-columns: repeat(3, 1fr); gap: 3rem; } }
+  .hobby h3 { margin-top: 0.35rem; font-size: 1.375rem; font-weight: 650; letter-spacing: -0.03em; color: var(--md-sys-color-on-surface); }
+  .hobby p:not(.tile-kicker) { margin-top: 0.6rem; line-height: 1.55; color: var(--md-sys-color-on-surface-variant); }
+  .hobby a { display: inline-flex; min-height: 2.75rem; align-items: center; color: var(--md-sys-color-primary); font-weight: 500; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bubble { animation: bubble var(--d) linear var(--t) infinite; }
+    .rays { animation: sway 14s ease-in-out infinite alternate; }
+    @supports (animation-timeline: view()) {
+      .sea-copy { animation: rise linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+      .sea-art { animation: sink linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+      .hobby { animation: rise linear both; animation-timeline: view(); animation-range: entry calc(var(--i) * 10%) cover calc(30% + var(--i) * 5%); }
+    }
+  }
+  @keyframes bubble {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-115svh) translateX(18px); opacity: 0; }
+  }
+  @keyframes sway { to { transform: translateX(6%) skewX(-4deg); } }
+  @keyframes sink { from { transform: translateY(-6%); } to { transform: translateY(6%); } }
+
+  /* ============================================================ 8 · close */
+  .close { padding-block: 24svh; text-align: center; }
+  .close-inner { display: grid; justify-items: center; }
+  .close-title {
+    font-size: clamp(3.5rem, 12vw, 10rem);
+    line-height: 0.88;
+    font-weight: 700;
+    letter-spacing: -0.065em;
+    color: var(--md-ref-paper-25);
+  }
+  .close-title span {
+    background: linear-gradient(100deg, var(--md-ref-amber-500), var(--md-ref-amber-200) 60%, var(--md-ref-amber-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .close-lead {
+    margin-top: 2rem;
+    max-width: 32rem;
+    font-size: clamp(1.0625rem, 1.9vw, 1.3125rem);
+    line-height: 1.5;
+    color: var(--md-ref-stone-400);
+  }
+  .close-btn { margin-top: 2.5rem; min-height: 3.25rem; padding-inline: 1.75rem; font-size: 1.0625rem; }
+  .close-status { margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.9375rem; color: var(--md-ref-stone-400); }
+  .close-socials { margin-top: 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1.5rem; font-size: 0.875rem; }
+  .close-socials a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; color: var(--md-ref-stone-400); transition: color 200ms; }
+  .close-socials a:hover { color: var(--md-ref-paper-25); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .close-title { animation: close-in linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+    }
+  }
+  @keyframes close-in {
+    from { opacity: 0; transform: scale(0.82); filter: blur(10px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
+
+  @media (forced-colors: active) {
+    .accent, .stat-value, .close-title span { background: none; color: CanvasText; }
+  }
+</style>
