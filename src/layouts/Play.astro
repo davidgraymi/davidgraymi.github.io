@@ -63,14 +63,14 @@ const widths: Record<Game['width'], string> = {
       </div>
     </main>
 
-    <dialog data-howto aria-labelledby="howto-title" class="play-sheet m-auto w-[92vw] max-w-md p-0 text-on-surface">
+    <dialog data-howto aria-labelledby="howto-eyebrow howto-title" class="play-sheet m-auto w-[92vw] max-w-md p-0 text-on-surface">
       <form method="dialog" class="absolute top-4 right-4">
         <button class="g-icon-btn" aria-label="Close">
           <Icon name="close" size={15} />
         </button>
       </form>
       <div class="px-7 pt-8 pb-7">
-        <p class="g-eyebrow">How to play</p>
+        <p id="howto-eyebrow" class="g-eyebrow">How to play</p>
         <h2 id="howto-title" class="mt-1 pr-10 text-[1.75rem] leading-tight font-semibold tracking-[-0.025em]">{game.title}</h2>
         <div class="mt-4 space-y-3 text-[0.9375rem] leading-relaxed text-on-surface-variant">
           {game.howTo.map((p) => <p>{p}</p>)}
@@ -122,6 +122,7 @@ const widths: Record<Game['width'], string> = {
     display: inline-flex;
     align-items: center;
     gap: 0.1rem;
+    min-width: 44px;
     min-height: 44px;
     padding-right: 0.5rem;
     margin-left: -0.35rem;
