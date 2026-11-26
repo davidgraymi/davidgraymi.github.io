@@ -132,7 +132,7 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
                     <div class="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-5">
                       <p class="g-note">{game.length}</p>
                       {game.story && (
-                        <a href={game.story.href} class="relative z-10 text-[0.8125rem] font-medium text-primary hover:underline hover:underline-offset-2">
+                        <a href={game.story.href} class="story-link relative z-10 text-[0.8125rem] font-medium text-primary hover:underline hover:underline-offset-2">
                           How it works<span class="sr-only">: {game.story.label}</span>
                         </a>
                       )}
@@ -198,6 +198,21 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
   }
   .game-card :is(h2, h3) a:focus-visible {
     outline: none;
+  }
+
+  /* A small text link inside a card: pad its hit area out to 44pt (24px
+     with a fine pointer) without moving the text. */
+  .story-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+  }
+  @media (pointer: fine) {
+    .story-link {
+      min-height: 28px;
+      margin-block: -4px;
+    }
   }
 
   /* The App Store's "Get" button: decorative, the whole card is the link. */
