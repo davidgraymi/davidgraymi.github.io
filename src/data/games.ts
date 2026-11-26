@@ -41,6 +41,21 @@ export const groups = {
 
 export const games: Game[] = [
   {
+    slug: 'four-in-a-row',
+    title: 'Four in a row',
+    blurb: 'Connect Four against my recursive thinking model. It decides how long to think, and you watch its pick change at every step.',
+    howTo: [
+      'Drop discs by clicking a column or pressing 1–7. Get four in a row across, down or diagonally before the model does.',
+      'After each of your moves the model thinks in steps. The bars over the board are how much it likes each column, live. The ring fills as it gets ready to answer; when it closes, it plays.',
+    ],
+    controls: 'Mouse, touch or keys 1–7',
+    length: '3–5 min',
+    opponent: 'Thinking model',
+    group: 'model',
+    story: { label: 'Teaching a network to think longer', href: '/blog/teaching-a-network-to-think-longer' },
+    width: 'md',
+  },
+  {
     slug: 'beat-the-bot',
     title: 'Beat the bot',
     blurb: 'Tetris against the value network from my reinforcement-learning project. Same pieces, two minutes, most lines wins.',

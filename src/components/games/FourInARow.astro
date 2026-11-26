@@ -1,0 +1,365 @@
+---
+/**
+ * "Four in a row": Connect Four against the outer-loop thinking model from
+ * CS440-Final-Project (c4p-long-D, the top model in its tournament). The model
+ * runs in a Web Worker in plain TypeScript; every outer step it takes streams
+ * back and redraws the confidence bars over the board, the ring and the dots.
+ * Markup ships with the page; the code and the 2.5 MB of weights load when the
+ * game nears the viewport.
+ */
+const cols = Array.from({ length: 7 }, (_, c) => c);
+const rows = Array.from({ length: 6 }, (_, r) => 5 - r); // top row first
+const R = 15; // readiness ring radius
+const CIRC = 2 * Math.PI * R;
+---
+
+<section class="c4-game not-prose my-12" data-c4 aria-label="Four in a row against the thinking model">
+  <div class="c4-stage mx-auto max-w-[34rem]">
+    <div class="flex items-center justify-between gap-3">
+      <div class="c4-seg" role="group" aria-label="Who moves first">
+        <button type="button" class="c4-seg-btn" data-c4-first="human" aria-pressed="true">You first</button>
+        <button type="button" class="c4-seg-btn" data-c4-first="model" aria-pressed="false">Model first</button>
+      </div>
+      <button type="button" class="c4-text-btn" data-c4-new>New game</button>
+    </div>
+
+    <!-- The model's confidence in each column, live, right above the column it's about. -->
+    <div class="c4-bars" aria-hidden="true">
+      {
+        cols.map((c) => (
+          <div class="c4-bar-slot" data-bar-col={c}>
+            <span class="c4-pct" data-pct />
+            <span class="c4-bar" data-bar />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="c4-board" data-c4-board>
+      {
+        cols.map((c) => (
+          <button type="button" class="c4-col" data-col={c} aria-label={`Column ${c + 1}`} disabled>
+            {rows.map((r) => (
+              <span class="c4-cell" data-cell={`${r}-${c}`} aria-hidden="true">
+                <span class="c4-heat" />
+                <span class="c4-disc" />
+              </span>
+            ))}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-7 flex items-center justify-center gap-4">
+      <svg class="c4-ring shrink-0" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
+        <circle cx="20" cy="20" r={R} class="c4-ring-track"></circle>
+        <circle
+          cx="20"
+          cy="20"
+          r={R}
+          class="c4-ring-fill"
+          data-c4-ring
+          stroke-dasharray={CIRC}
+          stroke-dashoffset={CIRC}
+          transform="rotate(-90 20 20)"></circle>
+        <text x="20" y="20" class="c4-ring-text" data-c4-step text-anchor="middle" dominant-baseline="central"></text>
+      </svg>
+      <p class="c4-status" data-c4-status aria-live="polite">Loading the model…</p>
+    </div>
+
+    <p class="c4-spec">
+      <span>1.25M parameters</span><span aria-hidden="true">·</span><span>No search</span><span aria-hidden="true"
+        >·</span
+      ><span>Runs on your device</span>
+    </p>
+  </div>
+</section>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-c4]');
+  if (roots.length) {
+    const start = (root: HTMLElement) => import('~/lib/games/connect-four/game').then(({ mount }) => mount(root));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            io.unobserve(entry.target);
+            start(entry.target as HTMLElement);
+          }
+        },
+        { rootMargin: '300px 0px' },
+      );
+      roots.forEach((root) => io.observe(root));
+    } else {
+      roots.forEach(start);
+    }
+  }
+</script>
+
+<style>
+  /* Inside a post, undo the article's serif voice. */
+  .c4-game {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    --c4-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --c4-gap: 2.4%;
+  }
+
+  /* ---- controls ---- */
+  .c4-seg {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 999px;
+    background: var(--md-sys-color-surface-container-high);
+  }
+  .c4-seg-btn {
+    min-height: 38px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      background 220ms var(--c4-ease),
+      color 220ms var(--c4-ease),
+      box-shadow 220ms var(--c4-ease);
+  }
+  .c4-seg-btn[aria-pressed='true'] {
+    background: var(--md-sys-color-surface-container-lowest);
+    color: var(--md-sys-color-on-surface);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.12),
+      0 0 0 0.5px rgb(0 0 0 / 0.06);
+  }
+  .c4-text-btn {
+    min-height: 44px;
+    padding: 0 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+  }
+  .c4-text-btn:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* ---- confidence bars ---- */
+  .c4-bars {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--c4-gap);
+    height: 4.5rem;
+    margin-top: 2rem;
+    padding: 0 var(--c4-gap);
+  }
+  .c4-bar-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+  .c4-bar {
+    width: 22%;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--md-sys-color-outline-variant);
+    transition:
+      height 260ms var(--c4-ease),
+      background 260ms var(--c4-ease),
+      box-shadow 260ms var(--c4-ease);
+  }
+  .c4-bar[data-top] {
+    background: var(--md-sys-color-primary);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--md-sys-color-primary) 55%, transparent);
+  }
+  .c4-pct {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--md-sys-color-primary);
+    opacity: 0;
+    transition: opacity 220ms var(--c4-ease);
+  }
+  .c4-pct[data-show] {
+    opacity: 1;
+  }
+
+  /* ---- board ---- */
+  .c4-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--c4-gap);
+    margin-top: 0.6rem;
+    padding: var(--c4-gap);
+    border-radius: 1.75rem;
+    background: linear-gradient(
+      180deg,
+      var(--md-sys-color-surface-container-high),
+      var(--md-sys-color-surface-container)
+    );
+    box-shadow:
+      0 0 0 0.5px color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent),
+      0 24px 48px -24px rgb(0 0 0 / 0.35),
+      0 2px 6px rgb(0 0 0 / 0.08);
+  }
+  .c4-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.45rem 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 220ms var(--c4-ease);
+  }
+  .c4-col:disabled {
+    cursor: default;
+  }
+  .c4-col:not(:disabled):hover,
+  .c4-col:focus-visible {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
+  }
+  .c4-col:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+  .c4-cell {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--md-sys-color-surface);
+    box-shadow:
+      inset 0 2px 4px rgb(0 0 0 / 0.22),
+      inset 0 -1px 0 rgb(255 255 255 / 0.06);
+    overflow: hidden;
+  }
+
+  /* Where its state moved most this step: a fine dot texture, never mistaken for a disc. */
+  .c4-heat {
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    background-image: radial-gradient(circle, var(--md-sys-color-primary) 1.3px, transparent 1.7px);
+    background-size: 6px 6px;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 260ms var(--c4-ease);
+  }
+  .c4-cell[data-p] .c4-heat {
+    display: none;
+  }
+
+  .c4-disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .c4-cell[data-p] .c4-disc {
+    opacity: 1;
+    animation: c4-drop 420ms var(--c4-ease);
+  }
+  .c4-cell[data-who='human'] .c4-disc {
+    background: radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--md-sys-color-on-surface) 70%, white) 0%,
+      var(--md-sys-color-on-surface) 62%
+    );
+    box-shadow:
+      inset 0 -3px 6px rgb(0 0 0 / 0.25),
+      0 1px 2px rgb(0 0 0 / 0.3);
+  }
+  .c4-cell[data-who='model'] .c4-disc {
+    background: radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--md-sys-color-primary) 60%, white) 0%,
+      var(--md-sys-color-primary) 62%
+    );
+    box-shadow:
+      inset 0 -3px 6px rgb(0 0 0 / 0.22),
+      0 1px 2px rgb(0 0 0 / 0.3);
+  }
+  .c4-cell[data-last] .c4-disc::after {
+    content: '';
+    position: absolute;
+    inset: 42%;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.8);
+  }
+  .c4-cell[data-who='human'][data-last] .c4-disc::after {
+    background: var(--md-sys-color-surface);
+  }
+  .c4-board[data-over] .c4-cell[data-p]:not([data-win]) .c4-disc {
+    opacity: 0.25;
+    transition: opacity 600ms var(--c4-ease);
+  }
+
+  /* ---- readiness ring + status ---- */
+  .c4-ring-track,
+  .c4-ring-fill {
+    fill: none;
+    stroke-width: 3;
+  }
+  .c4-ring-track {
+    stroke: var(--md-sys-color-surface-container-high);
+  }
+  .c4-ring-fill {
+    stroke: var(--md-sys-color-primary);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 260ms var(--c4-ease);
+  }
+  .c4-ring-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    fill: var(--md-sys-color-on-surface);
+  }
+  .c4-status {
+    min-width: 0;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--md-sys-color-on-surface);
+  }
+  .c4-status :global([data-dim]) {
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 400;
+  }
+  .c4-spec {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+    font-size: 0.8125rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  @keyframes c4-drop {
+    0% {
+      transform: translateY(-600%);
+    }
+    70% {
+      transform: translateY(4%);
+    }
+    100% {
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .c4-cell[data-p] .c4-disc {
+      animation: none;
+    }
+    .c4-bar,
+    .c4-heat,
+    .c4-ring-fill,
+    .c4-pct {
+      transition: none;
+    }
+  }
+</style>
