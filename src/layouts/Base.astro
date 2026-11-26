@@ -45,5 +45,30 @@ const props = Astro.props;
     <DotField />
     <Terminal />
 
+    <script>
+      // Scroll reveals (see global.css). Only hide what we can show again:
+      // skip it entirely under reduced motion or without IntersectionObserver.
+      const blocks = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (blocks.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.setAttribute('data-revealed', '');
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        // Anything already on screen at load shows immediately, without a fade.
+        const fold = innerHeight;
+        blocks.forEach((b) => {
+          if (b.getBoundingClientRect().top < fold) b.setAttribute('data-revealed', '');
+          else io.observe(b);
+        });
+        document.documentElement.classList.add('reveal-ready');
+      }
+    </script>
+
   </body>
 </html>

@@ -1,6 +1,6 @@
 # Design system — "Workbench"
 
-Precise like an instrument, warm like a workshop. Amber signal on warm paper (light) or charcoal (dark). Serif for the voice, sans for the interface, mono for the evidence. Soft hairline cards; square corners only where the content is a measurement.
+Precise like an instrument, warm like a workshop, finished like a product. Amber signal on warm paper (light) or charcoal (dark). Tight sans for headlines and interface, serif for long-form reading, mono only for code and the smallest data labels. Soft cards that lift, frosted chrome, one springy ease.
 
 ## What the design has to prove
 
@@ -8,9 +8,9 @@ The site exists to convince someone that David is a person they'd want to work w
 
 | Trait | Claim | How the design carries it |
 | --- | --- | --- |
-| **Engineer** | Measurements look like measurements | Mono numerals; `.is-instrument` panels (square, corner ticks) only for stats and metadata |
-| **Smart** | Reads like a good essay | Newsreader serif for headlines and articles, 19px prose, a real type hierarchy |
-| **Friendly** | Warm, not clinical | Stone and cream neutrals, charcoal instead of blue-black, 14px card corners, a real photo in the hero and on every post |
+| **Engineer** | Measurements look like measurements | Big tabular numerals for stats; every number can carry a source link |
+| **Smart** | Reads like a good essay | Newsreader serif for article bodies at 19px, tight sans headings, a real type hierarchy |
+| **Friendly** | Warm, not clinical | Stone and cream neutrals, charcoal instead of blue-black, 20px card corners, a real photo in the hero and on every post |
 | **Kind** | Never makes you work for it | Plain labels, 44px targets, AA contrast in both themes, motion only when it explains something |
 | **Trustworthy** | Every claim has a receipt | `.receipt-source` links each number to its proof; `.proof-quote` requires a name, role and relationship |
 | **Maker** | Products, not features | `.product-card` leads with the problem, shows a live `.status-pill`, ends in one action |
@@ -79,11 +79,11 @@ Three faces, three jobs. **12px is the floor.**
 
 | Face | Utility | Job | Where |
 | --- | --- | --- | --- |
-| Newsreader | `font-serif` | **Voice**: how David talks | `text-display`, `text-h1`, `text-h2`, `.prose`, quotes, the author's name |
+| Newsreader | `font-serif` | **Reading**: how David writes at length | `.prose` bodies, quotes, product problem lines |
 | Roboto Flex | `font-sans` (default) | **Interface**: what you click | Nav, buttons, card titles and copy, forms, tables, captions |
 | JetBrains Mono | `font-mono` | **Evidence**: numbers and labels | Stats, dates, kickers, status pills, code |
 
-Page and section titles are `font-serif font-medium tracking-tight`. Card titles stay sans: they're interface. Newsreader loads as the 58 KB weight-only build, not the 132 KB optical-size build.
+Page and section titles are sans: `font-semibold` with tight tracking (`-0.03em` to `-0.045em` as they grow). Prose `h2`/`h3` are sans too; the body stays serif. Newsreader loads as the 58 KB weight-only build, not the 132 KB optical-size build.
 
 | Utility | Size | Use |
 | --- | --- | --- |
@@ -101,7 +101,8 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 
 ## Shape, elevation, motion
 
-- **Radius:** cards and panels are soft (`rounded-card` = 14px). Portraits sit in a 20px mat; figures, code blocks and images in prose use 10px. Buttons are `full` pills. **Square corners mean data:** a `.ruled-panel.is-instrument` (stats strip, post and project metadata) goes square and shows its corner ticks. The header is a frosted full-width bar with round icon buttons and a pill search field. Small chips and index tags use `rounded-md`.
+- **Radius:** cards and panels are soft (`rounded-card` = 20px); the portrait is 28px with no mat; figures, code blocks and images in prose use 10px. Buttons and chips are `full` pills. Corner ticks are retired. The header is a frosted full-width bar with round icon buttons and a pill search field.
+- **Reveals:** wrap a block in `data-reveal` (every `Section` header and body already is) and it rises and fades in the first time it scrolls into view. Blocks already on screen at load show at once; reduced motion and print never hide anything.
 - **Elevation:** cards are flat; depth comes from hairlines. A `.product-card` lifts to 2 on hover. 2 for floating chrome, 3–5 for overlays (command palette, menus). No glows. Light-mode shadows are tinted warm brown, not black.
 - **Motion:** 140ms for state changes, 220ms for reveals, 320ms for page-level movement; `ease-standard` by default. Everything collapses to instant under `prefers-reduced-motion`.
 
@@ -111,14 +112,14 @@ Page and section titles are `font-serif font-medium tracking-tight`. Card titles
 | --- | --- | --- |
 | `Header` component | Sticky frosted bar (`saturate(180%) blur(20px)`): squircle brand mark, centred links, pill search, round icon buttons | Hairline appears only once the page scrolls. Active link sits on a soft pill. Mobile menu is a solid full-height sheet of large links that settle in one by one; the two-line menu icon folds into an X. Uses the global `--g-*` fills and ease from `games.css` |
 | `.wrap` | Page gutter + 76rem max width | 20px gutter on mobile, 32px from `md` |
-| `.kicker` | Mono uppercase eyebrow with amber rule | One per section, above the heading |
+| `.kicker` | Short sentence-case eyebrow in amber, semibold sans | One per section, above the heading |
 | `.btn` + `.btn-primary` / `.btn-tonal` / `.btn-ghost` | 44px pills; borderless, filled by emphasis (amber / 12% ink / 7% ink) | One primary per view. They press down to 96% instead of lifting; `disabled` / `aria-disabled` supported |
 | `.surface` | Static card | `--md-comp-card-*` tokens |
-| `.spotlight-card` | Interactive card: fills and draws a signal bar on hover | Anything that navigates |
+| `.spotlight-card` | Interactive card: lifts 3px and gains a soft shadow on hover | Anything that navigates |
 | `.glass-panel` | Static callout frame | Asides, mobile menu |
-| `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells in one soft frame | Services, project and album grids (`WorkCard` is a cell), prev/next links. Ticks are hidden unless the panel is `.is-instrument`. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
-| `.ruled-panel.is-instrument` | Square panel with corner ticks | Measurements only: the homepage stats strip, post and project metadata |
-| `.ruled-list` | Rows split by hairlines, left signal bar on hover | Post lists |
+| `.ruled-panel` > `.tick` ×4 + `.ruled-grid` > `.ruled-cell` | Hairline cells in one soft frame | Services, project and album grids (`WorkCard` is a cell), prev/next links. Ticks are no longer drawn. Add `.is-interactive` only when the cell is clickable or invites hover; `.cell-index` flips to primary on hover |
+| `.ruled-panel.is-instrument` | Kept for markup compatibility; renders like any `.ruled-panel` | Post and project metadata |
+| `.ruled-list` | Rows split by hairlines, soft fill on hover | Post lists |
 | `.ticked-frame` | Soft 20px mat around a portrait | The hero photo |
 | `TableOfContents` component | "On this page" map for long posts | Shown when a post has 3+ `h2`s. Collapsible `.glass-panel` below `xl`; sticky rail with a left signal bar on the current section from `xl` |
 | `BackLink` component | Mono label with a square arrow box | Top of every detail page (work, post, album) instead of a pill |
@@ -175,7 +176,7 @@ Social cards (`src/lib/og.ts`), the profile banners in `docs/brand/` (`npm run b
 
 1. Colours come from a role utility; no hex, no `[var(…)]`. Sage only for "it works".
 2. Font size comes from the scale; nothing under `text-label`. Serif for voice, sans for interface, mono for evidence.
-3. Square corners and ticks only on measurements.
+3. Soft corners everywhere; no ticks. Cards lift on hover, buttons press.
 4. Interactive targets are at least 44px on touch.
 5. Any claim, quote or number is real and, where possible, linked to its source.
 6. It looks right on `/design-system` in both themes.

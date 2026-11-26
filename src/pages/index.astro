@@ -37,83 +37,64 @@ const hobbies = offTheClock.map((item) =>
 
 <Base jsonLd={[websiteSchema, personSchema]}>
   {/* ---------------------------------------------------------------- hero */}
-  <section class="dot-field relative overflow-hidden border-b border-outline-variant">
-    <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-px"
-      style="background: linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent) 50%, transparent 95%); opacity: 0.8"
-    >
-    </div>
-
-    <div class="wrap py-10 sm:py-14 md:py-18 lg:py-22">
-      <div class="grid items-start gap-8 lg:grid-cols-[minmax(19rem,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
-        {/* Avatar: Precision Instrument Frame */}
-        <div class="relative order-1 w-36 sm:w-48 lg:w-full">
+  <section class="dot-field relative overflow-hidden">
+    <div class="wrap pt-10 pb-20 sm:pt-14 md:pt-20 md:pb-28">
+      <div class="grid items-center gap-10 lg:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        {/* Portrait */}
+        <div class="hero-photo relative w-40 sm:w-52 lg:w-full">
           <div class="ticked-frame">
-          <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-          <div class="relative overflow-hidden bg-surface-container-low">
-            <Image
-              src={avatar}
-              alt="David Gray"
-              widths={[288, 384, 480, 720, 960]}
-              sizes="(min-width: 1024px) 38vw, (min-width: 640px) 12rem, 9rem"
-              class="aspect-[4/5] w-full object-cover object-top transition-transform duration-500 ease-out hover:scale-105"
-              loading="eager"
-            />
-            <div
-              class="absolute inset-x-0 bottom-0 hidden items-center justify-between gap-3 px-5 py-4 font-mono text-label backdrop-blur-xl sm:flex text-on-surface bg-surface-container-highest/82 border-t border-outline-variant"
-            >
-              <span>{site.location}</span>
-              <span class="rounded-md px-2.5 py-0.5 font-semibold font-mono text-label bg-primary-container text-on-primary-container">
-                M.S. CS @ UIUC
-              </span>
+            <div class="relative bg-surface-container-low">
+              <Image
+                src={avatar}
+                alt="David Gray"
+                widths={[288, 384, 480, 720, 960]}
+                sizes="(min-width: 1024px) 38vw, (min-width: 640px) 13rem, 10rem"
+                class="block aspect-[4/5] w-full object-cover object-top"
+                loading="eager"
+              />
+              <div class="hero-badge absolute inset-x-3 bottom-3 hidden items-center justify-between gap-3 rounded-full py-1.5 pr-1.5 pl-4 text-[0.8125rem] font-medium text-on-surface sm:flex">
+                <span>{site.location}</span>
+                <span class="rounded-full bg-primary px-3 py-1 text-[0.75rem] font-semibold text-on-primary">M.S. CS @ UIUC</span>
+              </div>
             </div>
-          </div>
           </div>
         </div>
 
-        {/* Hero Copy & Controls */}
-        <div class="order-2">
-          <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container-high border-outline-variant text-primary">
-            <span class="h-1.5 w-1.5 rounded-full bg-primary" />
-            <span>Machine Learning & Systems</span>
-          </div>
-
-          <h1 class="mt-4 max-w-3xl font-serif font-medium leading-[1.04] tracking-tight text-[1.85rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4.25rem] text-on-surface">
-            Engineer. Scientist.<br /><span class="shimmer-text">Occasionally underwater.</span>
+        {/* Copy */}
+        <div>
+          <p class="kicker">Machine learning &amp; systems</p>
+          <h1 class="mt-3 max-w-3xl text-[clamp(2.6rem,7.2vw,5.25rem)] leading-[1.0] font-semibold tracking-[-0.045em] text-on-surface">
+            Engineer. Scientist.<br /><span class="hero-gradient">Occasionally underwater.</span>
           </h1>
 
-          <p class="mt-4 max-w-2xl text-body leading-relaxed sm:mt-5 sm:text-body-lg md:mt-6 md:text-title-sm text-on-surface-variant">
+          <p class="mt-6 max-w-2xl text-[clamp(1.0625rem,1.8vw,1.3125rem)] leading-relaxed text-on-surface-variant">
             <strong class="font-semibold text-on-surface">I'm a software engineer in St. Louis working on machine learning: how fast models really run, why, and the systems they run on.</strong>{' '}
             By day I secure Kubernetes and Azure delivery at Boeing. Alongside it, a document
             platform nobody asked me to build, and a master's in data science at the University of Illinois.
           </p>
-          <p class="mt-3.5 max-w-xl text-body-sm leading-relaxed sm:text-body text-on-surface-variant">
+          <p class="mt-4 max-w-xl text-[1rem] leading-relaxed text-on-surface-variant">
             Outside of that: scuba diving, rock climbing, hiking, and making things that aren't
             software. I like problems where the consequences are real.
           </p>
 
-          {/* Action Button Row */}
-          <div class="mt-7 flex flex-wrap items-center gap-2.5 sm:mt-9 sm:gap-3.5">
+          <div class="mt-8 flex flex-wrap items-center gap-3">
             <a href="/work" class="btn btn-primary">
               See my work
               <Icon name="arrow" size={15} />
             </a>
-            <a href="/contact" class="btn btn-ghost">
-              Get in touch
-            </a>
+            <a href="/contact" class="btn btn-ghost">Get in touch</a>
           </div>
 
-          {/* Social Links: Chips */}
-          <ul class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-caption sm:mt-7">
+          <ul class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.875rem]">
             {
               socials.slice(0, 3).map((s) => (
                 <li>
                   <a
                     href={s.href}
-                    class="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-primary text-on-surface-variant"
+                    class="inline-flex min-h-11 items-center gap-2 text-on-surface-variant transition-colors duration-200 hover:text-on-surface"
                     rel={s.href.startsWith('http') ? 'me noopener' : undefined}
                   >
-                    <Icon name={s.icon} size={14} />
+                    <Icon name={s.icon} size={15} />
                     {s.handle}
                   </a>
                 </li>
@@ -123,31 +104,24 @@ const hobbies = offTheClock.map((item) =>
 
           {site.availableForWork && (
             <p class="mt-3 inline-flex items-center gap-2 text-body-sm text-on-surface-variant">
-              <span class="h-2 w-2 rounded-full bg-primary" />
+              <span class="h-2 w-2 rounded-full bg-secondary" />
               {site.availabilityNote}
             </p>
           )}
         </div>
       </div>
 
-      {/* Stats: ruled telemetry strip */}
-      <div class="ruled-panel is-instrument mt-16">
-        <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-      <div class="ruled-grid grid-cols-2 md:grid-cols-4">
+      {/* By the numbers */}
+      <dl class="mt-20 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-24 md:grid-cols-4" data-reveal>
         {
           stats.map((stat) => (
-            <div class="ruled-cell p-5 md:p-6">
-              <p class="font-mono text-headline font-bold tracking-tight md:text-headline-lg text-primary">
-                {stat.value}
-              </p>
-              <p class="mt-1 text-caption leading-snug font-medium text-on-surface-variant">
-                {stat.label}
-              </p>
+            <div class="flex flex-col">
+              <dt class="mt-2 max-w-[14rem] text-[0.9375rem] leading-snug text-on-surface-variant">{stat.label}</dt>
+              <dd class="hero-stat order-first text-[clamp(2.5rem,5vw,3.75rem)] leading-none font-semibold tracking-[-0.045em]">{stat.value}</dd>
             </div>
           ))
         }
-      </div>
-      </div>
+      </dl>
     </div>
   </section>
 
@@ -188,23 +162,16 @@ const hobbies = offTheClock.map((item) =>
     title="The kinds of problem I'm good at"
     lead="Everything below is work I do now, not work I did once. If your problem looks like one of these, we should talk."
   >
-    <div class="ruled-panel mt-12">
-      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-      <div class="ruled-grid md:grid-cols-2 lg:grid-cols-4">
-        {
-          services.map((service, i) => (
-            <div class="ruled-cell is-interactive p-7 md:p-8">
-              <span class="cell-index inline-flex items-center justify-center rounded-md px-2.5 py-1 font-mono text-label font-semibold">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 class="mt-5 text-title font-semibold leading-snug text-on-surface">{service.title}</h3>
-              <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
-                {service.body}
-              </p>
-            </div>
-          ))
-        }
-      </div>
+    <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      {
+        services.map((service, i) => (
+          <div class="surface p-7">
+            <span class="grid size-8 place-items-center rounded-full bg-[var(--g-fill)] text-[0.8125rem] font-semibold text-primary">{i + 1}</span>
+            <h3 class="mt-5 text-title font-semibold leading-snug tracking-[-0.015em] text-on-surface">{service.title}</h3>
+            <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">{service.body}</p>
+          </div>
+        ))
+      }
     </div>
   </Section>
 
@@ -226,8 +193,8 @@ const hobbies = offTheClock.map((item) =>
         All projects
         <Icon name="arrow" size={16} />
       </a>
-      <a href="/play" class="btn btn-tonal font-mono text-caption">
-        Play the games →
+      <a href="/play" class="btn btn-tonal">
+        Play the games
       </a>
     </div>
   </Section>
@@ -256,27 +223,58 @@ const hobbies = offTheClock.map((item) =>
     lead="Same habits, different problems. Most of what I'm good at at work, I practiced somewhere else first."
     alt
   >
-    <div class="ruled-panel mt-12">
-      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-      <div class="ruled-grid sm:grid-cols-2 lg:grid-cols-4">
-        {
-          hobbies.map((item) => (
-            <div class="ruled-cell is-interactive dot-reveal flex flex-col p-7 md:p-8">
-              <p class="font-mono text-label font-semibold uppercase tracking-[0.12em] text-primary">{item.label}</p>
-              <h3 class="mt-4 text-title font-semibold leading-snug text-on-surface">{item.title}</h3>
-              <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">{item.body}</p>
-              {item.href && (
-                <a href={item.href} class="link-underline relative z-10 mt-auto inline-flex items-center gap-1.5 pt-6 font-mono text-caption text-on-surface">
-                  {item.cta}
-                  <Icon name="arrow" size={14} />
-                </a>
-              )}
-            </div>
-          ))
-        }
-      </div>
+    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        hobbies.map((item) => (
+          <div class:list={['surface relative flex flex-col p-7', item.href && 'spotlight-card']}>
+            <p class="text-[0.8125rem] font-semibold text-primary">{item.label}</p>
+            <h3 class="mt-2 text-title font-semibold leading-snug tracking-[-0.015em] text-on-surface">{item.title}</h3>
+            <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">{item.body}</p>
+            {item.href && (
+              <a href={item.href} class="mt-auto inline-flex min-h-11 items-center gap-1.5 pt-5 text-[0.875rem] font-medium text-primary after:absolute after:inset-0 after:content-['']">
+                {item.cta}
+                <Icon name="arrow" size={14} />
+              </a>
+            )}
+          </div>
+        ))
+      }
     </div>
   </Section>
 
   <CallToAction />
 </Base>
+
+<style>
+  /* The last line of the headline in an amber-to-coral gradient. */
+  .hero-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--md-sys-color-primary) 10%,
+      color-mix(in srgb, var(--md-sys-color-primary) 55%, #e8465b) 90%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-stat {
+    background: linear-gradient(180deg, var(--md-sys-color-on-surface), color-mix(in srgb, var(--md-sys-color-on-surface) 62%, transparent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-badge {
+    background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 0 0 0.5px var(--g-hair);
+  }
+  @media (forced-colors: active) {
+    .hero-gradient,
+    .hero-stat {
+      background: none;
+      color: CanvasText;
+    }
+  }
+</style>

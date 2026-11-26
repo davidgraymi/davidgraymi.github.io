@@ -213,12 +213,12 @@
   /* Cards are soft hairline frames. Hover fills the card and draws a signal bar.
      Square corners and corner ticks are reserved for .is-instrument panels:
      the ones that show measurements (stats, post metadata). */
-  --md-comp-card-radius: var(--md-sys-shape-corner-large);
+  --md-comp-card-radius: 1.25rem; /* 20px: soft, app-like */
   --md-comp-card-bg: var(--md-sys-color-surface-container-lowest);
   --md-comp-card-bg-hover: var(--md-sys-color-surface-container-low);
-  --md-comp-card-border: var(--md-sys-color-outline-variant);
+  --md-comp-card-border: color-mix(in srgb, var(--md-sys-color-on-surface) 9%, transparent); /* a hairline, not a rule */
   --md-comp-card-shadow: none;
-  --md-comp-card-bar-height: 2px;
+  --md-comp-card-bar-height: 0px; /* the old signal bars are retired; cards lift instead */
   --md-comp-media-radius: var(--md-sys-shape-corner-medium);
   --md-comp-portrait-radius: var(--md-sys-shape-corner-extra-large);
 
