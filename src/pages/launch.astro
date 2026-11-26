@@ -23,6 +23,8 @@ import Icon from '~/components/Icon.astro';
 import avatar from '~/assets/avatar.png';
 import shotLight from '~/assets/launch/bindersnap-policy.png';
 import shotDark from '~/assets/launch/bindersnap-policy-dark.png';
+import phoneApprove from '~/assets/launch/bindersnap-phone-approve.png';
+import phoneApproveDark from '~/assets/launch/bindersnap-phone-approve-dark.png';
 import { stats } from '~/data/resume';
 import { products } from '~/data/products';
 import { quotes } from '~/data/proof';
@@ -33,20 +35,19 @@ import LacamHero from '~/components/LacamHero.astro';
 
 const bindersnap = products.find((p) => p.slug === 'bindersnap')!;
 
+// Chapter 3's pinned story: the laptop, then the phone joins it.
 const features = [
   {
     title: 'Every version, kept.',
     body: 'Edit in the browser or upload the Word file you already have. Each approved version stays readable forever.',
   },
   {
-    title: 'Every sign-off, recorded.',
-    body: 'Who reviewed it, who approved it, and when. Written once and never rewritten.',
-  },
-  {
-    title: 'Ready for the surveyor.',
-    body: 'Export the audit packet in one click, even after a subscription ends.',
+    title: 'Approve from anywhere.',
+    body: 'Tap Approve, then confirm. Who signed off, and when, is written once and never rewritten.',
   },
 ];
+
+const phoneAlt = 'Bindersnap on a phone: a change needs one more approval, with Approve and Ask for changes buttons';
 
 const headline = ['Engineer.', 'Scientist.'];
 
@@ -137,28 +138,46 @@ const hobbies = offTheClock.slice(1);
       <p class="product-lead">{bindersnap.problem} Bindersnap keeps the proof.</p>
     </div>
 
-    <div class="laptop-track">
-      <div class="laptop">
-        <div class="laptop-screen">
-          {/* Real app, local demo stack with seeded data (Riverside Health). Dark variant follows the theme. */}
-          <Image src={shotLight} alt="Bindersnap showing an Infection Control Policy: version 1 on record, who signs off on it, and a change waiting on a decision" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-light" />
-          <Image src={shotDark} alt="Bindersnap showing an Infection Control Policy: version 1 on record, who signs off on it, and a change waiting on a decision" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-dark" />
+    {/* Pinned story: the laptop is revealed, then the phone rises into place
+        in front of its right side. */}
+    <div class="story">
+      <div class="story-pin">
+        <div class="laptop-track">
+          <div class="devices">
+            <div class="laptop">
+              <div class="laptop-screen">
+                {/* Real app, local demo stack with seeded data (Riverside Health). Dark variant follows the theme. */}
+                <Image src={shotLight} alt="Bindersnap showing an Infection Control Policy: version 1 on record, who signs off on it, and a change waiting on a decision" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-light" />
+                <Image src={shotDark} alt="Bindersnap showing an Infection Control Policy: version 1 on record, who signs off on it, and a change waiting on a decision" widths={[720, 1080, 1440, 2160, 2880]} sizes="(min-width: 1088px) 62rem, 94vw" class="screen-img fig-dark" />
+              </div>
+              <div class="laptop-base" aria-hidden="true"></div>
+            </div>
+
+            <div class="phone">
+              <div class="phone-status" aria-hidden="true"><span>9:41</span><i class="phone-island"></i></div>
+              <div class="phone-screen">
+                {/* Real capture at 390×844 @3x, signed in as a reviewer. */}
+                <Image src={phoneApprove} alt={phoneAlt} widths={[390, 780, 1170]} sizes="(min-width: 1088px) 20rem, 34vw" class="fig-light" />
+                <Image src={phoneApproveDark} alt={phoneAlt} widths={[390, 780, 1170]} sizes="(min-width: 1088px) 20rem, 34vw" class="fig-dark" />
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="laptop-base" aria-hidden="true"></div>
+
+        <ol class="features">
+          {
+            features.map((f, i) => (
+              <li class="feature" style={`--i:${i}`}>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </div>
 
     <div class="wrap">
-      <ul class="features">
-        {
-          features.map((f, i) => (
-            <li class="feature" style={`--i:${i}`}>
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-            </li>
-          ))
-        }
-      </ul>
 
       <div class="product-cta">
         <a href={bindersnap.action.href} class="btn btn-primary" rel="noopener">
@@ -641,7 +660,59 @@ const hobbies = offTheClock.slice(1);
 
   /* The laptop */
   .laptop-track { margin-top: 5rem; perspective: 1800px; padding-inline: 1.5rem; }
-  .laptop { width: min(64rem, 100%); margin-inline: auto; transform-origin: 50% 100%; }
+  /* Laptop and phone share one cell. At rest (and without scroll motion) the
+     phone stands in front of the laptop's right side. cqi = 1% of this box. */
+  .devices {
+    width: min(64rem, 100%);
+    margin-inline: auto;
+    display: grid;
+    align-items: end;
+    container-type: inline-size;
+    perspective: 2400px;
+    transform-origin: 50% 100%;
+  }
+  .devices > * { grid-area: 1 / 1; }
+  .laptop { width: 100%; }
+
+  .phone {
+    --x: 125%;
+    width: 29%;
+    justify-self: center;
+    padding: 1cqi;
+    border-radius: 5cqi;
+    background: var(--md-ref-char-0);
+    box-shadow:
+      0 0 0 1px var(--md-ref-char-500),
+      0 40px 80px -30px rgb(0 0 0 / 0.5);
+    transform-origin: 50% 100%;
+    transform: translateX(var(--x)) scale(0.8);
+  }
+  @media (max-width: 640px) { .phone { --x: 112%; width: 33%; } }
+  /* The capture has no status bar, so draw one in the app's page colour. */
+  .phone-status {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 4.4cqi;
+    padding-inline: 3.2cqi;
+    border-radius: 4cqi 4cqi 0 0;
+    background: light-dark(rgb(244 239 231), rgb(43 39 38));
+    color: light-dark(rgb(29 27 25), rgb(244 239 231));
+    font-size: 1.45cqi;
+    font-weight: 650;
+  }
+  .phone-island {
+    position: absolute;
+    top: 0.9cqi;
+    left: 50%;
+    translate: -50% 0;
+    width: 8.5cqi;
+    height: 2.5cqi;
+    border-radius: 999px;
+    background: #000;
+  }
+  .phone-screen { overflow: hidden; border-radius: 0 0 4cqi 4cqi; }
+  .phone-screen :global(img) { display: block; width: 100%; height: auto; }
   /* The screenshot sets the screen's height. A % height inside an aspect-ratio
      box is unresolved in Safari, which then crops the image's right side. */
   .laptop-screen {
@@ -679,11 +750,14 @@ const hobbies = offTheClock.slice(1);
 
   /* Features */
   .features {
-    margin-top: 6rem;
+    margin: 6rem auto 0;
+    padding-inline: 1.5rem;
+    max-width: 80rem;
     display: grid;
     gap: 2.5rem;
+    list-style: none;
   }
-  @media (min-width: 768px) { .features { grid-template-columns: repeat(3, 1fr); gap: 3rem; } }
+  @media (min-width: 768px) { .features { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 3rem; } }
   .feature h3 {
     font-size: clamp(1.375rem, 2.2vw, 1.75rem);
     font-weight: 650;
@@ -713,18 +787,69 @@ const hobbies = offTheClock.slice(1);
         animation-timeline: view();
         animation-range: entry 0% cover 35%;
       }
-      /* The lid opens as it rises into view. */
-      .laptop {
+      /* The story: a tall track whose pinned frame holds the devices. The
+         laptop opens as it arrives, then the phone rises into place. */
+      .story {
+        height: 260svh;
+        view-timeline: --story block;
+        view-timeline-inset: 0; /* ignore the page's scroll-padding */
+      }
+      .story-pin {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        display: grid;
+        grid-template-rows: auto auto;
+        align-content: center;
+        gap: clamp(1.5rem, 4svh, 3rem);
+        padding-block: 4.5rem 3rem; /* clear the sticky header */
+      }
+      .laptop-track { margin-top: 0; }
+      /* Fit the devices to what's left of the screen after the caption. */
+      .devices { width: min(64rem, 100%, (100svh - 17rem) * 1.6); }
+
+      .devices {
         animation: lid-open linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 50%;
+        animation-timeline: --story;
+        animation-range: entry 15% entry 95%;
+      }
+      .phone {
+        animation: phone-rise linear both;
+        animation-timeline: --story;
+        animation-range: contain 18% contain 55%;
+      }
+
+      /* One caption at a time, stacked in the same cell. */
+      .features {
+        margin-top: 0;
+        grid-template-columns: none;
+        width: min(36rem, 100%);
+        text-align: center;
+        min-height: 9.5rem;
       }
       .feature {
-        animation: rise linear both;
-        animation-timeline: view();
-        animation-range: entry calc(var(--i) * 12%) cover calc(30% + var(--i) * 6%);
+        grid-area: 1 / 1;
+        animation: beat linear both;
+        animation-timeline: --story;
       }
+      .feature:nth-child(1) { animation-range: entry 60% contain 30%; }
+      /* The second caption stays: it hands over to the buttons. */
+      .feature:nth-child(2) { animation-name: beat-in; animation-range: contain 30% contain 55%; }
     }
+  }
+  @keyframes phone-rise {
+    from { opacity: 0; transform: translate(var(--x), 45%) scale(0.8); }
+    40% { opacity: 1; }
+    to { opacity: 1; transform: translate(var(--x), 0) scale(0.8); }
+  }
+  @keyframes beat {
+    0% { opacity: 0; transform: translateY(1.5rem); filter: blur(6px); }
+    22%, 78% { opacity: 1; transform: none; filter: none; }
+    100% { opacity: 0; transform: translateY(-1.5rem); filter: blur(6px); }
+  }
+  @keyframes beat-in {
+    from { opacity: 0; transform: translateY(1.5rem); filter: blur(6px); }
+    to { opacity: 1; transform: none; filter: none; }
   }
   @keyframes lid-open {
     from { transform: rotateX(38deg) scale(0.86) translateY(8%); opacity: 0.3; }
