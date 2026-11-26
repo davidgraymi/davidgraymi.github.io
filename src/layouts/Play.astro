@@ -199,6 +199,13 @@ const widths: Record<Game['width'], string> = {
   // ---- How to play: shown on the first visit to each game, then on demand ----
   const howto = document.querySelector<HTMLDialogElement>('[data-howto]')!;
   document.querySelector('[data-howto-open]')!.addEventListener('click', () => howto.showModal());
+  // Opened on load, the sheet has no earlier focus to hand back, so focus would
+  // stay on its (now hidden) Play button and the games' page-level keys would
+  // ignore it. Hand focus back to the page instead.
+  howto.addEventListener('close', () => {
+    const el = document.activeElement as HTMLElement | null;
+    if (el && howto.contains(el)) el.blur();
+  });
   const seenKey = `play-seen:${location.pathname.replace(/\/$/, '')}`;
   try {
     if (!localStorage.getItem(seenKey)) {
