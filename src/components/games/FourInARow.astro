@@ -13,14 +13,14 @@ const R = 15; // readiness ring radius
 const CIRC = 2 * Math.PI * R;
 ---
 
-<section class="c4-game not-prose my-12" data-c4 aria-label="Four in a row against the thinking model">
+<section class="c4-game g-root not-prose my-12" data-c4 aria-label="Four in a row against the thinking model">
   <div class="c4-stage mx-auto max-w-[34rem]">
     <div class="flex items-center justify-between gap-3">
-      <div class="c4-seg" role="group" aria-label="Who moves first">
-        <button type="button" class="c4-seg-btn" data-c4-first="human" aria-pressed="true">You first</button>
-        <button type="button" class="c4-seg-btn" data-c4-first="model" aria-pressed="false">Model first</button>
+      <div class="g-seg" role="group" aria-label="Who moves first">
+        <button type="button" class="g-seg-btn" data-c4-first="human" aria-pressed="true">You first</button>
+        <button type="button" class="g-seg-btn" data-c4-first="model" aria-pressed="false">Model first</button>
       </div>
-      <button type="button" class="c4-text-btn" data-c4-new>New game</button>
+      <button type="button" class="g-btn g-btn-plain" data-c4-new>New game</button>
     </div>
 
     <!-- The model's confidence in each column, live, right above the column it's about. -->
@@ -35,7 +35,7 @@ const CIRC = 2 * Math.PI * R;
       }
     </div>
 
-    <div class="c4-board" data-c4-board>
+    <div class="c4-board g-tray" data-c4-board>
       {
         cols.map((c) => (
           <button type="button" class="c4-col" data-col={c} aria-label={`Column ${c + 1}`} disabled>
@@ -64,13 +64,11 @@ const CIRC = 2 * Math.PI * R;
           transform="rotate(-90 20 20)"></circle>
         <text x="20" y="20" class="c4-ring-text" data-c4-step text-anchor="middle" dominant-baseline="central"></text>
       </svg>
-      <p class="c4-status" data-c4-status aria-live="polite">Loading the model…</p>
+      <p class="c4-status g-status" data-c4-status aria-live="polite">Loading the model…</p>
     </div>
 
-    <p class="c4-spec">
-      <span>1.25M parameters</span><span aria-hidden="true">·</span><span>No search</span><span aria-hidden="true"
-        >·</span
-      ><span>Runs on your device</span>
+    <p class="g-spec mt-5">
+      <span>1.25M parameters</span><span>No search</span><span>Runs on your device</span>
     </p>
   </div>
 </section>
@@ -100,49 +98,8 @@ const CIRC = 2 * Math.PI * R;
 <style>
   /* Inside a post, undo the article's serif voice. */
   .c4-game {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.5;
     --c4-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --c4-gap: 2.4%;
-  }
-
-  /* ---- controls ---- */
-  .c4-seg {
-    display: inline-flex;
-    padding: 3px;
-    border-radius: 999px;
-    background: var(--md-sys-color-surface-container-high);
-  }
-  .c4-seg-btn {
-    min-height: 38px;
-    padding: 0 1rem;
-    border-radius: 999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface-variant);
-    transition:
-      background 220ms var(--c4-ease),
-      color 220ms var(--c4-ease),
-      box-shadow 220ms var(--c4-ease);
-  }
-  .c4-seg-btn[aria-pressed='true'] {
-    background: var(--md-sys-color-surface-container-lowest);
-    color: var(--md-sys-color-on-surface);
-    box-shadow:
-      0 1px 2px rgb(0 0 0 / 0.12),
-      0 0 0 0.5px rgb(0 0 0 / 0.06);
-  }
-  .c4-text-btn {
-    min-height: 44px;
-    padding: 0 0.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--md-sys-color-primary);
-  }
-  .c4-text-btn:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
 
   /* ---- confidence bars ---- */
@@ -194,16 +151,6 @@ const CIRC = 2 * Math.PI * R;
     gap: var(--c4-gap);
     margin-top: 0.6rem;
     padding: var(--c4-gap);
-    border-radius: 1.75rem;
-    background: linear-gradient(
-      180deg,
-      var(--md-sys-color-surface-container-high),
-      var(--md-sys-color-surface-container)
-    );
-    box-shadow:
-      0 0 0 0.5px color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent),
-      0 24px 48px -24px rgb(0 0 0 / 0.35),
-      0 2px 6px rgb(0 0 0 / 0.08);
   }
   .c4-col {
     display: flex;
@@ -321,23 +268,10 @@ const CIRC = 2 * Math.PI * R;
   }
   .c4-status {
     min-width: 0;
-    font-size: 1.0625rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--md-sys-color-on-surface);
   }
   .c4-status :global([data-dim]) {
     color: var(--md-sys-color-on-surface-variant);
     font-weight: 400;
-  }
-  .c4-spec {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.6rem;
-    margin-top: 1.25rem;
-    font-size: 0.8125rem;
-    color: var(--md-sys-color-on-surface-variant);
   }
 
   @keyframes c4-drop {

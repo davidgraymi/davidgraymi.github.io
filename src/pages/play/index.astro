@@ -2,110 +2,247 @@
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import Base from '~/layouts/Base.astro';
-import PageHeader from '~/components/PageHeader.astro';
 import Icon from '~/components/Icon.astro';
-import { games, groups } from '~/data/games';
+import { games, groups, type Game } from '~/data/games';
 
 /**
  * Card previews: src/assets/games/<slug>-dark.webp and <slug>-light.webp,
  * captured by `npm run games:thumbnails`. A game without one gets a plain card.
+ *
+ * Like the games themselves, this page uses the .g-* primitives
+ * (src/styles/games.css), not Workbench: it is the door into the arcade.
  */
 const shots = import.meta.glob<{ default: ImageMetadata }>('/src/assets/games/*.webp', { eager: true });
 const shot = (slug: string, theme: 'dark' | 'light') => shots[`/src/assets/games/${slug}-${theme}.webp`]?.default;
 
+/** The newest model game leads the page; everything else sits in its group. */
+const featured = games[0];
 const sections = (Object.keys(groups) as (keyof typeof groups)[]).map((key) => ({
   key,
   ...groups[key],
-  games: games.filter((g) => g.group === key),
+  games: games.filter((g) => g.group === key && g !== featured),
 }));
+
+const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(game.slug, 'light') });
 ---
 
 <Base
   title="Games"
   description="Small games you can play in the browser, several of them against the real models and solvers from my projects."
 >
-  <PageHeader
-    kicker="Play"
-    title="Games"
-    lead="Every game opens full screen with nothing else in the way. Several of them pit you against a model or solver from one of my projects, running in your browser."
-  />
-
-  {
-    sections.map((section, s) => (
-      <section aria-labelledby={`group-${section.key}`} class:list={['border-b border-outline-variant', s % 2 === 1 && 'bg-surface-container-lowest']}>
-        <div class="wrap py-14 md:py-18">
-          <p class="kicker">{String(s + 1).padStart(2, '0')}</p>
-          <h2 id={`group-${section.key}`} class="mt-4 text-h2 font-semibold tracking-tight text-on-surface">
-            {section.title}
-          </h2>
-          <p class="mt-3 max-w-2xl text-body-lg text-on-surface-variant">{section.lead}</p>
-
-          <div class="ruled-panel mt-10">
-            <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
-            <ul class="ruled-grid sm:grid-cols-2 lg:grid-cols-4" role="list">
-              {section.games.map((game) => {
-                const dark = shot(game.slug, 'dark');
-                const light = shot(game.slug, 'light');
-                return (
-                  <li class="ruled-cell is-interactive group relative flex flex-col">
-                    <div class="game-thumb relative aspect-[4/3] overflow-hidden border-b border-rule-soft bg-surface-container-lowest" aria-hidden="true">
-                      {dark && light ? (
-                        <>
-                          <Image src={dark} alt={`${game.title} screenshot, dark theme`} widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-dark size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
-                          <Image src={light} alt={`${game.title} screenshot, light theme`} widths={[360, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw" class="thumb-light size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="lazy" />
-                        </>
-                      ) : (
-                        <div class="dot-field size-full" />
-                      )}
-                      <span class="absolute right-3 bottom-3 grid size-11 place-items-center rounded-full bg-primary text-on-primary opacity-0 shadow-elevation-2 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100" aria-hidden="true">
-                        <Icon name="play" size={16} />
-                      </span>
-                    </div>
-
-                    <div class="flex flex-1 flex-col p-5">
-                      <p class="font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant">vs. {game.opponent}</p>
-                      <h3 class="mt-2.5 text-title font-semibold leading-snug transition-colors duration-200 group-hover:text-primary">
-                        <a href={`/play/${game.slug}`} class="after:absolute after:inset-0 after:content-['']">
-                          {game.title}
-                        </a>
-                      </h3>
-                      <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">{game.blurb}</p>
-                      <dl class="mt-auto flex flex-wrap gap-1.5 pt-5">
-                        <dt class="sr-only">Length</dt>
-                        <dd class="chip py-1">{game.length}</dd>
-                        <dt class="sr-only">Controls</dt>
-                        <dd class="chip py-1">{game.controls}</dd>
-                      </dl>
-                      {game.story && (
-                        <a
-                          href={game.story.href}
-                          class="link-underline relative z-10 mt-4 self-start font-mono text-label text-on-surface-variant hover:text-primary"
-                        >
-                          How it works →<span class="sr-only">: {game.story.label}</span>
-                        </a>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </section>
-    ))
-  }
-
-  <section>
-    <div class="wrap py-12">
-      <p class="max-w-2xl text-body text-on-surface-variant">
-        Looking for endless Wordlet? The <a href="/wordlet" class="link-underline text-primary">original Flutter build</a> picks
-        a new word every round.
+  <div class="g-root">
+    <!-- Title -->
+    <section class="wrap pt-16 pb-10 text-center md:pt-24 md:pb-14">
+      <p class="g-eyebrow">Play</p>
+      <h1 class="mt-2 text-[clamp(2.75rem,8vw,5rem)] leading-[1.02] font-semibold tracking-[-0.04em] text-on-surface">
+        Games
+      </h1>
+      <p class="mx-auto mt-5 max-w-xl text-[clamp(1.0625rem,2vw,1.25rem)] leading-relaxed text-on-surface-variant">
+        Several of them pit you against a model or solver from one of my projects, running in your browser. Each opens full
+        screen, with nothing else in the way.
       </p>
-    </div>
-  </section>
+    </section>
+
+    <!-- Featured -->
+    {
+      (() => {
+        const t = thumbs(featured);
+        return (
+          <section class="wrap" aria-labelledby="featured-title">
+            <article class="game-card featured g-tray group relative grid overflow-hidden md:grid-cols-[1.25fr_1fr]">
+              <div class="relative aspect-[4/3] overflow-hidden md:order-2 md:aspect-auto md:min-h-[26rem]" aria-hidden="true">
+                {t.dark && t.light ? (
+                  <>
+                    <Image src={t.dark} alt={`${featured.title} screenshot, dark theme`} widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-dark" loading="eager" />
+                    <Image src={t.light} alt={`${featured.title} screenshot, light theme`} widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-light" loading="eager" />
+                  </>
+                ) : (
+                  <div class="size-full bg-surface-container-lowest" />
+                )}
+              </div>
+              <div class="relative flex flex-col justify-center p-7 md:p-12">
+                <p class="g-eyebrow text-primary">New · vs. {featured.opponent}</p>
+                <h2 id="featured-title" class="mt-2 text-[clamp(2rem,4.5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-on-surface">
+                  <a href={`/play/${featured.slug}`} class="after:absolute after:inset-0 after:z-0 after:content-['']">
+                    {featured.title}
+                  </a>
+                </h2>
+                <p class="mt-4 max-w-md text-[1.0625rem] leading-relaxed text-on-surface-variant">{featured.blurb}</p>
+                <div class="relative z-10 mt-7 flex flex-wrap items-center gap-3">
+                  <a href={`/play/${featured.slug}`} class="g-btn" tabindex="-1" aria-hidden="true">
+                    <Icon name="play" size={13} />
+                    Play
+                  </a>
+                  {featured.story && (
+                    <a href={featured.story.href} class="g-btn g-btn-plain">
+                      How it works<span class="sr-only">: {featured.story.label}</span>
+                    </a>
+                  )}
+                </div>
+                <p class="g-note mt-6">
+                  {featured.length} · {featured.controls}
+                </p>
+              </div>
+            </article>
+          </section>
+        );
+      })()
+    }
+
+    <!-- Groups -->
+    {
+      sections.map((section) => (
+        <section aria-labelledby={`group-${section.key}`} class="wrap pt-20 md:pt-28">
+          <div class="max-w-2xl">
+            <h2 id={`group-${section.key}`} class="text-[clamp(1.75rem,4vw,2.5rem)] leading-tight font-semibold tracking-[-0.03em] text-on-surface">
+              {section.title}
+            </h2>
+            <p class="mt-2 text-[1.0625rem] leading-relaxed text-on-surface-variant">{section.lead}</p>
+          </div>
+
+          <ul class:list={['mt-8 grid gap-5 sm:grid-cols-2', section.games.length % 3 === 0 && 'lg:grid-cols-3']} role="list">
+            {section.games.map((game) => {
+              const t = thumbs(game);
+              return (
+                <li class="game-card g-card group relative flex flex-col overflow-hidden">
+                  <div class="card-shot relative aspect-[16/9] overflow-hidden" aria-hidden="true">
+                    {t.dark && t.light ? (
+                      <>
+                        <Image src={t.dark} alt={`${game.title} screenshot, dark theme`} widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-dark" loading="lazy" />
+                        <Image src={t.light} alt={`${game.title} screenshot, light theme`} widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-light" loading="lazy" />
+                      </>
+                    ) : (
+                      <div class="size-full bg-surface-container-lowest" />
+                    )}
+                  </div>
+
+                  <div class="flex flex-1 flex-col p-5 pt-4">
+                    <div class="flex items-start justify-between gap-4">
+                      <div class="min-w-0">
+                        <p class="g-eyebrow">vs. {game.opponent}</p>
+                        <h3 class="mt-0.5 text-[1.25rem] leading-snug font-semibold tracking-[-0.02em] text-on-surface">
+                          <a href={`/play/${game.slug}`} class="after:absolute after:inset-0 after:content-['']">
+                            {game.title}
+                          </a>
+                        </h3>
+                      </div>
+                      <span class="play-pill" aria-hidden="true">Play</span>
+                    </div>
+                    <p class="mt-2 text-[0.9375rem] leading-relaxed text-on-surface-variant">{game.blurb}</p>
+                    <div class="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-5">
+                      <p class="g-note">{game.length}</p>
+                      {game.story && (
+                        <a href={game.story.href} class="story-link relative z-10 text-[0.8125rem] font-medium text-primary hover:underline hover:underline-offset-2">
+                          How it works<span class="sr-only">: {game.story.label}</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+
+    <section class="wrap py-20 text-center md:py-28">
+      <p class="g-note text-[0.9375rem]">
+        Looking for endless Wordlet? The <a href="/wordlet" class="font-medium text-primary hover:underline hover:underline-offset-2">original Flutter build</a> picks a
+        new word every round.
+      </p>
+    </section>
+  </div>
 </Base>
 
 <style>
+  .thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    transform: scale(1.18);
+    transition: transform 700ms var(--g-ease);
+  }
+  .game-card:hover .thumb {
+    transform: scale(1.22);
+  }
+  /* Fade the screenshot into the card so it reads as one object. */
+  .card-shot::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, var(--md-sys-color-surface-container-low));
+    pointer-events: none;
+  }
+
+  .game-card {
+    transition:
+      transform 420ms var(--g-ease),
+      box-shadow 420ms var(--g-ease);
+  }
+  .game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--g-lift);
+  }
+  .game-card.featured:hover {
+    transform: translateY(-3px);
+  }
+  /* The title link stretches over the whole card, so the card wears its ring. */
+  .game-card:has(:is(h2, h3) a:focus-visible) {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 3px;
+  }
+  .game-card :is(h2, h3) a:focus-visible {
+    outline: none;
+  }
+
+  /* A small text link inside a card: pad its hit area out to 44pt (24px
+     with a fine pointer) without moving the text. */
+  .story-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+  }
+  @media (pointer: fine) {
+    .story-link {
+      min-height: 28px;
+      margin-block: -4px;
+    }
+  }
+
+  /* The App Store's "Get" button: decorative, the whole card is the link. */
+  .play-pill {
+    flex: none;
+    margin-top: 0.35rem;
+    padding: 0.3rem 0.95rem;
+    border-radius: 999px;
+    background: var(--g-fill);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    transition:
+      background-color 220ms var(--g-ease),
+      color 220ms var(--g-ease);
+  }
+  .game-card:hover .play-pill {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .game-card,
+    .game-card:hover,
+    .thumb {
+      transform: none;
+      transition: none;
+    }
+  }
+
   /* Show the preview that matches the theme; mirrors ThemeToggle's rules. */
   .thumb-dark { display: none; }
   :global(:root[data-theme='dark']) .thumb-dark { display: block; }

@@ -6,20 +6,16 @@
  */
 ---
 
-<div class="ruled-panel lost-signal" data-lost-signal>
-  <span class="tick tick-tl"></span><span class="tick tick-tr"></span>
-  <span class="tick tick-bl"></span><span class="tick tick-br"></span>
-
-  <div class="flex items-center justify-between gap-4 border-b border-rule-soft px-4 py-2.5 font-mono text-label uppercase tracking-[0.14em] text-on-surface-variant">
-    <span>Lost signal</span>
-    <span>
-      Score <span class="text-on-surface" data-score>0</span>
-      <span class="mx-1.5" aria-hidden="true">/</span>
-      Best <span class="text-primary" data-best>0</span>
-    </span>
+<div class="g-root lost-signal" data-lost-signal>
+  <div class="mb-3 flex items-baseline justify-between gap-4 px-1">
+    <p class="g-eyebrow">Lost signal</p>
+    <p class="g-num flex gap-4 text-[0.8125rem] text-on-surface-variant">
+      <span>Score <span class="font-semibold text-on-surface" data-score>0</span></span>
+      <span>Best <span class="font-semibold text-primary" data-best>0</span></span>
+    </p>
   </div>
 
-  <div class="relative">
+  <div class="g-well rounded-[1.5rem] shadow-[var(--g-lift)]">
     <canvas
       class="block aspect-[9/5] w-full touch-none bg-surface-container-lowest"
       data-canvas
@@ -32,15 +28,15 @@
     <span class="hidden text-on-surface-variant" data-c="muted"></span>
     <span class="hidden text-rule-soft" data-c="grid"></span>
 
-    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center" data-overlay>
-      <p class="font-mono text-body-sm text-on-surface" data-message>Signal lost. Want to find it?</p>
-      <button type="button" class="btn btn-tonal" data-start>Play</button>
+    <div class="g-veil absolute inset-0 flex flex-col items-center justify-center gap-4 p-4 text-center" data-overlay>
+      <p class="g-status" data-message>Signal lost. Want to find it?</p>
+      <button type="button" class="g-btn" data-start>Play</button>
     </div>
   </div>
 
-  <p class="border-t border-rule-soft px-4 py-2.5 text-caption text-on-surface-variant">
-    <kbd class="font-mono">←</kbd> <kbd class="font-mono">→</kbd> or <kbd class="font-mono">A</kbd>
-    <kbd class="font-mono">D</kbd> to steer, <kbd class="font-mono">Space</kbd> to start. On touch, drag across the screen.
+  <p class="g-note mt-4 text-center">
+    <kbd class="g-kbd">←</kbd> <kbd class="g-kbd">→</kbd> or <kbd class="g-kbd">A</kbd> <kbd class="g-kbd">D</kbd> to steer,
+    <kbd class="g-kbd">Space</kbd> to start. On touch, drag across the screen.
   </p>
   <p class="sr-only" aria-live="polite" data-live></p>
 </div>

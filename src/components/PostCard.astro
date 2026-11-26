@@ -15,9 +15,7 @@ const { entry } = Astro.props;
 >
   <div class="flex flex-col gap-2.5 md:flex-row md:items-baseline md:gap-8">
     <div class="md:w-34 md:shrink-0">
-      <span
-        class="inline-block rounded-md px-2.5 py-0.5 font-mono text-label uppercase tracking-wider font-semibold bg-surface-container-high text-primary"
-      >
+      <span class="inline-block text-[0.875rem] font-medium tabular-nums text-on-surface-variant">
         <FormattedDate date={entry.data.pubDate} />
       </span>
     </div>
@@ -42,9 +40,9 @@ const { entry } = Astro.props;
 
       {
         entry.data.tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-1.5 font-mono text-label">
+          <div class="mt-4 flex flex-wrap gap-1.5">
             {entry.data.tags.slice(0, 3).map((tag) => (
-              <a href={tagHref(tag)} class="chip relative z-10 transition-colors hover:border-primary hover:text-primary">
+              <a href={tagHref(tag)} class="chip relative z-10">
                 #{tag}
               </a>
             ))}

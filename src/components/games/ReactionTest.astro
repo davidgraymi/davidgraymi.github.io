@@ -7,28 +7,27 @@ const stats = [
 ] as const;
 ---
 
-<div class="ruled-panel" data-reaction>
-  <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
+<div class="g-root" data-reaction>
   <div
     role="button"
     tabindex="0"
     data-panel
     data-state="idle"
-    class="grid min-h-72 cursor-pointer border-b border-outline-variant touch-manipulation select-none place-items-center p-8 text-center bg-surface-container-low text-on-surface motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-standard data-[state=lit]:bg-primary data-[state=lit]:text-on-primary data-[state=lit]:shadow-glow-lg data-[state=early]:bg-error-container data-[state=early]:text-on-error-container"
+    class="rx-pad g-tray grid min-h-80 cursor-pointer touch-manipulation select-none place-items-center p-8 text-center text-on-surface sm:min-h-96"
   >
     <div>
-      <p data-heading class="font-mono text-headline-lg font-semibold tracking-tight">Click to start</p>
-      <p data-hint class="mt-3 min-h-6 text-body-sm opacity-80">
+      <p data-heading class="g-num text-[clamp(2.25rem,7vw,3.75rem)] leading-none font-semibold tracking-[-0.035em]">Click to start</p>
+      <p data-hint class="mt-4 min-h-6 text-[1.0625rem] opacity-75">
         Wait for amber, then click, tap or press Space.
       </p>
     </div>
   </div>
-  <dl class="ruled-grid grid-cols-3">
+  <dl class="g-stats mt-6">
     {
       stats.map(([key, label]) => (
-        <div class="ruled-cell p-5">
-          <dt class="font-mono text-label uppercase tracking-wider text-on-surface-variant">{label}</dt>
-          <dd data-stat={key} class="mt-1 font-mono text-headline-sm font-semibold text-on-surface">
+        <div class="flex flex-col-reverse">
+          <dt class="g-stat-label">{label}</dt>
+          <dd data-stat={key} class="g-stat-value">
             –
           </dd>
         </div>
@@ -37,6 +36,37 @@ const stats = [
   </dl>
   <p role="status" class="sr-only" data-status></p>
 </div>
+
+<style>
+  .rx-pad {
+    transition:
+      background 260ms var(--g-ease),
+      color 260ms var(--g-ease),
+      box-shadow 260ms var(--g-ease),
+      transform 160ms var(--g-ease);
+  }
+  .rx-pad:active {
+    transform: scale(0.99);
+  }
+  .rx-pad[data-state='waiting'] {
+    background: var(--md-sys-color-surface-container-highest);
+  }
+  .rx-pad[data-state='lit'] {
+    background: radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--md-sys-color-primary) 80%, white), var(--md-sys-color-primary) 60%);
+    color: var(--md-sys-color-on-primary);
+    box-shadow:
+      var(--g-lift),
+      0 0 80px -10px color-mix(in srgb, var(--md-sys-color-primary) 70%, transparent);
+    transition-duration: 0ms;
+  }
+  .rx-pad[data-state='early'] {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+  .rx-pad[data-state='result'] [data-heading] {
+    animation: g-appear 420ms var(--g-ease) both;
+  }
+</style>
 
 <script>
   type State = 'idle' | 'waiting' | 'lit' | 'result' | 'early';

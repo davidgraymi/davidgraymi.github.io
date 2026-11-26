@@ -19,7 +19,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   {
     cover && (
       <div
-        class="aspect-[16/9] overflow-hidden border-b border-rule-soft bg-surface-container"
+        class="aspect-[16/9] overflow-hidden bg-surface-container"
       >
         <Image
           src={cover}
@@ -36,7 +36,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
   <div class="flex flex-1 flex-col p-6 sm:p-7">
     {/* Header / Meta: M3 Expressive Assist Chip */}
     <div
-      class="flex items-center justify-between gap-3 font-mono text-label uppercase tracking-[0.12em] text-on-surface-variant"
+      class="flex items-center justify-between gap-3 text-[0.8125rem] font-medium text-on-surface-variant"
     >
       <div class="flex items-center gap-2">
         <span>{kind}</span>
@@ -45,7 +45,7 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       </div>
       {entry.id === 'wordlet' && (
         <span
-          class="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-label font-semibold bg-primary-container text-on-primary-container"
+          class="chip chip-accent"
         >
           Playable
         </span>
@@ -68,8 +68,9 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
     {
       highlight && (
         <div
-          class="mt-4 flex items-start gap-2.5 border-l-2 border-primary px-3.5 py-2 font-mono text-label leading-snug bg-surface-container text-on-surface transition-colors duration-200 group-hover:bg-surface-container-high"
+          class="mt-4 flex items-start gap-2.5 rounded-xl bg-[var(--g-fill)] px-3.5 py-2.5 text-[0.875rem] leading-snug text-on-surface"
         >
+          <span class="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
           <span class="line-clamp-3 font-medium">{highlight}</span>
         </div>
       )
@@ -80,14 +81,14 @@ const { title, blurb, kind, category, year, stack, highlight, cover, coverAlt } 
       {
         stack.slice(0, 4).map((tech) => (
           <span
-            class="chip py-1 transition-colors group-hover:border-outline"
+            class="chip"
           >
             {tech}
           </span>
         ))
       }
       <span
-        class="ml-auto grid h-7.5 w-7.5 place-items-center rounded-full transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-primary text-on-surface-variant bg-surface-container-high"
+        class="ml-auto grid size-8 place-items-center rounded-full bg-[var(--g-fill)] text-on-surface-variant transition-all duration-200 group-hover:bg-primary group-hover:text-on-primary"
       >
         <Icon name="arrow" size={16} />
       </span>

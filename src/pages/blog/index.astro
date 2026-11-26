@@ -35,9 +35,9 @@ const tags = tagCounts(posts).filter((t) => t.count > 1);
         </p>
       ) : (
         <>
-          <nav aria-label="Tags" class="mb-10 flex max-w-3xl flex-wrap gap-1.5 font-mono text-label">
+          <nav aria-label="Tags" class="mb-10 flex max-w-3xl flex-wrap gap-1.5">
             {tags.map(({ tag, count }) => (
-              <a href={tagHref(tag)} class="chip transition-colors hover:border-primary hover:text-primary">
+              <a href={tagHref(tag)} class="chip">
                 #{tag} <span class="text-on-surface-variant">{count}</span>
               </a>
             ))}

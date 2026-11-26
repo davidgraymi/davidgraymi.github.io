@@ -9,33 +9,25 @@ const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
 ---
 
-<header class="site-header sticky top-0 z-50 w-full border-b border-outline-variant bg-surface/88 backdrop-blur-xl">
-  <div class="wrap flex h-16 items-center gap-4">
-    {/* Brand / Logo */}
-    <a href="/" class="group flex h-full shrink-0 items-center gap-2.5 pr-2">
-      <span
-        class="grid h-8 w-8 place-items-center bg-primary font-mono text-caption font-bold text-on-primary"
-        aria-hidden="true"
-      >dg</span>
-      <span class="text-body font-semibold tracking-tight transition-colors group-hover:text-primary">
+<header class="site-header sticky top-0 z-50 w-full">
+  <div class="wrap relative z-10 grid h-14 grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+    {/* Brand */}
+    <a href="/" class="brand group flex h-full items-center gap-2.5 justify-self-start">
+      <span class="brand-mark grid size-7 place-items-center font-mono text-[0.75rem] font-bold text-on-primary" aria-hidden="true">dg</span>
+      <span class="text-[0.9375rem] font-semibold tracking-[-0.01em] text-on-surface transition-opacity duration-200 group-hover:opacity-70">
         {site.name}<span class="sr-only">, home</span>
       </span>
     </a>
 
-    <span class="hidden h-6 w-px bg-outline-variant md:block" aria-hidden="true"></span>
-
-    {/* Desktop Navigation Links */}
-    <nav class="hidden h-full items-stretch md:flex" aria-label="Main">
+    {/* Desktop navigation, centred */}
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
       {
         nav.map((item) => {
           const active = isActive(item.href);
           return (
             <a
               href={item.href}
-              class:list={[
-                'nav-link relative flex items-center px-4 text-body-sm transition-colors duration-150 hover:text-on-surface',
-                active ? 'is-active font-semibold text-on-surface' : 'font-medium text-on-surface-variant',
-              ]}
+              class:list={['nav-link', active && 'is-active']}
               aria-current={active ? 'page' : undefined}
             >
               {item.label}
@@ -45,24 +37,18 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       }
     </nav>
 
-    {/* Header Actions */}
-    <div class="ml-auto flex items-center gap-2">
-      {/* Cmd+K Quick Search Trigger */}
-      <button
-        id="cmd-palette-btn"
-        type="button"
-        class="hidden h-9 w-52 items-center gap-2 border border-outline-variant bg-surface pl-3 pr-1.5 text-caption text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface lg:inline-flex"
-        title="Search pages, projects and posts"
-      >
+    {/* Actions */}
+    <div class="flex items-center gap-2 justify-self-end">
+      <button id="cmd-palette-btn" type="button" class="search-pill hidden lg:inline-flex" title="Search pages, projects and posts">
         <Icon name="search" size={14} />
         <span class="flex-1 text-left">Search</span>
-        <kbd aria-hidden="true" data-shortcut class="rounded-md border border-outline-variant bg-surface-container px-1.5 py-0.5 font-mono text-label">⌘K</kbd>
+        <kbd aria-hidden="true" data-shortcut class="g-kbd">⌘K</kbd>
       </button>
 
       <button
         id="cmd-palette-btn-compact"
         type="button"
-        class="hidden h-9 w-9 place-items-center border border-outline-variant bg-surface text-on-surface-variant transition-colors duration-150 hover:border-outline hover:text-on-surface md:grid lg:hidden"
+        class="g-icon-btn hidden md:inline-grid lg:hidden"
         title="Search pages, projects and posts"
         aria-label="Open Command Palette"
       >
@@ -71,105 +57,231 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
       <ThemeToggle />
 
-      <a href="/contact" class="btn btn-primary hidden h-9 px-4 text-caption md:inline-flex">
-        Get in touch
-        <Icon name="arrow" size={13} />
-      </a>
+      <a href="/contact" class="g-btn g-btn-sm hidden md:inline-flex">Get in touch</a>
 
-      {/* Mobile menu hamburger */}
+      {/* Mobile menu: two lines that fold into an X */}
       <button
         id="menu-toggle"
         type="button"
-        class="grid h-11 w-11 place-items-center border border-outline-variant bg-surface text-on-surface md:hidden"
+        class="menu-btn g-icon-btn md:hidden"
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-nav"
       >
-        <span id="menu-open"><Icon name="menu" size={17} /></span>
-        <span id="menu-close" hidden><Icon name="close" size={17} /></span>
+        <span class="menu-line" aria-hidden="true"></span>
+        <span class="menu-line" aria-hidden="true"></span>
       </button>
     </div>
   </div>
 
-  {/* Mobile Menu: full-width ruled sheet under the bar */}
-  <nav
-    id="mobile-nav"
-    class="absolute inset-x-0 top-full hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-outline-variant bg-surface shadow-elevation-3 md:hidden"
-    aria-label="Mobile Navigation"
-  >
-    <ul class="ruled-list border-t-0">
+  {/* Mobile menu: a frosted sheet with large links that settle in one by one */}
+  <nav id="mobile-nav" class="mobile-nav hidden md:hidden" aria-label="Mobile Navigation">
+    <ul class="wrap pt-6">
       {
         nav.map((item, i) => (
-          <li>
+          <li style={`--i: ${i}`}>
             <a
               href={item.href}
-              class:list={[
-                'wrap flex min-h-14 items-center gap-4 text-body transition-colors',
-                isActive(item.href) ? 'font-semibold text-primary' : 'font-medium text-on-surface',
-              ]}
+              class:list={['mobile-link', isActive(item.href) && 'is-active']}
               aria-current={isActive(item.href) ? 'page' : undefined}
             >
-              <span class="font-mono text-label text-on-surface-variant">{String(i + 1).padStart(2, '0')}</span>
-              <span class="flex-1">{item.label}</span>
-              <Icon name="arrow" size={15} />
+              {item.label}
             </a>
           </li>
         ))
       }
     </ul>
-    <div class="wrap grid grid-cols-2 gap-2 py-4">
-      <button id="mobile-cmd-btn" type="button" class="btn btn-ghost w-full text-body-sm">
+    <div class="wrap mobile-actions grid grid-cols-2 gap-2 pt-8 pb-10" style={`--i: ${nav.length}`}>
+      <button id="mobile-cmd-btn" type="button" class="g-btn g-btn-tonal g-btn-block">
         <Icon name="search" size={15} />
         Search
       </button>
-      <a href="/contact" class="btn btn-primary w-full text-body-sm">
-        Get in touch
-      </a>
+      <a href="/contact" class="g-btn g-btn-block">Get in touch</a>
     </div>
   </nav>
 </header>
 
 <style>
-  /* Signal bar along the header's bottom rule: drawn for the active page, grows in on hover. */
-  .nav-link::after {
-    content: '';
+  /* Frosted glass; the hairline appears once the page scrolls under it.
+     On the header itself, not a pseudo-element: its view-transition-name
+     makes it a backdrop root, so a child's backdrop-filter would see nothing. */
+  .site-header {
+    background: color-mix(in srgb, var(--md-sys-color-surface) 72%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 0.5px 0 transparent;
+    transition:
+      box-shadow 260ms var(--g-ease),
+      background-color 260ms var(--g-ease);
+  }
+  .site-header[data-scrolled] {
+    box-shadow: 0 0.5px 0 var(--g-hair);
+  }
+  /* With the menu open, the bar and the sheet read as one solid surface. */
+  .site-header[data-menu-open] {
+    background: var(--md-sys-color-surface);
+  }
+
+  /* An app-icon squircle with a soft top light. */
+  .brand-mark {
+    border-radius: 0.5rem;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.22), transparent 55%),
+      var(--md-sys-color-primary);
+    box-shadow:
+      inset 0 0 0 0.5px rgb(0 0 0 / 0.12),
+      0 1px 2px rgb(0 0 0 / 0.18);
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      color 200ms var(--g-ease),
+      background-color 200ms var(--g-ease);
+  }
+  .nav-link:hover {
+    color: var(--md-sys-color-on-surface);
+  }
+  .nav-link.is-active {
+    color: var(--md-sys-color-on-surface);
+    background: var(--g-fill);
+  }
+
+  .search-pill {
+    align-items: center;
+    gap: 0.5rem;
+    width: 13rem;
+    height: 36px;
+    padding: 0 0.4rem 0 0.85rem;
+    border-radius: 999px;
+    background: var(--g-fill);
+    font-size: 0.8125rem;
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      background-color 200ms var(--g-ease),
+      color 200ms var(--g-ease);
+  }
+  .search-pill:hover {
+    background: var(--g-fill-strong);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* Hamburger: two lines that rotate into an X. */
+  .menu-btn {
+    position: relative;
+  }
+  .menu-line {
     position: absolute;
-    inset: auto 0.75rem -1px;
-    height: 2px;
-    background: var(--md-sys-color-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 1.5px;
+    margin-left: -8px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: transform 320ms var(--g-ease);
   }
-  .nav-link:hover::after,
-  .nav-link.is-active::after {
-    transform: scaleX(1);
+  .menu-line:first-child {
+    transform: translateY(-3.5px);
   }
-  .nav-link:not(.is-active):hover::after {
-    background: var(--md-sys-color-outline);
+  .menu-line:last-child {
+    transform: translateY(3.5px);
+  }
+  .menu-btn[aria-expanded='true'] .menu-line:first-child {
+    transform: rotate(45deg);
+  }
+  .menu-btn[aria-expanded='true'] .menu-line:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .mobile-nav {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    height: calc(100dvh - 3.5rem);
+    overflow-y: auto;
+    background: var(--md-sys-color-surface);
+  }
+  .mobile-link {
+    display: block;
+    padding: 0.45rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--md-sys-color-on-surface);
+    transition: opacity 200ms var(--g-ease);
+  }
+  .mobile-link:hover {
+    opacity: 0.7;
+  }
+  .mobile-link.is-active {
+    color: var(--md-sys-color-primary);
+  }
+  .mobile-nav:not(.hidden) li,
+  .mobile-nav:not(.hidden) .mobile-actions {
+    animation: menu-in 480ms var(--g-ease) both;
+    animation-delay: calc(var(--i) * 35ms + 40ms);
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav:not(.hidden) li,
+    .mobile-nav:not(.hidden) .mobile-actions {
+      animation: none;
+    }
+    .menu-line {
+      transition: none;
+    }
   }
 </style>
 
 <script>
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-nav');
-  const openIcon = document.getElementById('menu-open');
-  const closeIcon = document.getElementById('menu-close');
+  const header = document.querySelector<HTMLElement>('.site-header');
 
   const isOpen = () => !!menu && !menu.classList.contains('hidden');
 
+  // The open menu covers the page, so it behaves like a modal: everything
+  // outside the header goes inert (no Tab, no screen-reader browsing) and
+  // focus moves to the first link; closing hands focus back to the toggle.
+  const outside = () => {
+    const els: Element[] = [];
+    for (let node: Element | null = header; node && node !== document.body; node = node.parentElement) {
+      for (const sib of node.parentElement?.children ?? []) if (sib !== node && !sib.matches('script, style')) els.push(sib);
+    }
+    return els;
+  };
+
   function setMenu(open: boolean) {
     if (!menu || !toggle) return;
+    if (open === isOpen()) return;
     menu.classList.toggle('hidden', !open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    if (openIcon) openIcon.hidden = open;
-    if (closeIcon) closeIcon.hidden = !open;
+    header?.toggleAttribute('data-menu-open', open);
     // The menu floats over the page, so stop the page scrolling underneath it.
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    outside().forEach((el) => el.toggleAttribute('inert', open));
+    if (open) menu.querySelector<HTMLElement>('a, button')?.focus({ preventScroll: true });
+    else if (menu.contains(document.activeElement)) toggle.focus({ preventScroll: true });
   }
 
   toggle?.addEventListener('click', () => setMenu(!isOpen()));
+
+  // Hairline under the bar only once there's something scrolled beneath it.
+  const syncScrolled = () => header?.toggleAttribute('data-scrolled', window.scrollY > 4);
+  addEventListener('scroll', syncScrolled, { passive: true });
+  syncScrolled();
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isOpen()) {

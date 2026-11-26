@@ -34,17 +34,18 @@ const filters = [
   <div class="wrap py-12 md:py-16">
     {/* Filter pills */}
     <div class="flex flex-wrap items-center justify-between gap-4">
-      <div id="filter-tabs" class="flex flex-wrap items-center gap-2">
+      <div id="filter-tabs" class="seg" role="group" aria-label="Filter projects">
         <button
           type="button"
           data-filter="all"
           class="filter-tab active"
+          aria-pressed="true"
         >
           All ({entries.length})
         </button>
         {
           filters.map((f) => (
-            <button type="button" data-filter={f.key} class="filter-tab">
+            <button type="button" data-filter={f.key} class="filter-tab" aria-pressed="false">
               {f.label}
             </button>
           ))
@@ -60,7 +61,6 @@ const filters = [
     {/* Projects: ruled panel of cells */}
     <h2 class="sr-only">Projects</h2>
     <div class="ruled-panel mt-10">
-      <span class="tick tick-tl" /><span class="tick tick-tr" /><span class="tick tick-bl" /><span class="tick tick-br" />
       <div id="projects-grid" class="ruled-grid md:grid-cols-2 lg:grid-cols-3">
         {entries.map((entry) => <WorkCard entry={entry} />)}
       </div>
@@ -88,14 +88,14 @@ const filters = [
                   href={`/work/${entry.id}`}
                   class="group grid gap-x-6 gap-y-1 py-4 sm:grid-cols-[4rem_1fr_auto] sm:items-baseline"
                 >
-                  <span class="font-mono text-label text-on-surface-variant">{entry.data.year}</span>
+                  <span class="text-[0.875rem] tabular-nums text-on-surface-variant">{entry.data.year}</span>
                   <span>
                     <span class="font-semibold text-on-surface transition-colors group-hover:text-primary">
                       {entry.data.title}
                     </span>
                     <span class="block text-body-sm text-on-surface-variant">{entry.data.blurb}</span>
                   </span>
-                  <span class="font-mono text-label text-on-surface-variant">
+                  <span class="text-[0.8125rem] text-on-surface-variant">
                     {entry.data.stack.slice(0, 2).join(' · ')}
                   </span>
                 </a>
@@ -120,8 +120,10 @@ const filters = [
 
   filterTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      filterTabs.forEach((t) => t.classList.remove('active'));
-      tab.classList.add('active');
+      filterTabs.forEach((t) => {
+        t.classList.toggle('active', t === tab);
+        t.setAttribute('aria-pressed', String(t === tab));
+      });
 
       const filter = tab.dataset.filter ?? 'all';
       let visibleCount = 0;

@@ -26,30 +26,29 @@ const moves = [
 ];
 ---
 
-<section id={id} class="rtr not-prose ruled-panel my-10" data-rtr aria-labelledby={`${id}-title`}>
-  <span class="tick tick-tl"></span><span class="tick tick-tr"></span><span class="tick tick-bl"></span><span class="tick tick-br"></span>
-
-  <header class="border-b border-outline-variant p-5">
-    <p class="kicker" id={`${id}-title`}>Try it · Route the robots</p>
-    <p class="mt-3 text-body-sm leading-relaxed text-on-surface-variant">
+<section id={id} class="rtr g-root not-prose my-10" data-rtr aria-labelledby={`${id}-title`}>
+  <header class="text-center">
+    <p class="g-eyebrow" id={`${id}-title`}>Route the robots</p>
+    <p class="g-note mx-auto mt-1 max-w-xl text-[0.9375rem]">
       Draw walls, drop up to six robots and their goals, then let a JavaScript LaCAM solver route them — or try to beat it by
       hand.
     </p>
   </header>
 
-  <div class="flex flex-wrap items-center gap-2 border-b border-rule-soft px-5 py-4" data-ui hidden>
-    <span class="mr-1 font-mono text-label uppercase tracking-widest text-on-surface-variant">Puzzle</span>
-    {
-      PRESETS.map((p) => (
-        <button type="button" class="filter-tab" data-preset={p.id} aria-pressed="false">
-          {p.name}
-        </button>
-      ))
-    }
-    <p class="w-full text-caption text-on-surface-variant" data-preset-blurb></p>
+  <div class="mt-5 flex flex-col items-center gap-2" data-ui hidden>
+    <div class="g-seg justify-center" role="group" aria-label="Puzzle">
+      {
+        PRESETS.map((p) => (
+          <button type="button" class="g-seg-btn" data-preset={p.id} aria-pressed="false">
+            {p.name}
+          </button>
+        ))
+      }
+    </div>
+    <p class="g-note min-h-5 text-center" data-preset-blurb></p>
   </div>
 
-  <div class="p-3 sm:p-5">
+  <div class="g-tray mt-4 p-2.5 sm:p-3.5">
     <div class="rtr-stage relative">
       <div
         class="rtr-board"
@@ -59,29 +58,33 @@ const moves = [
         aria-label="Puzzle grid, 10 columns by 7 rows. Arrow keys move the cursor."
         aria-describedby={`${id}-keys`}
       >
-        <p class="col-span-full row-span-full grid place-items-center text-caption text-on-surface-variant" data-loading>
+        <p class="g-note col-span-full row-span-full grid place-items-center" data-loading>
           Loading puzzle…
         </p>
       </div>
     </div>
-    <noscript><p class="mt-3 text-caption text-on-surface-variant">This puzzle needs JavaScript.</p></noscript>
+    <noscript><p class="g-note mt-3">This puzzle needs JavaScript.</p></noscript>
   </div>
 
   <div data-ui hidden>
+    <p class="g-status mt-5 min-h-7 text-center" role="status" aria-live="polite" data-status></p>
+
     <!-- Edit controls -->
-    <div class="grid gap-4 border-t border-rule-soft px-5 py-4" data-panel="edit">
-      <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Tool">
-        <span class="mr-1 w-14 font-mono text-label uppercase tracking-widest text-on-surface-variant">Tool</span>
-        {
-          tools.map((t) => (
-            <button type="button" class="filter-tab" data-tool={t.id} aria-pressed="false" aria-keyshortcuts={t.key}>
-              {t.label}
-            </button>
-          ))
-        }
+    <div class="g-card mt-4 grid gap-4 p-4 sm:p-5" data-panel="edit">
+      <div class="flex flex-wrap items-center gap-3" role="group" aria-label="Tool">
+        <span class="g-eyebrow w-12">Tool</span>
+        <div class="g-seg">
+          {
+            tools.map((t) => (
+              <button type="button" class="g-seg-btn" data-tool={t.id} aria-pressed="false" aria-keyshortcuts={t.key}>
+                {t.label}
+              </button>
+            ))
+          }
+        </div>
       </div>
       <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Robot">
-        <span class="mr-1 w-14 font-mono text-label uppercase tracking-widest text-on-surface-variant">Robot</span>
+        <span class="g-eyebrow mr-1 w-12">Robot</span>
         {
           robots.map((i) => (
             <button type="button" class="rtr-swatch" data-robot={i} aria-pressed="false" aria-keyshortcuts={String(i + 1)}>
@@ -91,37 +94,37 @@ const moves = [
             </button>
           ))
         }
-        <button type="button" class="btn btn-ghost ml-auto h-9 px-4 text-caption" data-action="remove">Remove robot 1</button>
+        <button type="button" class="g-btn g-btn-plain g-btn-sm ml-auto" data-action="remove">Remove robot 1</button>
       </div>
-      <div class="flex flex-wrap gap-3">
-        <button type="button" class="btn btn-primary" data-action="solve">Solve with LaCAM</button>
-        <button type="button" class="btn btn-tonal" data-action="play">Beat the solver</button>
-        <button type="button" class="btn btn-ghost" data-action="clear">Clear board</button>
+      <div class="flex flex-wrap justify-center gap-2 pt-1">
+        <button type="button" class="g-btn" data-action="solve">Solve with LaCAM</button>
+        <button type="button" class="g-btn g-btn-tonal" data-action="play">Beat the solver</button>
+        <button type="button" class="g-btn g-btn-plain" data-action="clear">Clear board</button>
       </div>
     </div>
 
     <!-- Watch controls -->
-    <div class="grid gap-4 border-t border-rule-soft px-5 py-4" data-panel="watch" hidden>
+    <div class="g-card mt-4 grid gap-4 p-4 sm:p-5" data-panel="watch" hidden>
       <div class="flex items-center gap-4">
-        <button type="button" class="btn btn-tonal w-28" data-action="toggle-play">Play</button>
+        <button type="button" class="g-btn g-btn-tonal w-24" data-action="toggle-play">Play</button>
         <label class="flex flex-1 items-center gap-3">
           <span class="sr-only">Timestep</span>
-          <input type="range" min="0" max="1" step="1" value="0" class="rtr-scrub w-full" data-scrub />
+          <input type="range" min="0" max="1" step="1" value="0" class="g-range" data-scrub />
         </label>
-        <span class="w-20 text-right font-mono text-label text-on-surface-variant" data-scrub-label>t = 0</span>
+        <span class="g-num w-14 text-right text-[0.875rem] font-medium text-on-surface-variant" data-scrub-label>t = 0</span>
       </div>
-      <div class="flex flex-wrap gap-3">
-        <button type="button" class="btn btn-primary" data-action="play">Beat the solver</button>
-        <button type="button" class="btn btn-ghost" data-action="edit">Back to editing</button>
+      <div class="flex flex-wrap justify-center gap-2">
+        <button type="button" class="g-btn" data-action="play">Beat the solver</button>
+        <button type="button" class="g-btn g-btn-plain" data-action="edit">Back to editing</button>
       </div>
     </div>
 
     <!-- Manual play controls -->
-    <div class="grid gap-4 border-t border-rule-soft px-5 py-4 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-6" data-panel="play" hidden>
+    <div class="g-card mt-4 grid gap-5 p-4 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-7 sm:p-5" data-panel="play" hidden>
       <div class="rtr-pad" role="group" aria-label="Move the selected robot">
         {
           moves.map((m) => (
-            <button type="button" class={`rtr-pad-btn rtr-pad-${m.area}`} data-move={m.id} aria-label={m.label}>
+            <button type="button" class={`g-key rtr-pad-btn rtr-pad-${m.area}`} data-move={m.id} aria-label={m.label}>
               <span aria-hidden="true">{m.glyph}</span>
             </button>
           ))
@@ -129,7 +132,7 @@ const moves = [
       </div>
       <div class="grid gap-4">
         <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Selected robot">
-          <span class="mr-1 font-mono text-label uppercase tracking-widest text-on-surface-variant">Robot</span>
+          <span class="g-eyebrow mr-1">Robot</span>
           {
             robots.map((i) => (
               <button type="button" class="rtr-swatch" data-robot={i} aria-pressed="false">
@@ -140,47 +143,48 @@ const moves = [
             ))
           }
         </div>
-        <div class="flex flex-wrap gap-3">
-          <button type="button" class="btn btn-primary" data-action="step" aria-keyshortcuts="Enter">Step</button>
-          <button type="button" class="btn btn-tonal" data-action="undo" aria-keyshortcuts="U">Undo</button>
-          <button type="button" class="btn btn-ghost" data-action="restart">Restart</button>
-          <button type="button" class="btn btn-ghost" data-action="edit">Edit board</button>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" class="g-btn" data-action="step" aria-keyshortcuts="Enter">Step</button>
+          <button type="button" class="g-btn g-btn-tonal" data-action="undo" aria-keyshortcuts="U">Undo</button>
+          <button type="button" class="g-btn g-btn-plain" data-action="restart">Restart</button>
+          <button type="button" class="g-btn g-btn-plain" data-action="edit">Edit board</button>
         </div>
       </div>
     </div>
 
-    <dl class="ruled-grid grid-cols-3 border-t border-outline-variant">
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Solver makespan</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-makespan">—</dd>
+    <dl class="g-card mt-4 grid grid-cols-3 gap-x-3 gap-y-5 px-4 py-5 text-center">
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Solver makespan</dt>
+        <dd class="g-stat-value text-[1.375rem]" data-stat="solver-makespan">—</dd>
       </div>
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Solver sum of costs</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-soc">—</dd>
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Solver sum of costs</dt>
+        <dd class="g-stat-value text-[1.375rem]" data-stat="solver-soc">—</dd>
       </div>
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Configs explored</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-on-surface" data-stat="solver-configs">—</dd>
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Configs explored</dt>
+        <dd class="g-stat-value text-[1.375rem]" data-stat="solver-configs">—</dd>
       </div>
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your steps</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-steps">—</dd>
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Your steps</dt>
+        <dd class="g-stat-value text-[1.375rem] text-primary" data-stat="you-steps">—</dd>
       </div>
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your sum of costs</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-soc">—</dd>
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Your sum of costs</dt>
+        <dd class="g-stat-value text-[1.375rem] text-primary" data-stat="you-soc">—</dd>
       </div>
-      <div class="ruled-cell px-4 py-3">
-        <dt class="font-mono text-label uppercase tracking-widest text-on-surface-variant">Your moves</dt>
-        <dd class="mt-1 font-mono text-headline-sm text-primary" data-stat="you-moves">—</dd>
+      <div class="flex flex-col-reverse">
+        <dt class="g-stat-label">Your moves</dt>
+        <dd class="g-stat-value text-[1.375rem] text-primary" data-stat="you-moves">—</dd>
       </div>
     </dl>
 
-    <p class="min-h-12 border-t border-outline-variant px-5 py-3 text-body-sm text-on-surface" role="status" aria-live="polite" data-status></p>
-
-    <details class="border-t border-rule-soft px-5 py-3 text-caption text-on-surface-variant" id={`${id}-keys`}>
-      <summary class="cursor-pointer font-mono text-label uppercase tracking-widest">Keyboard and rules</summary>
-      <ul class="mt-2 grid gap-1">
+    <details class="rtr-keys g-card mt-4 text-[0.8125rem] text-on-surface-variant" id={`${id}-keys`}>
+      <summary class="flex min-h-12 cursor-pointer items-center justify-between px-5 text-[0.875rem] font-medium text-on-surface">
+        Keyboard and rules
+        <svg class="rtr-caret text-on-surface-variant" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
+      </summary>
+      <ul class="grid gap-1.5 px-5 pb-5">
         <li>Editing: arrow keys move the cursor, Enter or Space applies the tool, W / S / G / X pick a tool, 1–6 pick a robot.</li>
         <li>Playing: 1–6 pick a robot, arrow keys plan its move (. to wait), Enter steps everyone at once, U undoes.</li>
         <li>Watching: Space plays or pauses, left and right arrows step through time.</li>
@@ -232,10 +236,9 @@ const moves = [
     display: grid;
     grid-template-columns: repeat(10, minmax(0, 1fr));
     grid-template-rows: repeat(7, minmax(0, 1fr));
-    gap: 1px;
+    gap: 3px;
     aspect-ratio: 10 / 7;
-    background: var(--md-sys-color-rule-soft);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 1.1rem;
     outline: none;
     user-select: none;
     -webkit-user-select: none;
@@ -248,15 +251,28 @@ const moves = [
     cursor: pointer;
   }
   .rtr-board:focus-visible {
-    border-color: var(--md-sys-color-primary);
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 4px;
   }
 
   .rtr-cell {
+    border-radius: 0.4rem;
     background: var(--md-sys-color-surface);
-    transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.12);
+    transition:
+      background-color 220ms var(--g-ease),
+      box-shadow 220ms var(--g-ease),
+      transform 220ms var(--g-ease);
   }
   .rtr-cell.is-wall {
-    background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 42%, var(--md-sys-color-surface));
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--md-sys-color-on-surface-variant) 55%, var(--md-sys-color-surface)),
+      color-mix(in srgb, var(--md-sys-color-on-surface-variant) 42%, var(--md-sys-color-surface))
+    );
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 1px 2px rgb(0 0 0 / 0.2);
   }
   .rtr[data-mode='edit'] .rtr-cell:not(.is-wall):hover {
     background: var(--md-sys-color-surface-container);
@@ -267,9 +283,9 @@ const moves = [
 
   .rtr-overlay {
     position: absolute;
-    inset: 1px;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     overflow: visible;
   }
@@ -319,38 +335,46 @@ const moves = [
     stroke-width: 0.05;
   }
 
-  /* Robot swatches: square 44px targets with a numbered colour dot */
+  /* Robot swatches: round 44px targets with a numbered colour dot */
   .rtr-swatch {
     display: inline-grid;
     place-items: center;
     width: 2.75rem;
     height: 2.75rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-medium);
-    background: var(--md-sys-color-surface-container);
+    border-radius: 999px;
+    background: var(--g-fill);
     cursor: pointer;
-    transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    transition:
+      background-color 220ms var(--g-ease),
+      box-shadow 220ms var(--g-ease),
+      transform 160ms var(--g-ease);
   }
   .rtr-swatch:hover {
-    border-color: var(--md-sys-color-outline);
+    background: var(--g-fill-strong);
+  }
+  .rtr-swatch:active {
+    transform: scale(0.92);
   }
   .rtr-swatch.active {
-    border-color: var(--md-sys-color-on-surface);
-    box-shadow: inset 0 0 0 1px var(--md-sys-color-on-surface);
+    background: var(--md-sys-color-surface-container-lowest);
+    box-shadow:
+      0 0 0 2px var(--md-sys-color-on-surface),
+      0 2px 6px rgb(0 0 0 / 0.15);
   }
   .rtr-swatch.is-empty .rtr-dot {
-    opacity: 0.45;
+    opacity: 0.4;
   }
   .rtr-dot {
     display: grid;
     place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.625rem;
+    height: 1.625rem;
     border-radius: 9999px;
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
+    font-size: 0.75rem;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
     color: var(--md-sys-color-surface);
+    box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.18);
   }
   .rtr-dot[data-slot='0'] { background: var(--rtr-0); }
   .rtr-dot[data-slot='1'] { background: var(--rtr-1); }
@@ -362,27 +386,15 @@ const moves = [
   /* D-pad for touch play */
   .rtr-pad {
     display: grid;
-    grid-template-columns: repeat(3, 2.75rem);
-    grid-template-rows: repeat(3, 2.75rem);
+    grid-template-columns: repeat(3, 3rem);
+    grid-template-rows: repeat(3, 3rem);
     grid-template-areas: '. up .' 'left wait right' '. down .';
-    gap: 0.25rem;
-    justify-content: start;
+    gap: 0.3rem;
+    justify-content: center;
   }
   .rtr-pad-btn {
-    display: grid;
-    place-items: center;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    background: var(--md-sys-color-surface-container);
-    color: var(--md-sys-color-on-surface);
-    font-family: var(--font-mono);
-    font-size: var(--text-body-lg);
-    cursor: pointer;
-    transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
-      color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
-  }
-  .rtr-pad-btn:hover {
-    border-color: var(--md-sys-color-outline);
-    color: var(--md-sys-color-primary);
+    border-radius: 999px;
+    font-size: 1.125rem;
   }
   .rtr-pad-up { grid-area: up; }
   .rtr-pad-left { grid-area: left; }
@@ -390,21 +402,16 @@ const moves = [
   .rtr-pad-right { grid-area: right; }
   .rtr-pad-down { grid-area: down; }
 
-  .rtr-scrub {
-    accent-color: var(--md-sys-color-primary);
-    height: 2.75rem;
+  .rtr-keys summary {
+    list-style: none;
   }
-
-  .rtr :is(button, input):focus-visible {
-    outline: 2px solid var(--md-sys-color-primary);
-    outline-offset: 2px;
+  .rtr-keys summary::-webkit-details-marker {
+    display: none;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rtr-cell,
-    .rtr-swatch,
-    .rtr-pad-btn {
-      transition: none;
-    }
+  .rtr-caret {
+    transition: transform 260ms var(--g-ease);
+  }
+  .rtr-keys[open] .rtr-caret {
+    transform: rotate(180deg);
   }
 </style>

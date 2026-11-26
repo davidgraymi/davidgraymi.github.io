@@ -11,24 +11,21 @@ interface Props {
 const { kicker, title, lead, id, alt = false, class: className = '' } = Astro.props;
 ---
 
-<section
-  id={id}
-  class:list={['border-t border-outline-variant py-16 md:py-24', alt && 'bg-surface-container-lowest', className]}
->
+<section id={id} class:list={['py-20 md:py-28', alt && 'bg-surface-container-lowest', className]}>
   <div class="wrap">
     {
       (kicker || title || lead) && (
-        <div class="max-w-2xl">
+        <div class="max-w-2xl" data-reveal>
           {kicker && <p class="kicker">{kicker}</p>}
-          {title && <h2 class="mt-5 font-serif font-medium tracking-tight text-h2 text-on-surface">{title}</h2>}
-          {lead && (
-            <p class="mt-4 text-body-lg leading-relaxed text-on-surface-variant">
-              {lead}
-            </p>
+          {title && (
+            <h2 class="mt-2 text-[clamp(2rem,4.5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-on-surface">{title}</h2>
           )}
+          {lead && <p class="mt-4 text-[clamp(1.0625rem,1.6vw,1.25rem)] leading-relaxed text-on-surface-variant">{lead}</p>}
         </div>
       )
     }
-    <slot />
+    <div data-reveal style="--reveal-i: 1">
+      <slot />
+    </div>
   </div>
 </section>

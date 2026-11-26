@@ -7,28 +7,26 @@ const nav = await visibleNav();
 const year = new Date().getFullYear();
 ---
 
-<footer
-  class="mt-24 border-t border-outline-variant bg-surface-container-low"
->
-  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
-    <div>
-      <p class="text-base font-semibold tracking-tight text-on-surface">{site.name}</p>
-      <p class="mt-2 max-w-xs text-body-sm leading-relaxed text-on-surface-variant">
+<footer class="site-footer mt-24 bg-surface-container-low text-[0.875rem]">
+  <div class="wrap grid grid-cols-2 gap-x-6 gap-y-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div class="col-span-2 md:col-span-1">
+      <p class="text-[0.9375rem] font-semibold tracking-[-0.01em] text-on-surface">{site.name}</p>
+      <p class="mt-1.5 max-w-xs leading-relaxed text-on-surface-variant">
         {site.role}. Based in {site.location}.
       </p>
-      <a href={`mailto:${site.email}`} class="link-underline mt-4 inline-block font-mono text-caption">
+      <a href={`mailto:${site.email}`} class="foot-link foot-email mt-2 font-medium">
         {site.email}
       </a>
     </div>
 
     <nav aria-label="Footer">
-      <p class="kicker">Pages</p>
-      <ul class="mt-3 space-y-0.5 text-body-sm">
-        <li><a href="/" class="inline-block py-1.5 transition-colors hover:text-primary text-on-surface-variant">Home</a></li>
+      <p class="foot-head">Pages</p>
+      <ul class="mt-2">
+        <li><a href="/" class="foot-link">Home</a></li>
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} class="inline-block py-1.5 transition-colors hover:text-primary text-on-surface-variant">
+              <a href={item.href} class="foot-link">
                 {item.label}
               </a>
             </li>
@@ -38,16 +36,12 @@ const year = new Date().getFullYear();
     </nav>
 
     <div>
-      <p class="kicker">Elsewhere</p>
-      <ul class="mt-3 space-y-0.5 text-body-sm">
+      <p class="foot-head">Elsewhere</p>
+      <ul class="mt-2">
         {
           socials.map((s) => (
             <li>
-              <a
-                href={s.href}
-                class="inline-flex items-center gap-2.5 py-1.5 transition-colors hover:text-primary text-on-surface-variant"
-                rel={s.href.startsWith('http') ? 'me noopener' : undefined}
-              >
+              <a href={s.href} class="foot-link gap-2.5" rel={s.href.startsWith('http') ? 'me noopener' : undefined}>
                 <Icon name={s.icon} size={15} />
                 {s.label}
               </a>
@@ -55,7 +49,7 @@ const year = new Date().getFullYear();
           ))
         }
         <li>
-          <a href="/rss.xml" class="inline-flex items-center gap-2.5 py-1.5 transition-colors hover:text-primary text-on-surface-variant">
+          <a href="/rss.xml" class="foot-link gap-2.5">
             <Icon name="rss" size={15} />
             RSS Feed
           </a>
@@ -64,16 +58,58 @@ const year = new Date().getFullYear();
     </div>
   </div>
 
-  <div class="border-t border-outline-variant">
-    <div class="wrap flex flex-col gap-2.5 py-6 font-mono text-label sm:flex-row sm:items-center sm:justify-between text-on-surface-variant">
+  <div class="foot-rule">
+    <div class="wrap flex flex-col gap-1 py-5 text-[0.8125rem] text-on-surface-variant sm:flex-row sm:items-center sm:justify-between">
       <p>© {year} {site.name} · {site.location}</p>
       <button
         type="button"
         onclick="if(window.openCommandPalette) window.openCommandPalette()"
-        class="inline-flex items-center gap-1.5 transition-colors hover:text-primary text-left cursor-pointer"
+        class="foot-link -mx-1 px-1 text-left pointer-coarse:hidden"
       >
-        <span>Press <kbd data-shortcut class="rounded-md border px-1.5 py-0.5 text-label border-outline-variant bg-surface-container">⌘K</kbd> to search</span>
+        <span>Press <kbd data-shortcut class="g-kbd">⌘K</kbd> to search</span>
       </button>
     </div>
   </div>
 </footer>
+
+<style>
+  /* Quiet, like an app's footer: sentence-case headings, soft links that
+     brighten on hover, a hairline instead of rules. */
+  .foot-head {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+  }
+  .foot-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    transition: color 200ms var(--g-ease);
+  }
+  .foot-link:hover {
+    color: var(--md-sys-color-on-surface);
+  }
+  .foot-email,
+  .foot-email:hover {
+    color: var(--md-sys-color-primary);
+  }
+  .foot-email:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  /* Touch: every footer link is a 44pt row. */
+  @media (pointer: coarse) {
+    .foot-link {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+  .site-footer {
+    box-shadow: 0 -0.5px 0 var(--g-hair);
+  }
+  .foot-rule {
+    box-shadow: 0 -0.5px 0 var(--g-hair);
+  }
+</style>

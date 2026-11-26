@@ -18,12 +18,12 @@ const { class: className = 'mt-16' } = Astro.props as { class?: string };
   </span>
   <div>
     <p class="kicker">Written by</p>
-    <p class="mt-1.5 font-serif text-title font-medium text-on-surface">{site.name}</p>
+    <p class="mt-1.5 text-title font-semibold tracking-[-0.01em] text-on-surface">{site.name}</p>
     <p class="mt-2 text-body-sm leading-relaxed text-on-surface-variant">
       Software engineer in {site.location.split(',')[0]}. I write about measuring machine learning systems honestly,
       the things I build on the side, and what each one taught me.
     </p>
-    <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-caption">
+    <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.875rem]">
       <a href="/rss.xml" class="inline-flex min-h-11 items-center gap-2 text-on-surface-variant transition-colors hover:text-primary">
         <Icon name="rss" size={14} />
         Follow by RSS
