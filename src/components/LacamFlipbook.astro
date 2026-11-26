@@ -443,6 +443,7 @@ const traceJson = JSON.stringify(trace);
       gap: 0.5rem;
     }
     .lacam-canvas {
+      flex: none; /* a 0 basis in a column overrides the height and collapses the panel */
       height: 190px;
     }
   }
