@@ -50,11 +50,11 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
         return (
           <section class="wrap" aria-labelledby="featured-title">
             <article class="game-card featured g-tray group relative grid overflow-hidden md:grid-cols-[1.25fr_1fr]">
-              <div class="relative aspect-[4/3] overflow-hidden md:order-2 md:aspect-auto md:min-h-[26rem]">
+              <div class="relative aspect-[4/3] overflow-hidden md:order-2 md:aspect-auto md:min-h-[26rem]" aria-hidden="true">
                 {t.dark && t.light ? (
                   <>
-                    <Image src={t.dark} alt="" widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-dark" loading="eager" />
-                    <Image src={t.light} alt="" widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-light" loading="eager" />
+                    <Image src={t.dark} alt={`${featured.title} screenshot, dark theme`} widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-dark" loading="eager" />
+                    <Image src={t.light} alt={`${featured.title} screenshot, light theme`} widths={[640, 960, 1280]} sizes="(min-width: 768px) 45vw, 92vw" class="thumb thumb-light" loading="eager" />
                   </>
                 ) : (
                   <div class="size-full bg-surface-container-lowest" />
@@ -105,11 +105,11 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
               const t = thumbs(game);
               return (
                 <li class="game-card g-card group relative flex flex-col overflow-hidden">
-                  <div class="relative aspect-[16/9] overflow-hidden" aria-hidden="true">
+                  <div class="card-shot relative aspect-[16/9] overflow-hidden" aria-hidden="true">
                     {t.dark && t.light ? (
                       <>
-                        <Image src={t.dark} alt="" widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-dark" loading="lazy" />
-                        <Image src={t.light} alt="" widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-light" loading="lazy" />
+                        <Image src={t.dark} alt={`${game.title} screenshot, dark theme`} widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-dark" loading="lazy" />
+                        <Image src={t.light} alt={`${game.title} screenshot, light theme`} widths={[400, 720]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw" class="thumb thumb-light" loading="lazy" />
                       </>
                     ) : (
                       <div class="size-full bg-surface-container-lowest" />
@@ -170,7 +170,7 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
     transform: scale(1.22);
   }
   /* Fade the screenshot into the card so it reads as one object. */
-  .game-card:not(.featured) [aria-hidden='true']::after {
+  .card-shot::after {
     content: '';
     position: absolute;
     inset: auto 0 0;
@@ -191,11 +191,12 @@ const thumbs = (game: Game) => ({ dark: shot(game.slug, 'dark'), light: shot(gam
   .game-card.featured:hover {
     transform: translateY(-3px);
   }
-  .game-card:has(a:focus-visible) {
+  /* The title link stretches over the whole card, so the card wears its ring. */
+  .game-card:has(:is(h2, h3) a:focus-visible) {
     outline: 2px solid var(--md-sys-color-primary);
     outline-offset: 3px;
   }
-  .game-card a:focus-visible {
+  .game-card :is(h2, h3) a:focus-visible {
     outline: none;
   }
 
